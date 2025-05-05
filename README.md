@@ -7,9 +7,12 @@
 
 `npm run dev`
 
-### Weatherstack API
-https://weatherstack.com/?utm_source=Github&utm_medium=Referral&utm_campaign=Public-apis-repo-Best-sellers
+`npm install sass-embedded` for scss.
 
+### Weather API
+- [Open-meteo](https://open-meteo.com/)
+- Current and forcast free
+- 10,000 requests per day
 
 # Generated README info:
 ## React + TypeScript + Vite
