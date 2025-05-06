@@ -2,6 +2,10 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.scss'
+import SxStyledButton from './components/button-style-examples/sx-button'
+import MUIStyledButton from './components/button-style-examples/mui-styled-button'
+import EmotionStyledButton from './components/button-style-examples/emotion-styled-button'
+import EmotionButton from './components/button-style-examples/emotion-button'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -28,6 +32,10 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <SxStyledButton/>
+      <MUIStyledButton/>
+      <EmotionStyledButton>Emotion Styled Div</EmotionStyledButton>
+      <EmotionButton/>
     </>
   )
 }
