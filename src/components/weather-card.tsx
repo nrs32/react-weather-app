@@ -7,6 +7,8 @@ const WeatherCard: React.FC<CardProps> = ({ children, ...props }) => {
       sx={(theme) => ({
         color: theme.palette.text.primary,
         margin: '20px',
+        width: 'fit-content',
+        padding: '45px',
         background: `linear-gradient(to bottom right, ${theme.palette.cardBg.main}, ${theme.palette.cardBg.dark})`,
       })}
     >

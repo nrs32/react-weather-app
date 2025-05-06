@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material/styles';
 import { useQuery } from '@tanstack/react-query'
 import Button from '@mui/material/Button'
 
@@ -11,8 +12,8 @@ import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
+import type { WeatherData } from './types/weather-types';
 
-import { useTheme } from '@mui/material/styles';
 
 function App() {
   const theme = useTheme();
@@ -36,6 +37,8 @@ function App() {
     return <span>Error: {error.message}</span>
   }
 
+  const weatherData = data as WeatherData;
+
   return (
     <>
      <h1 className='heading'> Weather Dashboard </h1>
@@ -49,18 +52,22 @@ function App() {
     */}
 
       <WeatherCard>
-      <GradientCircularProgress
-        id="humidity"
-        value={70}
-        thickness={4}
-        size={100}
-        gradientstops={[theme.palette.pink.main, theme.palette.teal.main]}
-      />
+        <GradientCircularProgress
+          id="humidity"
+          value={weatherData.current.humidity}
+          label={`${weatherData.current.humidity}`}
+          labelColor={theme.palette.teal.main}
+          labelSize={50}
+          subtitle='Humidity'
+          thickness={3.5}
+          size={140}
+          gradientstops={[theme.palette.teal.main, theme.palette.blue.main]}
+        />
       </WeatherCard>
 
       <WeatherCard>
         Raw Data:
-        <pre className='raw-data'>{JSON.stringify(data, null, 2)}</pre>
+        <pre className='raw-data'>{JSON.stringify(weatherData, null, 2)}</pre>
       </WeatherCard>
 
       <div className='tech-icons'>
