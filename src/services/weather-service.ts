@@ -1,0 +1,24 @@
+import { fetchWeatherApi } from "openmeteo";
+import processWeatherData from "../utils/process-weather-data";
+
+export async function getWeather(lat: number, long: number) {
+  const url = "https://api.open-meteo.com/v1/forecast";
+
+  const params = {
+    "latitude": lat,
+    "longitude": long,
+    "temperature_unit": "fahrenheit",
+    "precipitation_unit": "inch",
+    "wind_speed_unit": "mph",
+    "daily": ["sunrise", "sunset"],
+    "timezone": "America/New_York",
+    "hourly": ["temperature_2m", "weather_code"],
+    "current": ["temperature_2m", "relative_humidity_2m", "apparent_temperature", "is_day", "precipitation", "weather_code"]
+  };
+
+  return await fetchWeatherApi(url, params)
+    .then(processWeatherData)
+    .catch((error) => {
+      console.error(error);
+    });
+}
