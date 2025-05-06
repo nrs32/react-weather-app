@@ -1,6 +1,18 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.heading {
   text-align: center;
+}
+
+.raw-data {
+  text-align: left;
+  font-family: inherit;
+  padding: 20px;
+  overflow-wrap: break-word;
+  height: 250px;
+  overflow: auto;
+}
+
+.tech-icons {
+  position: absolute;
+  bottom: 7px;
+  right: 8px;
 }

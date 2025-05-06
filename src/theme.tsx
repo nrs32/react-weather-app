@@ -36,11 +36,15 @@ const theme = createTheme({
       main: '#35B5D4',
     },
     cardBg: {
-      main: '#22242F'
+      main: '#272934',
+      dark: '#121621',
     },
     bg: {
-      main: '#0F111D',
+      main: '#121621',
     },
+    text: {
+      primary: '#FFFFFFDE',
+    }
   },
 });
 

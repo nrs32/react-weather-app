@@ -9,9 +9,14 @@ import EmotionStyledButton from './components/button-style-examples/emotion-styl
 import EmotionButton from './components/button-style-examples/emotion-button'
 import './App.scss';
 import { getWeather } from './services/weather-service'
+import WeatherCard from './components/weather-card'
+import GradientCircularProgress from './components/gradient-circular-progress'
 
+import { useTheme } from '@mui/material/styles';
 
 function App() {
+  const theme = useTheme();
+
   // TODO: considar ipinfo.io to get user lat and long
   // Then do the thing from the video where we wait for that query before doing the one that gets the weather
   const lat: number = 42.96;
@@ -33,7 +38,32 @@ function App() {
 
   return (
     <>
-      <div>
+     <h1 className='heading'> Weather Dashboard </h1>
+
+     {/*
+      Demo of Buttons I made
+      <SxStyledButton/>
+      <MUIStyledButton/>
+      <EmotionStyledButton>Emotion Styled Div</EmotionStyledButton>
+      <EmotionButton/>
+    */}
+
+      <WeatherCard>
+      <GradientCircularProgress
+        id="humidity"
+        value={70}
+        thickness={4}
+        size={100}
+        gradientstops={[theme.palette.pink.main, theme.palette.teal.main]}
+      />
+      </WeatherCard>
+
+      <WeatherCard>
+        Raw Data:
+        <pre className='raw-data'>{JSON.stringify(data, null, 2)}</pre>
+      </WeatherCard>
+
+      <div className='tech-icons'>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} alt="Vite logo" />
         </a>
@@ -41,19 +71,6 @@ function App() {
           <img src={reactLogo} alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
-
-      <SxStyledButton/>
-      <MUIStyledButton/>
-      <EmotionStyledButton>Emotion Styled Div</EmotionStyledButton>
-      <EmotionButton/>
-
-      <pre style={{
-        textAlign: 'left',
-        fontFamily: 'inherit',
-        padding: '20px',
-        overflowWrap: 'break-word',
-      }}>{JSON.stringify(data, null, 2)}</pre>
     </>
   )
 }
