@@ -11,9 +11,10 @@
 
 ### Weather API
 - [Open-meteo](https://open-meteo.com/)
-- Current and forcast free
+- Current weather and forcast free
 - 10,000 requests per day
-- [Example Query](https://open-meteo.com/en/docs?current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code&hourly=temperature_2m,weather_code)
+- [npm pkg](https://www.npmjs.com/package/openmeteo)
+- `npm install openmeteo`
 
 ### Use MUI
 - `npm install @mui/material @emotion/react @emotion/styled` for MUI and Emotion
@@ -145,6 +146,13 @@ import ThreeDRotation from '@mui/icons-material/ThreeDRotation';
 <AccessAlarmIcon />
 ```
 Just append themename for icon style other than default, e.g. Twotone theme is exported as `@mui/icons-material/DeleteTwoTone`;
+
+# React Query
+`npm install @tanstack/react-query`
+
+`npm i -D @tanstack/eslint-plugin-query`
+
+[Query Docs](https://tanstack.com/query/latest/docs/framework/react/guides/queries)
 
 ___
 ___
