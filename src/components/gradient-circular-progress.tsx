@@ -13,8 +13,9 @@ interface GradientCircularProgressProps extends CircularProgressProps {
 
 const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props: GradientCircularProgressProps) => {
   const [startColor, endColor] = props.gradientstops;
-  const { label, labelcolor, labelsize, subtitle } = props;
+  const { id, label, labelcolor, labelsize, subtitle } = props;
   const theme = useTheme();
+  const gradientId = `circle-progress-${id}`;
 
   return (
     <Box position="relative" display="inline-flex">
@@ -22,7 +23,7 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
       {/* Create the gradient svg to use for the progress track */}
       <svg width={0} height={0}>
         <defs>
-          <linearGradient id="my_gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor={startColor} />
             <stop offset="100%" stopColor={endColor} />
           </linearGradient>
@@ -47,7 +48,7 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
           position: 'absolute',
           left: 0,
           'svg circle': {
-            stroke: 'url(#my_gradient)',
+            stroke: `url(#${gradientId})`,
             strokeLinecap: 'round', // Make progress thing be round
           },
         }}

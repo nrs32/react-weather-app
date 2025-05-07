@@ -1,6 +1,5 @@
 import { useTheme } from '@mui/material/styles';
 import { useQuery } from '@tanstack/react-query'
-import Button from '@mui/material/Button'
 
 import reactLogo from './assets/react.svg'
 import openMedeoLogo from './assets/open-medeo.png'
@@ -48,14 +47,6 @@ function App() {
     <>
      <h1 className='heading'> Weather Dashboard </h1>
 
-     {/*
-      Demo of Buttons I made
-      <SxStyledButton/>
-      <MUIStyledButton/>
-      <EmotionStyledButton>Emotion Styled Div</EmotionStyledButton>
-      <EmotionButton/>
-    */}
-
       <WeatherCard>
         <GradientCircularProgress
           id="humidity"
@@ -72,7 +63,15 @@ function App() {
 
 
       <WeatherCard>
-        <CurvyTimeGraph data={temperaturesCurrentDay} />
+        <CurvyTimeGraph id="line" data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
+      </WeatherCard>
+
+      <WeatherCard>
+        <CurvyTimeGraph id="area" data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.blue.main]} type="area"/>
+      </WeatherCard>
+
+      <WeatherCard>
+        <CurvyTimeGraph id="dashed" data={temperaturesCurrentDay} gradientstops={[theme.palette.pink.main, "white"]} type="dashed-line"/>
       </WeatherCard>
 
       <WeatherCard>
