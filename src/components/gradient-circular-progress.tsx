@@ -5,15 +5,15 @@ import React from 'react';
 interface GradientCircularProgressProps extends CircularProgressProps {
   id: string; // unique ID per instance
   gradientstops: [string, string]; // [startColor, endColor]
-  labelColor?: string;
+  labelcolor?: string;
   label?: string;
-  labelSize?: number; // font-size
+  labelsize?: number; // font-size
   subtitle: string;
 }
 
 const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props: GradientCircularProgressProps) => {
   const [startColor, endColor] = props.gradientstops;
-  const { label, labelColor, labelSize, subtitle } = props;
+  const { label, labelcolor, labelsize, subtitle } = props;
   const theme = useTheme();
 
   return (
@@ -60,9 +60,9 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          color: labelColor,
+          color: labelcolor,
           fontWeight: 700,
-          fontSize: `${labelSize}px`,
+          fontSize: `${labelsize}px`,
           textAlign: 'center',
           lineHeight: 1,
         }}>

@@ -64,8 +64,8 @@ function App() {
           id="humidity"
           value={weatherData.current.humidity}
           label={`${weatherData.current.humidity}`}
-          labelColor={theme.palette.teal.main}
-          labelSize={50}
+          labelcolor={theme.palette.teal.main}
+          labelsize={50}
           subtitle='Humidity'
           thickness={3.5}
           size={140}

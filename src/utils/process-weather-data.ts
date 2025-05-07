@@ -1,5 +1,5 @@
 import { WeatherApiResponse } from '@openmeteo/sdk/weather-api-response';
-import type { DayKey, HourlyWeather, WeatherData } from '../types/weather-types';
+import type { DayKey, WeatherData } from '../types/weather-types';
 import weatherCodes from './weather-codes';
 
 const getWeatherDesc = (code: number): string => {
@@ -44,44 +44,6 @@ const getTimeToSunrise = (sunrise: Date, currentTime: Date): string => {
 	}
 
 	return `${hours} hour${hours !== 1 ? 's' : ''} & ${minutes} minute${minutes !== 1 ? 's' : ''}`;
-}
-
-const timeToMilitary = (time: string): number => {
-  const match = time.match(/^(\d+):00 (AM|PM)$/i);
-  if (!match) return -1;
-
-	// Extract matches:
-	// fullMatch (8:00 AM), firstGrpMatch (8), secondGroupMatch (AM)
-  const [_, hourStr, period] = match;
-
-  let hour = parseInt(hourStr, 10) % 12;
-  if (period.toUpperCase() === 'PM') hour += 12;
-  return hour;
-};
-
-const hourSort = (a: HourlyWeather, b: HourlyWeather) => {
-	const aMilitary = timeToMilitary(a.time);
-	const bMilitary = timeToMilitary(b.time);
-	if (aMilitary < bMilitary) {
-		return -1;
-
-	} else if (aMilitary > bMilitary) {
-		return 1;
-	}
-
-	return 0;
-}
-
-const sortHourlyData = (weatherData: WeatherData): WeatherData=> {
-	weatherData.day1.hourlyWeather.sort(hourSort);
-	weatherData.day2.hourlyWeather.sort(hourSort);
-	weatherData.day3.hourlyWeather.sort(hourSort);
-	weatherData.day4.hourlyWeather.sort(hourSort);
-	weatherData.day5.hourlyWeather.sort(hourSort);
-	weatherData.day6.hourlyWeather.sort(hourSort);
-	weatherData.day7.hourlyWeather.sort(hourSort);
-
-	return weatherData;
 }
 
 const getInitWeatherData = (response: WeatherApiResponse) => {
@@ -147,20 +109,28 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 	};
 
 	const hourlyTimes = initWeatherData.hourly.time;
-	let dayIndex = 1;
-	let currentDateKey =  hourlyTimes[0].toISOString().split('T')[0];
+	let dayIndex = 0;
+	let currentDateKey = hourlyTimes[0].toLocaleDateString('en-US');
+	const yesterdaysDateKey = new Date(Date.now() - 86400000).toLocaleDateString('en-US');
 	for (let i = 0; i < hourlyTimes.length; i++) {
 		const baseDate = hourlyTimes[i];
-		const dateKey = baseDate.toISOString().split('T')[0];
+		const dateKey = baseDate.toLocaleDateString('en-US');
+
+		if (dateKey === yesterdaysDateKey) {
+			// NOTE: Our data starts with yesterday bc of UTC data from open-meteo
+			// So we skip yesterdays data when mapping to days
+			// This also means the isNextDay will be true for our first data of today
+			continue;
+		}
+
 		const isNextDay = dateKey !== currentDateKey;
-		const isFirstDay = i == 0;
 
 		if (isNextDay) {
       dayIndex++;
       currentDateKey = dateKey;
     }
 
-		if (isNextDay || isFirstDay) {
+		if (isNextDay) {
 			const sunset = initWeatherData.daily.sunset[dayIndex - 1];
 			const sunrise = initWeatherData.daily.sunrise[dayIndex - 1];
 
@@ -170,19 +140,17 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 				sunset: getTimeString(sunset),
 				sunrise: getTimeString(sunrise),
 				hourlyWeather: [],
-			}
+			};
 		}
 
 		weatherData[`day${dayIndex}` as DayKey]!.hourlyWeather.push({
 			time: getTimeString(baseDate),
 			temperature: Math.round(initWeatherData.hourly.temperature2m[i]),
-			weatherDesc: getWeatherDesc(initWeatherData.hourly.weatherCode[i])
+			weatherDesc: getWeatherDesc(initWeatherData.hourly.weatherCode[i]),
 		});
 	}
 
-	const finalWeatherData = sortHourlyData(weatherData as WeatherData);
-
-	return finalWeatherData;
+	return weatherData as WeatherData;
 }
 
 export default processWeatherData;
