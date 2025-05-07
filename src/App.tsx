@@ -9,9 +9,10 @@ import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
 import type { DayKey, WeatherData } from './types/weather-types';
-import CurvyTimeGraph from './components/curvy-time-graph';
+import CurvyTimeGraph from './components/graphs/curvy-time-graph';
 import Box from '@mui/material/Box';
 import RawDataModal from './components/raw-data-modal';
+import XAxis from './components/graphs/x-axis';
 
 function App() {
   const theme = useTheme();
@@ -42,6 +43,7 @@ function App() {
   const temperaturesCurrentDay = weatherData.day1.hourlyWeather.map((hourly, i) => ({
     x: i,
     y: hourly.temperature,
+    xLabel: hourly.time
   }));
 
   const humidityCurrentDay = weatherData.day1.hourlyWeather.map((hourly, i) => ({
@@ -59,7 +61,7 @@ function App() {
   const weeklyMinTemp = Math.min(...allTemps.map(day => day.tempMin));
   const weeklyMaxTemp = Math.max(...allTemps.map(day => day.tempMax));
 
-  const dailyMinTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMin }));
+  const dailyMinTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMin, xLabel: d.dayOfWeek }));
   const dailyAvgTemp = allTemps.map((d, i) => ({ x: i, y: d.tempAvg }));
   const dailyMaxTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMax }));
 
@@ -114,8 +116,9 @@ function App() {
         <CurvyTimeGraph id="day-max-temp" style={{ position: "absolute", top: '45px' }} data={dailyMaxTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
         <CurvyTimeGraph id="day-avg-temp" style={{ position: "absolute", top: '45px' }} data={dailyAvgTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
         <CurvyTimeGraph id="day-min-temp" style={{ position: "absolute", top: '45px' }} data={dailyMinTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+        <XAxis style={{ position: "absolute", top: 'calc(200px + 45px)' }} data={dailyMinTemp}></XAxis>
 
-        <p style={{ paddingTop: '200px'}}>Weekly Temp Spread</p>
+        <p style={{ paddingTop: '260px'}}>Weekly Temp Spread</p>
         <p>TODO:</p>
         <p>- refactor logic for this graph into own component</p>
         <p>- add labels to areas on graph</p>
@@ -126,8 +129,9 @@ function App() {
       <WeatherCard width='400px' height='500px'>
         <CurvyTimeGraph id="dashed" style={{ position: "absolute", top: '45px' }} data={humidityCurrentDay} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
         <CurvyTimeGraph id="line" style={{ position: "absolute", top: '45px' }} data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' type="line-area"/>
+        <XAxis style={{ position: "absolute", top: 'calc(200px + 45px)' }} data={temperaturesCurrentDay} labelFrequency={4}></XAxis>
 
-        <p style={{ paddingTop: '200px'}}>Daily Humidity and Temperature</p>
+        <p style={{ paddingTop: '260px'}}>Daily Humidity and Temperature</p>
         <p>TODO:</p>
         <p>- refactor logic for this graph into own component</p>
         <p>- add labels to lines on graph</p>

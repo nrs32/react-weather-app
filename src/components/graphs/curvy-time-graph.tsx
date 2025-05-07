@@ -1,18 +1,22 @@
 /** @jsxImportSource @emotion/react */
+import type { Point } from '../../types/graph-types';
 import { css } from '@emotion/react';
 import React from 'react';
+import normalizeDataPoints from '../../utils/normalize-data-points';
 
 // TODO: refactor some of this logic to have multi components and base logic (?)
-// This components assumes x represents time as 0, 1, 2, 3 etc.
-// where 0 = midnight, 1 = 1am, 23 = 11am
-type Point = { x: number; y: number };
 
-type GradientDirection = 'v' | 'h'; // vertical or horizontal
+export type GradientDirection = 'v' | 'h'; // vertical or horizontal
 
 interface CurvyGraphProps {
   id: string;
-  style?: React.CSSProperties;
   data: Point[];
+  width?: number;
+  height?: number;
+  yRange?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
+  xRange?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
+
+  style?: React.CSSProperties;
   gradientstops: [string, string]; // [startColor, endColor]
   gradientDirection?: GradientDirection;
 
@@ -20,10 +24,6 @@ interface CurvyGraphProps {
   // area is a area graph
   // dashed-line is a dashed line, no area
   type: 'line-area' | 'area' | 'dashed-line';
-  width?: number;
-  height?: number;
-  yRange?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
-  xRange?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
   showAreaShadow?: boolean;  // show shadow above area curve
 }
 
@@ -60,37 +60,6 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
     return d.join(' ');
   };
 
-  function normalizeDataPoints(points: Point[]): Point[] {
-    let minY, maxY: number;
-    let minX, maxX: number;
-
-    if (yRange) {
-      [minY, maxY] = yRange;
-    } else {
-      const yValues = points.map(p => p.y);
-      minY = Math.min(...yValues);
-      maxY = Math.max(...yValues);
-    }
-
-    if (xRange) {
-      [minX, maxX] = xRange;
-
-    } else {
-      const xValues = points.map(p => p.x);
-      minX = Math.min(...xValues);
-      maxX = Math.max(...xValues);
-    }
-
-    const ySpan = maxY - minY || 1;
-    const xSpan = maxX - minX || 1;
-    const yShift = 2;
-
-    return points.map(p => ({
-      x: ((p.x - minX) / xSpan) * svgWidth,
-      y: ((1 - (p.y - minY) / ySpan) * svgHeight) + yShift,
-    }));
-  }
-
   // Generate Path for Area Graph (Closed Path to Fill Below the Line)
   const generateAreaPath = (d: string, points: Point[]) => {
     // Add a bottom line to close the path and fill only below the line
@@ -104,7 +73,7 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
     return d + ' ' + bottomLine;
   };
 
-  const normalizedPoints = normalizeDataPoints(data);
+  const normalizedPoints = normalizeDataPoints(data, svgWidth, svgHeight, yRange, xRange);
   const pathData = generateSmoothPath(normalizedPoints);
   const areaPathData = generateAreaPath(pathData, normalizedPoints);
 
