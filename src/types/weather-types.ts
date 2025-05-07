@@ -8,6 +8,7 @@ export interface CurrentWeather {
   weatherDesc: string;    // Weather code desc
 	timeToSunset: string;   // Time until sunset  (x hours & y minutes)
 	timeToSunrise: string;	// Time until sunrise (x hours & y minutes)
+  cloudCover: number;     // %
 }
 
 export interface HourlyWeather {
@@ -21,6 +22,7 @@ export interface DayWeather {
 	dayOfWeek: string; // Weekday short
 	sunset: string;    // The time h:mm AM/PM
 	sunrise: string;   // The time h:mm AM/PM
+  uvIndex: number;
 	hourlyWeather: HourlyWeather[];
 }
 

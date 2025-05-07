@@ -59,8 +59,33 @@ function App() {
           size={140}
           gradientstops={[theme.palette.teal.main, theme.palette.blue.main]}
         />
+        <span style={{ paddingLeft: "30px" }}>
+          <GradientCircularProgress
+            id="precipitation"
+            value={weatherData.current.precipitation}
+            label={`${weatherData.current.precipitation}`}
+            labelcolor={theme.palette.pink.main}
+            labelsize={50}
+            subtitle='Precip.'
+            thickness={3.5}
+            size={140}
+            gradientstops={[theme.palette.purple.main, theme.palette.pink.main]}
+          />
+        </span>
+        <span style={{ paddingLeft: "30px" }}>
+          <GradientCircularProgress
+            id="cloud_cover"
+            value={weatherData.current.cloudCover}
+            label={`${weatherData.current.cloudCover}`}
+            labelcolor={theme.palette.pink.light}
+            labelsize={50}
+            subtitle='Cloud Cover'
+            thickness={3.5}
+            size={140}
+            gradientstops={[theme.palette.pink.main, "white"]}
+          />
+        </span>
       </WeatherCard>
-
 
       <WeatherCard>
         <CurvyTimeGraph id="line" data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' type="line-area"/>

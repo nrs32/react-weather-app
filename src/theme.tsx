@@ -28,6 +28,7 @@ const theme = createTheme({
     },
     pink: {
       main: '#C332DF',
+      light: '#E3A5F0'
     },
     teal: {
       main: '#2FF3E0',

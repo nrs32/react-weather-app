@@ -67,6 +67,7 @@ const getInitWeatherData = (response: WeatherApiResponse) => {
 			isDay: current.variables(3)!.value(),
 			precipitation: current.variables(4)!.value(),
 			weatherCode: current.variables(5)!.value(),
+			cloudCover: current.variables(6)!.value(),
 		},
 		hourly: {
 			time: [...Array((Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval())].map(
@@ -85,6 +86,7 @@ const getInitWeatherData = (response: WeatherApiResponse) => {
 			sunset: [...Array(sunset.valuesInt64Length())].map(
 				(_, i) => new Date((Number(sunset.valuesInt64(i)) + utcOffsetSeconds) * 1000)
 			),
+			uvIndexMax: daily.variables(2)!.valuesArray()!,
 		},
 	};
 }
@@ -105,6 +107,7 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 			weatherDesc: getWeatherDesc(currentWeather.weatherCode),
 			timeToSunset: getTimeToSunset(initWeatherData.daily.sunset[0], currentWeather.time),
 			timeToSunrise: getTimeToSunrise(initWeatherData.daily.sunrise[0], currentWeather.time),
+			cloudCover: currentWeather.cloudCover,
 		},
 	};
 
@@ -140,6 +143,7 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 				sunset: getTimeString(sunset),
 				sunrise: getTimeString(sunrise),
 				hourlyWeather: [],
+				uvIndex: initWeatherData.daily.uvIndexMax[dayIndex - 1],
 			};
 		}
 
