@@ -13,6 +13,7 @@ import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
 import type { WeatherData } from './types/weather-types';
+import CurvyTimeGraph from './components/curvy-time-graph';
 
 
 function App() {
@@ -39,6 +40,13 @@ function App() {
 
   const weatherData = data as WeatherData;
 
+  // TODO: use hook and option for user to switch which days data they're viewing
+  // Then recalc this based on selected day and display that data
+  const temperaturesCurrentDay = weatherData.day1.hourlyWeather.map((hourly, i) => ({
+    x: i,
+    y: hourly.temperature,
+  }));
+
   return (
     <>
      <h1 className='heading'> Weather Dashboard </h1>
@@ -63,6 +71,11 @@ function App() {
           size={140}
           gradientstops={[theme.palette.teal.main, theme.palette.blue.main]}
         />
+      </WeatherCard>
+
+
+      <WeatherCard>
+        <CurvyTimeGraph data={temperaturesCurrentDay} />
       </WeatherCard>
 
       <WeatherCard>
