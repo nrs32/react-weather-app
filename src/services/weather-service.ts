@@ -12,7 +12,7 @@ export async function getWeather(lat: number, long: number) {
     "wind_speed_unit": "mph",
     "daily": ["sunrise", "sunset", "uv_index_max"],
     "timezone": "America/New_York",
-    "hourly": ["temperature_2m", "weather_code"],
+    "hourly": ["temperature_2m", "weather_code", "relative_humidity_2m", "apparent_temperature"],
     "current": ["temperature_2m", "relative_humidity_2m", "apparent_temperature", "is_day", "precipitation", "weather_code", "cloud_cover"]
   };
 

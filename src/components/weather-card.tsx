@@ -1,13 +1,20 @@
 import { Card, type CardProps } from '@mui/material';
 
-const WeatherCard: React.FC<CardProps> = ({ children, ...props }) => {
+interface WeatherCardProps extends CardProps {
+  height?: string;
+  width?: string;
+}
+
+const WeatherCard: React.FC<WeatherCardProps> = ({ children, ...props }) => {
   return (
     <Card
       {...props}
       sx={(theme) => ({
+        position: 'relative',
         color: theme.palette.text.primary,
         margin: '20px',
-        width: 'fit-content',
+        width: props.width || 'fit-content',
+        height: props.height,
         padding: '45px',
         background: `linear-gradient(to bottom right, ${theme.palette.cardBg.main}, ${theme.palette.cardBg.dark})`,
       })}

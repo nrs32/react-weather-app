@@ -15,6 +15,8 @@ export interface HourlyWeather {
   time: string; 			 // The current time h:mm AM/PM
   temperature: number; // Temperature at 2 meters above ground (Fahrenheit)
   weatherDesc: string; // Weather code desc
+  humidity: number; 	 // Relative humidity at 2 meters above ground (%)
+  apparentTemperature: number; // Apparent temperature (Fahrenheit)
 }
 
 export interface DayWeather {

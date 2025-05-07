@@ -12,9 +12,11 @@
 }
 
 .tech-icons {
-  position: absolute;
+  position: sticky;
   bottom: 7px;
-  right: 8px;
+  width: fit-content;
+  left: 100vw;
+  background: inherit;
 
   a {
     padding-left: 11px;

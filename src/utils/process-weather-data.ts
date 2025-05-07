@@ -75,6 +75,8 @@ const getInitWeatherData = (response: WeatherApiResponse) => {
 			),
 			temperature2m: hourly.variables(0)!.valuesArray()!,
 			weatherCode: hourly.variables(1)!.valuesArray()!,
+			relativeHumidity2m: hourly.variables(2)!.valuesArray()!,
+			apparentTemperature: hourly.variables(3)!.valuesArray()!,
 		},
 		daily: {
 			time: [...Array((Number(daily.timeEnd()) - Number(daily.time())) / daily.interval())].map(
@@ -150,6 +152,8 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 		weatherData[`day${dayIndex}` as DayKey]!.hourlyWeather.push({
 			time: getTimeString(baseDate),
 			temperature: Math.round(initWeatherData.hourly.temperature2m[i]),
+			humidity: initWeatherData.hourly.relativeHumidity2m[i],
+			apparentTemperature: Math.round(initWeatherData.hourly.apparentTemperature[i]),
 			weatherDesc: getWeatherDesc(initWeatherData.hourly.weatherCode[i]),
 		});
 	}

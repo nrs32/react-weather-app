@@ -11,6 +11,7 @@ type GradientDirection = 'v' | 'h'; // vertical or horizontal
 
 interface CurvyGraphProps {
   id: string;
+  style?: React.CSSProperties;
   data: Point[];
   gradientstops: [string, string]; // [startColor, endColor]
   gradientDirection?: GradientDirection;
@@ -21,9 +22,10 @@ interface CurvyGraphProps {
   type: 'line-area' | 'area' | 'dashed-line';
   width?: number;
   height?: number;
+  range?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
 }
 
-const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, data, gradientstops, gradientDirection = 'v', width = 400, height = 200, type }) => {
+const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width = 400, height = 200, range }) => {
   const graphId = `curvy-time-graph-${id}`;
   const [startColor, endColor] = gradientstops;
   const svgHeight = height - 20;
@@ -49,18 +51,27 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, data, gradientstops, gr
     return d.join(' ');
   };
 
-  function normalizeYDataPoints(points: Point[]): Point[] {
-    // map Y values into a consistent visual range
-    // so the minimum y maps to the bottom, and the max y maps to the top
-    const yValues = points.map(p => p.y);
-    const minY = Math.min(...yValues);
-    const maxY = Math.max(...yValues);
-    const range = maxY - minY || 1; // avoid divide-by-zero
+  function normalizeDataPoints(points: Point[]): Point[] {
+    let minY, maxY: number;
+
+    if (range) {
+      minY = range[0];
+      maxY = range[1];
+
+    } else {
+      // map Y values into a consistent visual range
+      // so the minimum y maps to the bottom, and the max y maps to the top
+      const yValues = points.map(p => p.y);
+      minY = Math.min(...yValues);
+      maxY = Math.max(...yValues);
+    }
+
+    const calculatedRange = maxY - minY || 1; // avoid divide-by-zero
     const yShift = 2; // Shifts all y points down 2 px to prevent clipping
 
     return points.map(p => ({
       x: (p.x / 24) * svgWidth, // Scale x points
-      y: (1 - (p.y - minY) / range) * svgHeight + yShift,
+      y: (1 - (p.y - minY) / calculatedRange) * svgHeight + yShift,
     }));
   }
 
@@ -77,7 +88,7 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, data, gradientstops, gr
     return d + ' ' + bottomLine;
   };
 
-  const normalizedPoints = normalizeYDataPoints(data);
+  const normalizedPoints = normalizeDataPoints(data);
   const pathData = generateSmoothPath(normalizedPoints);
   const areaPathData = generateAreaPath(pathData, normalizedPoints);
 
@@ -117,7 +128,7 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, data, gradientstops, gr
   );
 
   return (
-    <div>
+    <div style={style}>
       <svg width={width} height={height}>
         {renderGradient(false)}
 

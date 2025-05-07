@@ -43,6 +43,13 @@ function App() {
     y: hourly.temperature,
   }));
 
+  const humidityCurrentDay = weatherData.day1.hourlyWeather.map((hourly, i) => ({
+    x: i,
+    y: hourly.humidity,
+  }));
+
+  ////////////////////////////////////////////////////////////////////
+
   return (
     <>
      <h1 className='heading'> Weather Dashboard </h1>
@@ -88,15 +95,21 @@ function App() {
       </WeatherCard>
 
       <WeatherCard>
-        <CurvyTimeGraph id="line" data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' type="line-area"/>
+        <CurvyTimeGraph id="day-temp-2" data={temperaturesCurrentDay} gradientstops={[theme.palette.pink.light, theme.palette.pink.main]} type="area"/>
+        <CurvyTimeGraph id="day-temp" data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.blue.main]} type="area"/>
+        <CurvyTimeGraph id="day-humidity" data={humidityCurrentDay} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' type="area"/>
       </WeatherCard>
 
-      <WeatherCard>
-        <CurvyTimeGraph id="area" data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.blue.main]} type="area"/>
-      </WeatherCard>
+      <WeatherCard width='400px' height='500px'>
+        <CurvyTimeGraph id="dashed" style={{ position: "absolute", top: '45px' }} data={humidityCurrentDay} range={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
+        <CurvyTimeGraph id="line" style={{ position: "absolute", top: '45px' }} data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' type="line-area"/>
 
-      <WeatherCard>
-        <CurvyTimeGraph id="dashed" data={temperaturesCurrentDay} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
+        <p style={{ paddingTop: '200px'}}>Daily Humidity and Temperature</p>
+        <p>TODO:</p>
+        <p>- add labels to lines on graph</p>
+        <p>- add x and y axis labels and background lines</p>
+        <p>- add label with date at top of card, with arrows somewhere, like carosoul</p>
+        <p>- arrows can go from one day to the next to view each day's humidity and temperature graph</p>
       </WeatherCard>
 
       <WeatherCard>
