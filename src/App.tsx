@@ -13,6 +13,7 @@ import CurvyTimeGraph from './components/graphs/curvy-time-graph';
 import Box from '@mui/material/Box';
 import RawDataModal from './components/raw-data-modal';
 import XAxis from './components/graphs/x-axis';
+import YAxis from './components/graphs/y-axis';
 
 function App() {
   const theme = useTheme();
@@ -113,6 +114,7 @@ function App() {
       </WeatherCard>
 
       <WeatherCard width='400px' height='500px'>
+        <YAxis style={{ position: "absolute", top: '44px', left: '-8px' }} yRange={[weeklyMinTemp, weeklyMaxTemp]}></YAxis>
         <CurvyTimeGraph id="day-max-temp" style={{ position: "absolute", top: '45px' }} data={dailyMaxTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
         <CurvyTimeGraph id="day-avg-temp" style={{ position: "absolute", top: '45px' }} data={dailyAvgTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
         <CurvyTimeGraph id="day-min-temp" style={{ position: "absolute", top: '45px' }} data={dailyMinTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>

@@ -18,9 +18,8 @@ const XAxis: React.FC<XAxisProps> = ({
   const theme = useTheme();
 
   const svgHeight = 40;
-  const svgWidth = width;
   const widthOffset = 25;
-  const normalizedPoints = normalizeDataPoints(data, svgWidth, svgHeight, undefined, xRange);
+  const normalizedPoints = normalizeDataPoints(data, width, svgHeight, undefined, xRange);
 
   const ticks = normalizedPoints.map((point) => point.x);
 
