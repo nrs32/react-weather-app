@@ -89,6 +89,8 @@ const getInitWeatherData = (response: WeatherApiResponse) => {
 				(_, i) => new Date((Number(sunset.valuesInt64(i)) + utcOffsetSeconds) * 1000)
 			),
 			uvIndexMax: daily.variables(2)!.valuesArray()!,
+			temperature2mMax: daily.variables(3)!.valuesArray()!,
+			temperature2mMin: daily.variables(4)!.valuesArray()!,
 		},
 	};
 }
@@ -138,6 +140,9 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 		if (isNextDay) {
 			const sunset = initWeatherData.daily.sunset[dayIndex - 1];
 			const sunrise = initWeatherData.daily.sunrise[dayIndex - 1];
+			const maxTemp = initWeatherData.daily.temperature2mMax[dayIndex - 1];
+			const minTemp = initWeatherData.daily.temperature2mMin[dayIndex - 1];
+			const avgTemp = (maxTemp + minTemp) / 2;
 
 			weatherData[`day${dayIndex}` as DayKey] = {
 				date: `${baseDate.getMonth() + 1}/${baseDate.getDate()}`,
@@ -146,6 +151,9 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 				sunrise: getTimeString(sunrise),
 				hourlyWeather: [],
 				uvIndex: initWeatherData.daily.uvIndexMax[dayIndex - 1],
+				tempMax: maxTemp,
+				tempMin: minTemp,
+				tempAvg: avgTemp
 			};
 		}
 

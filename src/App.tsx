@@ -8,9 +8,10 @@ import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
-import type { WeatherData } from './types/weather-types';
+import type { DayKey, WeatherData } from './types/weather-types';
 import CurvyTimeGraph from './components/curvy-time-graph';
-
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 function App() {
   const theme = useTheme();
@@ -50,10 +51,23 @@ function App() {
 
   ////////////////////////////////////////////////////////////////////
 
+
+  ////////////////////////////////////////////////////////////////////
+  // Get weekly graph data
+  const dayKeys: DayKey[] = Array.from({ length: 7 }, (_, i) => `day${i + 1}` as DayKey);
+  const allTemps = dayKeys.map(key => weatherData[key]);
+  const weeklyMinTemp = Math.min(...allTemps.map(day => day.tempMin));
+  const weeklyMaxTemp = Math.max(...allTemps.map(day => day.tempMax));
+
+  const dailyMinTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMin }));
+  const dailyAvgTemp = allTemps.map((d, i) => ({ x: i, y: d.tempAvg }));
+  const dailyMaxTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMax }));
+
+  ////////////////////////////////////////////////////////////////////
+
   return (
     <>
      <h1 className='heading'> Weather Dashboard </h1>
-
       <WeatherCard>
         <GradientCircularProgress
           id="humidity"
@@ -92,24 +106,35 @@ function App() {
             gradientstops={[theme.palette.pink.main, "white"]}
           />
         </span>
-      </WeatherCard>
-
-      <WeatherCard>
-        <CurvyTimeGraph id="day-temp-2" data={temperaturesCurrentDay} gradientstops={[theme.palette.pink.light, theme.palette.pink.main]} type="area"/>
-        <CurvyTimeGraph id="day-temp" data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.blue.main]} type="area"/>
-        <CurvyTimeGraph id="day-humidity" data={humidityCurrentDay} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' type="area"/>
+        <p>- show current weather data:</p>
+        <p>- time, temp, (humidity, precip, cloud cover) weatherDesc, and icon for it</p>
       </WeatherCard>
 
       <WeatherCard width='400px' height='500px'>
-        <CurvyTimeGraph id="dashed" style={{ position: "absolute", top: '45px' }} data={humidityCurrentDay} range={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
+        <CurvyTimeGraph id="day-max-temp" style={{ position: "absolute", top: '45px' }} data={dailyMaxTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
+        <CurvyTimeGraph id="day-avg-temp" style={{ position: "absolute", top: '45px' }} data={dailyAvgTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+        <CurvyTimeGraph id="day-min-temp" style={{ position: "absolute", top: '45px' }} data={dailyMinTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+
+        <p style={{ paddingTop: '200px'}}>Weekly Temp Spread</p>
+        <p>TODO:</p>
+        <p>- refactor logic for this graph into own component</p>
+        <p>- add labels to areas on graph</p>
+        <p>- add x and y axis labels and background lines</p>
+        <p>- add label with title at top of card</p>
+      </WeatherCard>
+
+      <WeatherCard width='400px' height='500px'>
+        <CurvyTimeGraph id="dashed" style={{ position: "absolute", top: '45px' }} data={humidityCurrentDay} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
         <CurvyTimeGraph id="line" style={{ position: "absolute", top: '45px' }} data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' type="line-area"/>
 
         <p style={{ paddingTop: '200px'}}>Daily Humidity and Temperature</p>
         <p>TODO:</p>
+        <p>- refactor logic for this graph into own component</p>
         <p>- add labels to lines on graph</p>
         <p>- add x and y axis labels and background lines</p>
         <p>- add label with date at top of card, with arrows somewhere, like carosoul</p>
         <p>- arrows can go from one day to the next to view each day's humidity and temperature graph</p>
+        <p>- also show icon for overall weather of day</p>
       </WeatherCard>
 
       <WeatherCard>
@@ -117,7 +142,37 @@ function App() {
         <pre className='raw-data'>{JSON.stringify(weatherData, null, 2)}</pre>
       </WeatherCard>
 
-      <div className='tech-icons'>
+      <Box sx={(theme) => ({
+        position: 'sticky',
+        bottom: '7px',
+        width: 'fit-content',
+        left: '100vw',
+        background: theme.palette.bg.main,
+        padding: '10px 5px 0 10px',
+        borderRadius: '5px',
+        'a': {
+          paddingLeft: '11px',
+        }
+      })}>
+        <Button
+          variant="contained"
+          sx={(theme) => ({
+            backgroundColor: theme.palette.bg.main,
+            color: theme.palette.common.white,
+            border: `2px solid ${theme.palette.cardBg.main}`,
+            padding: '6px 16px',
+            position: 'relative',
+            bottom: '9px',
+            width: 'fit-content',
+            textTransform: 'none',
+            fontWeight: 500,
+            '&:hover': {
+              backgroundColor: theme.palette.bg.dark,
+            },
+          })}
+        >
+          Raw Data
+        </Button>
         <a href="https://open-meteo.com" target="_blank">
           <img src={openMedeoLogo} width="30px" alt="Open-meteo logo" />
         </a>
@@ -127,7 +182,7 @@ function App() {
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} alt="React logo" />
         </a>
-      </div>
+      </Box>
     </>
   )
 }

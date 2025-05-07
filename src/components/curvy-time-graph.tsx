@@ -22,10 +22,12 @@ interface CurvyGraphProps {
   type: 'line-area' | 'area' | 'dashed-line';
   width?: number;
   height?: number;
-  range?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
+  yRange?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
+  xRange?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
+  showAreaShadow?: boolean;  // show shadow above area curve
 }
 
-const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width = 400, height = 200, range }) => {
+const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width = 400, height = 200, yRange, xRange, showAreaShadow }) => {
   const graphId = `curvy-time-graph-${id}`;
   const [startColor, endColor] = gradientstops;
   const svgHeight = height - 20;
@@ -48,30 +50,44 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
       // Draws a curve toward x, y with the bend based on the controlPoints
       return `Q ${prev.x},${prev.y} ${cx},${cy}`;
     });
+
+    // The above map loop will end the curve at the midpoint between the second to last, and last points
+    // So here we add to the curve the final segment for the final x, y
+    const secondLast = points[points.length - 2];
+    const last = points[points.length - 1];
+    d.push(`Q ${secondLast.x},${secondLast.y} ${last.x},${last.y}`);
+
     return d.join(' ');
   };
 
   function normalizeDataPoints(points: Point[]): Point[] {
     let minY, maxY: number;
+    let minX, maxX: number;
 
-    if (range) {
-      minY = range[0];
-      maxY = range[1];
-
+    if (yRange) {
+      [minY, maxY] = yRange;
     } else {
-      // map Y values into a consistent visual range
-      // so the minimum y maps to the bottom, and the max y maps to the top
       const yValues = points.map(p => p.y);
       minY = Math.min(...yValues);
       maxY = Math.max(...yValues);
     }
 
-    const calculatedRange = maxY - minY || 1; // avoid divide-by-zero
-    const yShift = 2; // Shifts all y points down 2 px to prevent clipping
+    if (xRange) {
+      [minX, maxX] = xRange;
+
+    } else {
+      const xValues = points.map(p => p.x);
+      minX = Math.min(...xValues);
+      maxX = Math.max(...xValues);
+    }
+
+    const ySpan = maxY - minY || 1;
+    const xSpan = maxX - minX || 1;
+    const yShift = 2;
 
     return points.map(p => ({
-      x: (p.x / 24) * svgWidth, // Scale x points
-      y: (1 - (p.y - minY) / calculatedRange) * svgHeight + yShift,
+      x: ((p.x - minX) / xSpan) * svgWidth,
+      y: ((1 - (p.y - minY) / ySpan) * svgHeight) + yShift,
     }));
   }
 
@@ -133,9 +149,23 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
         {renderGradient(false)}
 
         {type === 'area' && (
-          <path d={areaPathData} css={css`
-            fill: url(#${graphId});
-          `} />
+          <>
+            {showAreaShadow &&
+              <defs>
+                <filter id="areaShadow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feDropShadow
+                    dx="0"
+                    dy="-2" // shadow up 2 px
+                    stdDeviation="4"  // softness
+                    flood-color="rgba(0, 0, 0, 0.15)" />
+                </filter>
+              </defs>
+            }
+            <path d={areaPathData} css={css`
+              fill: url(#${graphId});
+              filter: url(#areaShadow);
+            `} />
+          </>
         )}
 
         {type === 'dashed-line' && (

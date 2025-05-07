@@ -25,6 +25,9 @@ export interface DayWeather {
 	sunset: string;    // The time h:mm AM/PM
 	sunrise: string;   // The time h:mm AM/PM
   uvIndex: number;
+  tempMax: number;
+  tempMin: number;
+  tempAvg: number;
 	hourlyWeather: HourlyWeather[];
 }
 
