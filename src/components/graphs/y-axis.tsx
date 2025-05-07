@@ -33,6 +33,14 @@ const YAxis: React.FC<YAxisProps> = ({
 
   const heightOffset = 10;
 
+  // TODO: instead of doing this logic here, do it in App.tsx and pass in the labels array
+  // TODO: then we can do custom logic for second chart but still use normalize
+  // TODO: we'll adjust this to take two lists, labels in one list and points in another
+  // TODO: then we can, outside of here, use logic to label ticks as (humidity, temperature) but use the same lines
+
+
+  // TODO: when that stuff is done, we'll clean up everything and then make 2 components, 1 for each chart
+  // TODO: where we can share and define logic specific to those charts and clean up App.tsx a ton
   const step = (adjustedMax - min) / totalTicks;
   const labels: number[] = [];
   for (let i = min; i <= adjustedMax; i += step) {
