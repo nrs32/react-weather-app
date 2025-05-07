@@ -157,7 +157,7 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
                     dx="0"
                     dy="-2" // shadow up 2 px
                     stdDeviation="4"  // softness
-                    flood-color="rgba(0, 0, 0, 0.15)" />
+                    floodColor="rgba(0, 0, 0, 0.15)" />
                 </filter>
               </defs>
             }

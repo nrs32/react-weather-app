@@ -10,8 +10,8 @@ import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
 import type { DayKey, WeatherData } from './types/weather-types';
 import CurvyTimeGraph from './components/curvy-time-graph';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import RawDataModal from './components/raw-data-modal';
 
 function App() {
   const theme = useTheme();
@@ -137,11 +137,6 @@ function App() {
         <p>- also show icon for overall weather of day</p>
       </WeatherCard>
 
-      <WeatherCard>
-        Raw Data:
-        <pre className='raw-data'>{JSON.stringify(weatherData, null, 2)}</pre>
-      </WeatherCard>
-
       <Box sx={(theme) => ({
         position: 'sticky',
         bottom: '7px',
@@ -154,25 +149,7 @@ function App() {
           paddingLeft: '11px',
         }
       })}>
-        <Button
-          variant="contained"
-          sx={(theme) => ({
-            backgroundColor: theme.palette.bg.main,
-            color: theme.palette.common.white,
-            border: `2px solid ${theme.palette.cardBg.main}`,
-            padding: '6px 16px',
-            position: 'relative',
-            bottom: '9px',
-            width: 'fit-content',
-            textTransform: 'none',
-            fontWeight: 500,
-            '&:hover': {
-              backgroundColor: theme.palette.bg.dark,
-            },
-          })}
-        >
-          Raw Data
-        </Button>
+        <RawDataModal weatherData={weatherData}></RawDataModal>
         <a href="https://open-meteo.com" target="_blank">
           <img src={openMedeoLogo} width="30px" alt="Open-meteo logo" />
         </a>
