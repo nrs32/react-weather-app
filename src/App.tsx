@@ -3,11 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import Button from '@mui/material/Button'
 
 import reactLogo from './assets/react.svg'
+import openMedeoLogo from './assets/open-medeo.png'
 import viteLogo from '/vite.svg'
-import SxStyledButton from './components/button-style-examples/sx-button'
-import MUIStyledButton from './components/button-style-examples/mui-styled-button'
-import EmotionStyledButton from './components/button-style-examples/emotion-styled-button'
-import EmotionButton from './components/button-style-examples/emotion-button'
 import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
@@ -84,6 +81,9 @@ function App() {
       </WeatherCard>
 
       <div className='tech-icons'>
+        <a href="https://open-meteo.com" target="_blank">
+          <img src={openMedeoLogo} width="30px" alt="Open-meteo logo" />
+        </a>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} alt="Vite logo" />
         </a>
