@@ -63,7 +63,7 @@ function App() {
 
 
       <WeatherCard>
-        <CurvyTimeGraph id="line" data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
+        <CurvyTimeGraph id="line" data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' type="line-area"/>
       </WeatherCard>
 
       <WeatherCard>
@@ -71,7 +71,7 @@ function App() {
       </WeatherCard>
 
       <WeatherCard>
-        <CurvyTimeGraph id="dashed" data={temperaturesCurrentDay} gradientstops={[theme.palette.pink.main, "white"]} type="dashed-line"/>
+        <CurvyTimeGraph id="dashed" data={temperaturesCurrentDay} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
       </WeatherCard>
 
       <WeatherCard>

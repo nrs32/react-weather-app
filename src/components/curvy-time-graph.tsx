@@ -7,20 +7,23 @@ import React from 'react';
 // where 0 = midnight, 1 = 1am, 23 = 11am
 type Point = { x: number; y: number };
 
+type GradientDirection = 'v' | 'h'; // vertical or horizontal
+
 interface CurvyGraphProps {
   id: string;
   data: Point[];
   gradientstops: [string, string]; // [startColor, endColor]
-  width?: number;
-  height?: number;
+  gradientDirection?: GradientDirection;
 
   // line-area is a solid line with a transparent area
   // area is a area graph
   // dashed-line is a dashed line, no area
-  type?: 'line-area' | 'area' | 'dashed-line';
+  type: 'line-area' | 'area' | 'dashed-line';
+  width?: number;
+  height?: number;
 }
 
-const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, data, gradientstops, width = 400, height = 200, type }) => {
+const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, data, gradientstops, gradientDirection = 'v', width = 400, height = 200, type }) => {
   const graphId = `curvy-time-graph-${id}`;
   const [startColor, endColor] = gradientstops;
   const svgHeight = height - 20;
@@ -100,7 +103,13 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, data, gradientstops, wi
   // SVG Gradient Definition
   const renderGradient = (isTransparent: boolean) => (
     <defs>
-      <linearGradient id={`${graphId}${isTransparent ? "_transparent" : ""}`} x1="0%" y1="0%" x2="0%" y2="100%">
+      <linearGradient
+        id={`${graphId}${isTransparent ? "_transparent" : ""}`}
+        x1="0%"
+        y1="0%"
+        x2={gradientDirection === 'h' ? '100%' : '0%'}
+        y2={gradientDirection === 'h' ? '0%' : '100%'}
+      >
         <stop offset="0%" stopColor={startColor} stopOpacity={isTransparent ? "0.5" : "1"}/>
         <stop offset="100%" stopColor={endColor} stopOpacity={isTransparent ? "0" : "1"}/>
       </linearGradient>
