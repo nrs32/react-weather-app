@@ -21,7 +21,7 @@ const WeeklyTempSpreadGraph: React.FC<{weatherData: WeatherData}> = ({ weatherDa
   const dailyAvgTemps: Point[] = allTemps.map((d, i) => ({ x: i, y: d.tempAvg }));
   const dailyMaxTemps: Point[] = allTemps.map((d, i) => ({ x: i, y: d.tempMax }));
 
-  const dailyYPoints: LabeledYPoint[] = determineYRangePoints([weeklyMin, weeklyMax], 25, (y) => {
+  const dailyYPoints: LabeledYPoint[] = determineYRangePoints([weeklyMin, weeklyMax], 25, 5, (y) => {
     return `${Math.round(y)}°F`
   });
 

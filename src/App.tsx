@@ -8,14 +8,11 @@ import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
-import type { DayKey, WeatherData } from './types/weather-types';
-import CurvyTimeGraph from './components/graphs-parts/curvy-time-graph';
+import type { WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
 import RawDataModal from './components/raw-data-modal';
-import XAxis from './components/graphs-parts/x-axis';
-import YAxis from './components/graphs-parts/y-axis';
-import determineYRangePoints from './utils/determine-y-range-points';
 import WeeklyTempSpreadGraph from './components/weekly-temp-spread-graph';
+import TempVHumidityGraph from './components/temp-v-humidity-graph';
 
 function App() {
   const theme = useTheme();
@@ -40,45 +37,6 @@ function App() {
   }
 
   const weatherData = data as WeatherData;
-
-  ////////////////////////////////////////////////////////////////////
-  // Get Temp / Humidity Data
-  // TODO: use hook and option for user to switch which days data they're viewing
-  // Then recalc this based on selected day and display that data
-  const temperaturesCurrentDay = weatherData.day1.hourlyWeather.map((hourly, i) => ({
-    x: i,
-    y: hourly.temperature,
-    xLabel: hourly.time
-  }));
-
-  const humidityCurrentDay = weatherData.day1.hourlyWeather.map((hourly, i) => ({
-    x: i,
-    y: hourly.humidity,
-  }));
-
-  const currentDayTemps = temperaturesCurrentDay.map(temp => temp.y);
-  const maxTemp = Math.max(...currentDayTemps);
-  const minTemp = Math.min(...currentDayTemps);
-
- // NOTE: Even thoygh the y values are different for these 2 calc
- // They will be normalized to the same svg y coordinate
- // So we can combine the lables and should line up correctly for each data set
-  const currentTempYPoints = determineYRangePoints([minTemp, maxTemp], 25, (y) => {
-    return `${Math.round(y)}°F`
-  });
-
-  const adjustedMaxHumidity = 95; // Fn will add 5 to account for chart height
-  const currentHumidityYPoints = determineYRangePoints([0, adjustedMaxHumidity], 25, (y) => {
-    return `${Math.round(y)}%`
-  });
-
-  console.log(currentTempYPoints, currentHumidityYPoints)
-
-  const combinedCurrentYPoints = currentTempYPoints.map((tempY, i) => ({
-    ...tempY,
-    yLabel: `${tempY.yLabel} • ${currentHumidityYPoints[i].yLabel}`
-  }));
-  ////////////////////////////////////////////////////////////////////
 
   return (
     <>
@@ -137,21 +95,11 @@ function App() {
       </WeatherCard>
 
       <WeatherCard width='500px' height='500px'>
-      <YAxis
-          style={{ position: "absolute", top: '44px', left: '25px' }}
-          labeledYPoints={combinedCurrentYPoints}
-          graphWidth={400}
-          height={200}
-          textSpace={65}
-        >
-        </YAxis>
-        <CurvyTimeGraph id="dashed" width={400} height={200} style={{ position: "absolute", top: '45px', left: '109px' }} data={humidityCurrentDay} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
-        <CurvyTimeGraph id="line" width={400} height={200} style={{ position: "absolute", top: '45px', left: '109px'  }} data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
-        <XAxis width={400} style={{ position: "absolute", top: 'calc(200px + 45px)', left: '109px'  }} data={temperaturesCurrentDay} labelFrequency={4}></XAxis>
+        {/* TODO: don't hardcode day here, determine based on hook or something */}
+        <TempVHumidityGraph hourlyWeather={weatherData.day1.hourlyWeather}></TempVHumidityGraph>
 
         <p style={{ paddingTop: '260px'}}>Daily Humidity and Temperature</p>
         <p>TODO:</p>
-        <p>- refactor logic for this graph into own component</p>
         <p>- add labels to lines on graph</p>
         <p>- add x and y axis labels and background lines</p>
         <p>- add label with date at top of card, with arrows somewhere, like carosoul</p>
