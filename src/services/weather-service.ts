@@ -1,7 +1,9 @@
 import { fetchWeatherApi } from "openmeteo";
 import processWeatherData from "../utils/process-weather-data";
+import { fakeData } from "../assets/fake-data";
 
 export async function getWeather(lat: number, long: number) {
+  const useRealData: boolean = false;
   const url = "https://api.open-meteo.com/v1/forecast";
 
   const params = {
@@ -16,9 +18,16 @@ export async function getWeather(lat: number, long: number) {
     "current": ["temperature_2m", "relative_humidity_2m", "apparent_temperature", "is_day", "precipitation", "weather_code", "cloud_cover"]
   };
 
-  return await fetchWeatherApi(url, params)
-    .then(processWeatherData)
-    .catch((error) => {
-      console.error(error);
+  if (useRealData) {
+    return await fetchWeatherApi(url, params)
+      .then(processWeatherData)
+      .catch((error) => {
+        console.error(error);
+      });
+
+  } else {
+    return new Promise(resolve => {
+      resolve(fakeData);
     });
+  }
 }

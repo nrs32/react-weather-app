@@ -10,3 +10,5 @@ export interface GraphProps {
   chartTop: number,
   chartLeft: number,
 }
+
+export const SPACE_BELOW_DATA = 20; // Used to help charts look pretty by giving them some room below their lowest point

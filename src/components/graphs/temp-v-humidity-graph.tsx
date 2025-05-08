@@ -7,6 +7,8 @@ import determineYRangePoints from '../../utils/determine-y-range-points';
 import YAxis from '../graphs-parts/y-axis';
 import CurvyTimeGraph from '../graphs-parts/curvy-time-graph';
 import XAxis from '../graphs-parts/x-axis';
+import getTemperatureLabel from '../../utils/get-y-label';
+import getHumidityLabel from '../../utils/get-humidity-label';
 
 interface TempVHumidityGraphProps extends GraphProps {
   hourlyWeather: HourlyWeather[],
@@ -30,12 +32,16 @@ const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ hourlyWeather, 
 
   return (
     <>
-      <YAxis style={{ position: "absolute", top: `${chartTop - 1}px`, left: `${chartLeft - 89}px`}} labeledYPoints={combinedYPoints} graphWidth={graphWidth} height={graphHeight} textSpace={65}></YAxis>
+      <YAxis style={{ position: "absolute", top: `${chartTop - 1}px`, left: `${chartLeft - 89}px`}} labeledYPoints={combinedYPoints} getLabel={(y) => getTempAndHumidityLabel(getTemperatureLabel(y), 'N/A')} graphWidth={graphWidth} height={graphHeight} textSpace={65}></YAxis>
       <CurvyTimeGraph id="dashed" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={hourlyHumidity} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
       <CurvyTimeGraph id="line" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px`  }} data={hourlyTemps} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
       <XAxis width={graphWidth} style={{ position: "absolute", top: `calc(${graphHeight}px + ${chartTop + 7}px)`, left: `${chartLeft}px` }} data={hourlyTemps} labelFrequency={4}></XAxis>
     </>
   )
+}
+
+const getTempAndHumidityLabel = (tempLabel: string, humidityLabel: string): string => {
+  return `${tempLabel} • ${humidityLabel}`
 }
 
 const getCombinedYRange = (temperatures: number[]): LabeledYPoint[] => {
@@ -44,23 +50,16 @@ const getCombinedYRange = (temperatures: number[]): LabeledYPoint[] => {
   // So we can combine the lables for each data set
   // And they should line up correctly on the graph
 
-  const totalTicks = 25;
+  const totalDataPoints = 23;
   const maxTemp: number = Math.max(...temperatures);
   const minTemp: number = Math.min(...temperatures);
-  const tempLabels: LabeledYPoint[] = determineYRangePoints([minTemp, maxTemp], totalTicks, (y) => {
-    return `${Math.round(y)}°F`
-  });
+  const tempLabels: LabeledYPoint[] = determineYRangePoints([minTemp, maxTemp], totalDataPoints, getTemperatureLabel);
 
-  const humidityLabels: LabeledYPoint[] = determineYRangePoints([0, 100], totalTicks, (y) => {
-    const humidity = Math.round(y);
-    return `${humidity > 100 ? 'N/A' : `${humidity}%`}`
-  });
-
-  console.log(tempLabels, humidityLabels)
+  const humidityLabels: LabeledYPoint[] = determineYRangePoints([0, 100], totalDataPoints, getHumidityLabel);
 
   return tempLabels.map((tempY, i) => ({
     ...tempY,
-    yLabel: `${tempY.yLabel} • ${humidityLabels[i].yLabel}`
+    yLabel: getTempAndHumidityLabel(tempY.yLabel, humidityLabels[i].yLabel),
   }));
 }
 

@@ -1,10 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import type { Point } from '../../types/graph-types';
+import { SPACE_BELOW_DATA, type Point } from '../../types/graph-types';
 import { css } from '@emotion/react';
 import React from 'react';
 import normalizeDataPoints from '../../utils/normalize-data-points';
-
-// TODO: refactor some of this logic to have multi components and base logic (?)
 
 export type GradientDirection = 'v' | 'h'; // vertical or horizontal
 
@@ -30,52 +28,12 @@ export interface CurvyGraphProps {
 const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width, height, yRange, xRange, showAreaShadow }) => {
   const graphId = `curvy-time-graph-${id}`;
   const [startColor, endColor] = gradientstops;
-  const svgHeight = height - 20;
+  const svgHeight = height - SPACE_BELOW_DATA;
   const svgWidth = width;
-
-  const generateSmoothPath = (points: Point[]) => {
-    const d = points.map((point, i, arr) => {
-
-      // Move to the starting x, y, without drawing a line
-      if (i === 0) return `M ${point.x},${point.y}`;
-
-      // Get the previous position
-      const prev = arr[i - 1];
-
-      // control points: midpoints between current and previous x,y positions
-      const cx = (prev.x + point.x) / 2;
-      const cy = (prev.y + point.y) / 2;
-
-      // Quadratic Bézier curve
-      // Draws a curve toward x, y with the bend based on the controlPoints
-      return `Q ${prev.x},${prev.y} ${cx},${cy}`;
-    });
-
-    // The above map loop will end the curve at the midpoint between the second to last, and last points
-    // So here we add to the curve the final segment for the final x, y
-    const secondLast = points[points.length - 2];
-    const last = points[points.length - 1];
-    d.push(`Q ${secondLast.x},${secondLast.y} ${last.x},${last.y}`);
-
-    return d.join(' ');
-  };
-
-  // Generate Path for Area Graph (Closed Path to Fill Below the Line)
-  const generateAreaPath = (d: string, points: Point[]) => {
-    // Add a bottom line to close the path and fill only below the line
-    const lastPoint = points[points.length - 1];
-    const lowestY = svgHeight + 20;
-
-    // The first L draws straight line from last point to bottom of graph
-    // The second L draws a horizontal line back to starting x
-    // Z close the path
-    const bottomLine = `L ${lastPoint.x},${lowestY} L ${points[0].x},${lowestY} Z`;
-    return d + ' ' + bottomLine;
-  };
 
   const normalizedPoints = normalizeDataPoints(data, svgWidth, svgHeight, yRange, xRange);
   const pathData = generateSmoothPath(normalizedPoints);
-  const areaPathData = generateAreaPath(pathData, normalizedPoints);
+  const areaPathData = generateAreaPath(pathData, normalizedPoints, svgHeight);
 
   // Styles for Line and Area Graphs
   const lineStyle = css`
@@ -153,6 +111,46 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
       </svg>
     </div>
   );
+};
+
+const generateSmoothPath = (points: Point[]) => {
+  const d = points.map((point, i, arr) => {
+
+    // Move to the starting x, y, without drawing a line
+    if (i === 0) return `M ${point.x},${point.y}`;
+
+    // Get the previous position
+    const prev = arr[i - 1];
+
+    // control points: midpoints between current and previous x,y positions
+    const cx = (prev.x + point.x) / 2;
+    const cy = (prev.y + point.y) / 2;
+
+    // Quadratic Bézier curve
+    // Draws a curve toward x, y with the bend based on the controlPoints
+    return `Q ${prev.x},${prev.y} ${cx},${cy}`;
+  });
+
+  // The above map loop will end the curve at the midpoint between the second to last, and last points
+  // So here we add to the curve the final segment for the final x, y
+  const secondLast = points[points.length - 2];
+  const last = points[points.length - 1];
+  d.push(`Q ${secondLast.x},${secondLast.y} ${last.x},${last.y}`);
+
+  return d.join(' ');
+};
+
+// Generate Path for Area Graph (Closed Path to Fill Below the Line)
+const generateAreaPath = (d: string, points: Point[], svgHeight: number) => {
+  // Add a bottom line to close the path and fill only below the line
+  const lastPoint = points[points.length - 1];
+  const lowestY = svgHeight + 20;
+
+  // The first L draws straight line from last point to bottom of graph
+  // The second L draws a horizontal line back to starting x
+  // Z close the path
+  const bottomLine = `L ${lastPoint.x},${lowestY} L ${points[0].x},${lowestY} Z`;
+  return d + ' ' + bottomLine;
 };
 
 export default CurvyTimeGraph;

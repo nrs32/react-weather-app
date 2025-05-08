@@ -7,6 +7,7 @@ import CurvyTimeGraph from '../graphs-parts/curvy-time-graph';
 import XAxis from '../graphs-parts/x-axis';
 import type { GraphProps, LabeledXPoint, LabeledYPoint, Point } from '../../types/graph-types';
 import type React from 'react';
+import getTemperatureLabel from '../../utils/get-y-label';
 
 interface WeeklyTempSpreadGraphProps extends GraphProps {
   weatherData: WeatherData,
@@ -25,14 +26,11 @@ const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ weatherDa
   const dailyAvgTemps: Point[] = allTemps.map((d, i) => ({ x: i, y: d.tempAvg }));
   const dailyMaxTemps: Point[] = allTemps.map((d, i) => ({ x: i, y: d.tempMax }));
 
-  const extraY = 0;
-  const dailyYPoints: LabeledYPoint[] = determineYRangePoints([weeklyMin, weeklyMax], 25, (y) => {
-    return `${Math.round(y)}°F`
-  });
+  const dailyYPoints: LabeledYPoint[] = determineYRangePoints([weeklyMin, weeklyMax], 23, getTemperatureLabel);
 
   return (
     <>
-      <YAxis style={{ position: "absolute", top: `${chartTop - 2}px`, left: `${chartLeft - 54}px` }} labeledYPoints={dailyYPoints} graphWidth={graphWidth} height={graphHeight + extraY} textSpace={30}></YAxis>
+      <YAxis style={{ position: "absolute", top: `${chartTop + 1}px`, left: `${chartLeft - 54}px` }} labeledYPoints={dailyYPoints} getLabel={getTemperatureLabel} graphWidth={graphWidth} height={graphHeight} textSpace={30}></YAxis>
       <CurvyTimeGraph id="day-max-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
       <CurvyTimeGraph id="day-avg-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
       <CurvyTimeGraph id="day-min-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={dailyMinTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>

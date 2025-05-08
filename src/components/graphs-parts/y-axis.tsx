@@ -1,7 +1,7 @@
 import React from 'react';
 import normalizeDataPoints from '../../utils/normalize-data-points';
 import { useTheme } from '@mui/material';
-import type { LabeledYPoint } from '../../types/graph-types';
+import { SPACE_BELOW_DATA, type LabeledYPoint, type Point } from '../../types/graph-types';
 
 interface YAxisProps {
   height: number;
@@ -10,7 +10,13 @@ interface YAxisProps {
   style?: React.CSSProperties;
   textSpace: number;         // How much space in px the text needs to be able to show
   labeledYPoints: LabeledYPoint[],
+  getLabel: (y: number) => string,
 }
+
+interface TicksAndLabels {
+  ticks: number[],
+  labels: string[],
+};
 
 const YAxis: React.FC<YAxisProps> = ({
   height,
@@ -19,6 +25,7 @@ const YAxis: React.FC<YAxisProps> = ({
   style,
   textSpace,
   labeledYPoints,
+  getLabel,
 }) => {
   const theme = useTheme();
 
@@ -30,18 +37,19 @@ const YAxis: React.FC<YAxisProps> = ({
 
   const heightOffset = 10;
 
-  // TODO: when that stuff is done, we'll clean up everything and then make 2 components, 1 for each chart
-  // TODO: where we can share and define logic specific to those charts and clean up App.tsx a ton
+  const normalizedPoints = normalizeDataPoints(labeledYPoints, svgWidth, height - SPACE_BELOW_DATA, undefined, undefined);
 
-  const normalizedPoints = normalizeDataPoints(labeledYPoints, svgWidth, height, undefined, undefined);
-  const ticks = normalizedPoints.map((point) => point.y);
+  const { labels, ticks } = getLabelsForSpaceBelowData(labeledYPoints, normalizedPoints, height, getLabel);
+
+  const finalTicks = ticks.concat(normalizedPoints.map((point) => point.y));
+  const finalLabels = labels.concat(labeledYPoints.map(label => label.yLabel));
 
   return (
     <div style={{ ...style, marginTop: `-${heightOffset}px` }}>
       <svg width={svgWidth} height={height + (heightOffset * 2)}>
         <g>
           {/* Tick Marks */}
-          {ticks.map((tickY, index) => (
+          {finalTicks.map((tickY, index) => (
             <line
               key={index}
               x1={textSpace + textRightPadding}
@@ -54,7 +62,7 @@ const YAxis: React.FC<YAxisProps> = ({
           ))}
 
           {/* Guidelines */}
-          {ticks.map((tickY, index) => (
+          {finalTicks.map((tickY, index) => (
             <line
               key={index}
               x1={endOfTickMark}
@@ -67,7 +75,7 @@ const YAxis: React.FC<YAxisProps> = ({
           ))}
 
           {/* Labels */}
-          {ticks.map((tickY, index) =>
+          {finalTicks.map((tickY, index) =>
             index % labelFrequency === 0 ? (
               <text
                 key={index}
@@ -77,7 +85,7 @@ const YAxis: React.FC<YAxisProps> = ({
                 fontSize="12"
                 fill={theme.palette.text.primary}
               >
-                {labeledYPoints[index].yLabel}
+                {finalLabels[index]}
               </text>
             ) : null
           )}
@@ -86,5 +94,43 @@ const YAxis: React.FC<YAxisProps> = ({
     </div>
   );
 };
+
+/**
+ * This method gets tick mark y coordinates, and labels to display on the section of the chart that is below the lowest actual data
+ * This is because of our use of SPACE_BELOW_DATA, which lets the charts look more beautiful
+ *
+ * @returns An object with a list of label string and a list of tick coordinates
+ */
+const getLabelsForSpaceBelowData = (
+  labeledYPoints: LabeledYPoint[],
+  normalizedPoints: Point[],
+  height: number,
+  getLabel: (y: number) => string,
+): TicksAndLabels => {
+  const result: TicksAndLabels = {
+    labels: [],
+    ticks: [],
+  };
+
+  const lowestYValue: number = labeledYPoints[0].y;
+  const stepBetweenOriginalYValues = labeledYPoints[1].y - lowestYValue;
+
+  const lowestPossibleYCoordinate = height;
+  const lowestExistingGraphYCoordinate = normalizedPoints[0].y;
+  const stepBetweenGraphYCoordinates = lowestExistingGraphYCoordinate - normalizedPoints[1].y;
+  const nextLowestGraphYCoordinate = lowestExistingGraphYCoordinate + stepBetweenGraphYCoordinates;
+
+  let labelYValue = lowestYValue;
+
+  for (let graphYCoor = nextLowestGraphYCoordinate; graphYCoor <= lowestPossibleYCoordinate; graphYCoor += stepBetweenGraphYCoordinates) {
+
+    labelYValue -= stepBetweenOriginalYValues;
+    result.labels.unshift(getLabel(labelYValue));
+
+    result.ticks.unshift(graphYCoor);
+  }
+
+  return result;
+}
 
 export default YAxis;

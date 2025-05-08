@@ -86,7 +86,7 @@ function App() {
         <p>- time, temp, (humidity, precip, cloud cover) weatherDesc, and icon for it</p>
       </WeatherCard>
 
-      <WeatherCard width='500px' height='500px'>
+      <WeatherCard width='700px' height='500px'>
         <WeeklyTempSpreadGraph weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={45} chartLeft={80}></WeeklyTempSpreadGraph>
 
         <p style={{ paddingTop: '260px'}}>Weekly Temp Spread</p>
@@ -97,7 +97,7 @@ function App() {
         <p>- add label with title at top of card</p>
       </WeatherCard>
 
-      <WeatherCard width='500px' height='500px'>
+      <WeatherCard width='700px' height='500px'>
         {/* TODO: don't hardcode day here, determine based on hook or something */}
         <TempVHumidityGraph hourlyWeather={weatherData.day1.hourlyWeather} graphWidth={400} graphHeight={200} chartTop={45} chartLeft={109}></TempVHumidityGraph>
 
