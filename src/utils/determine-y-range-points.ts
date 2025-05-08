@@ -12,16 +12,13 @@ import type { LabeledYPoint } from "../types/graph-types";
 const determineYRangePoints = (
   yRange: [number, number],
   totalTicks: number,
-  yAdjustment: number, // So ticks go higher than the highest point on the chart curve
   getLabel: (y: number) => string,
 ): LabeledYPoint[] => {
   const [min, max] = yRange;
 
-  const adjustedMax = (max + yAdjustment);
-
-  const step = (adjustedMax - min) / totalTicks;
+  const step = (max - min) / totalTicks;
   const labeledYPoints: LabeledYPoint[] = [];
-  for (let i = min; i <= adjustedMax; i += step) {
+  for (let i = min; labeledYPoints.length < (totalTicks + 1); i += step) {
     labeledYPoints.push({
       x: 0,
       y: i,

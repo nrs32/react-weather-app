@@ -11,14 +11,17 @@ import GradientCircularProgress from './components/gradient-circular-progress'
 import type { WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
 import RawDataModal from './components/raw-data-modal';
-import WeeklyTempSpreadGraph from './components/weekly-temp-spread-graph';
-import TempVHumidityGraph from './components/temp-v-humidity-graph';
+import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
+import TempVHumidityGraph from './components/graphs/temp-v-humidity-graph';
 
 function App() {
   const theme = useTheme();
 
   // TODO: considar ipinfo.io to get user lat and long
   // Then do the thing from the video where we wait for that query before doing the one that gets the weather
+
+  // TODO: auto-refresh data at some interval
+  // TODO: maybe allow user to manually refresh (?)
   const lat: number = 42.96;
   const long: number = -85.67;
   const { isPending, isError, data, error } = useQuery({
@@ -84,7 +87,7 @@ function App() {
       </WeatherCard>
 
       <WeatherCard width='500px' height='500px'>
-        <WeeklyTempSpreadGraph weatherData={weatherData}></WeeklyTempSpreadGraph>
+        <WeeklyTempSpreadGraph weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={45} chartLeft={80}></WeeklyTempSpreadGraph>
 
         <p style={{ paddingTop: '260px'}}>Weekly Temp Spread</p>
         <p>TODO:</p>
@@ -96,7 +99,7 @@ function App() {
 
       <WeatherCard width='500px' height='500px'>
         {/* TODO: don't hardcode day here, determine based on hook or something */}
-        <TempVHumidityGraph hourlyWeather={weatherData.day1.hourlyWeather}></TempVHumidityGraph>
+        <TempVHumidityGraph hourlyWeather={weatherData.day1.hourlyWeather} graphWidth={400} graphHeight={200} chartTop={45} chartLeft={109}></TempVHumidityGraph>
 
         <p style={{ paddingTop: '260px'}}>Daily Humidity and Temperature</p>
         <p>TODO:</p>

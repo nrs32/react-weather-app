@@ -3,3 +3,10 @@ export type Point = { x: number; y: number };
 export type LabeledYPoint = { yLabel: string } & Point;
 
 export type LabeledXPoint = { xLabel: string, xSubLabel?: string } & Point;
+
+export interface GraphProps {
+  graphWidth: number,
+  graphHeight: number,
+  chartTop: number,
+  chartLeft: number,
+}
