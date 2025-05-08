@@ -51,7 +51,7 @@ const YAxis: React.FC<YAxisProps> = ({
           {/* Tick Marks */}
           {finalTicks.map((tickY, index) => (
             <line
-              key={index}
+              key={`${index}_tick`}
               x1={textSpace + textRightPadding}
               x2={endOfTickMark}
               y1={tickY + heightOffset}
@@ -64,7 +64,7 @@ const YAxis: React.FC<YAxisProps> = ({
           {/* Guidelines */}
           {finalTicks.map((tickY, index) => (
             <line
-              key={index}
+            key={`${index}_guideline`}
               x1={endOfTickMark}
               x2={svgWidth - 12}
               y1={tickY + heightOffset}
@@ -78,7 +78,7 @@ const YAxis: React.FC<YAxisProps> = ({
           {finalTicks.map((tickY, index) =>
             index % labelFrequency === 0 ? (
               <text
-                key={index}
+                key={`${index}_label`}
                 x={textSpace}
                 y={tickY + heightOffset + 4}
                 textAnchor="end"

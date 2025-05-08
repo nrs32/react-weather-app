@@ -86,41 +86,32 @@ function App() {
         <p>- time, temp, (humidity, precip, cloud cover) weatherDesc, and icon for it</p>
       </WeatherCard>
 
-      <WeatherCard width='700px' height='500px'>
-        <WeeklyTempSpreadGraph weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={45} chartLeft={80}></WeeklyTempSpreadGraph>
-
-        <p style={{ paddingTop: '260px'}}>Weekly Temp Spread</p>
-        <p>TODO:</p>
-        <p>- refactor logic for this graph into own component</p>
-        <p>- add labels to areas on graph</p>
-        <p>- add x and y axis labels and background lines</p>
-        <p>- add label with title at top of card</p>
+      <WeatherCard width='580px' height='345px'>
+        <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={105} chartLeft={95}></WeeklyTempSpreadGraph>
       </WeatherCard>
 
-      <WeatherCard width='700px' height='500px'>
+      <WeatherCard width='630px' height='500px'>
         {/* TODO: don't hardcode day here, determine based on hook or something */}
-        <TempVHumidityGraph hourlyWeather={weatherData.day1.hourlyWeather} graphWidth={400} graphHeight={200} chartTop={45} chartLeft={109}></TempVHumidityGraph>
+        <TempVHumidityGraph title={`Humidity and Temperature (${weatherData.day1.dayOfWeek} ${weatherData.day1.date})`} hourlyWeather={weatherData.day1.hourlyWeather} graphWidth={400} graphHeight={200} chartTop={105} chartLeft={145}></TempVHumidityGraph>
 
-        <p style={{ paddingTop: '260px'}}>Daily Humidity and Temperature</p>
-        <p>TODO:</p>
-        <p>- add labels to lines on graph</p>
-        <p>- add x and y axis labels and background lines</p>
-        <p>- add label with date at top of card, with arrows somewhere, like carosoul</p>
-        <p>- arrows can go from one day to the next to view each day's humidity and temperature graph</p>
-        <p>- also show icon for overall weather of day</p>
+        <p style={{ paddingTop: '337px'}}>TODO:</p>
+        <p>- add arrows somewhere, like carosoul</p>
+        <p>- arrows can go from one day to the next to view each day's graph</p>
+        <p>- also show icon for overall weather of day (?)</p>
       </WeatherCard>
 
-      <Box sx={(theme) => ({
-        position: 'sticky',
-        bottom: '7px',
-        width: 'fit-content',
-        left: '100vw',
-        background: theme.palette.bg.main,
-        padding: '10px 5px 0 10px',
-        borderRadius: '5px',
-        'a': {
-          paddingLeft: '11px',
-        }
+      <Box
+        sx={(theme) => ({
+          position: 'sticky',
+          bottom: '7px',
+          width: 'fit-content',
+          left: '100vw',
+          background: theme.palette.bg.main,
+          padding: '10px 5px 0 10px',
+          borderRadius: '5px',
+          'a': {
+            paddingLeft: '11px',
+          }
       })}>
         <RawDataModal weatherData={weatherData}></RawDataModal>
         <a href="https://open-meteo.com" target="_blank">

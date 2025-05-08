@@ -9,12 +9,14 @@ import type { GraphProps, LabeledXPoint, LabeledYPoint, Point } from '../../type
 import type React from 'react';
 import getTemperatureLabel from '../../utils/get-y-label';
 import RightDataLabel from '../graphs-parts/right-data-label';
+import Box from '@mui/material/Box';
 
 interface WeeklyTempSpreadGraphProps extends GraphProps {
+  title: string;
   weatherData: WeatherData,
 }
 
-const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ weatherData, graphWidth, graphHeight, chartTop, chartLeft }) => {
+const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title, weatherData, graphWidth, graphHeight, chartTop, chartLeft }) => {
   const theme = useTheme();
 
   const dayKeys: DayKey[] = Array.from({ length: 7 }, (_, i) => `day${i + 1}` as DayKey);
@@ -33,6 +35,19 @@ const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ weatherDa
 
   return (
     <>
+      <Box
+        sx={{
+          fontWeight: 700,
+          fontSize: '22px',
+          textAlign: 'center',
+          position: 'absolute',
+          top: '45px',
+          width: '410px',
+          left: '83px'
+        }}
+      >
+        {title}
+      </Box>
       <YAxis style={{ position: "absolute", top: `${chartTop + 1}px`, left: `${chartLeft - 54}px` }} labeledYPoints={dailyYPoints} getLabel={getTemperatureLabel} graphWidth={graphWidth} height={graphHeight} textSpace={30}></YAxis>
 
       <CurvyTimeGraph id="day-max-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>

@@ -30,7 +30,7 @@ const XAxis: React.FC<XAxisProps> = ({
           {/* Tick Marks */}
           {ticks.map((tickX, index) => (
             <line
-              key={index}
+              key={`${index}_tick`}
               x1={tickX + widthOffset}
               x2={tickX + widthOffset}
               y1={7}
@@ -43,9 +43,8 @@ const XAxis: React.FC<XAxisProps> = ({
           {/* Labels*/}
           {ticks.map((tickX, index) => (
             index % labelFrequency == 0 &&
-            <>
+            <React.Fragment key={`${index}_label`}>
               <text
-                key={index}
                 x={tickX + widthOffset}
                 y={svgHeight - 25}
                 textAnchor="middle"
@@ -55,7 +54,6 @@ const XAxis: React.FC<XAxisProps> = ({
                 {data[index].xLabel}
               </text>
               {data[index].xSubLabel && <text
-                key={index}
                 x={tickX + widthOffset}
                 y={svgHeight - 5}
                 textAnchor="middle"
@@ -64,7 +62,7 @@ const XAxis: React.FC<XAxisProps> = ({
               >
                 {data[index].xSubLabel}
               </text>}
-            </>
+            </React.Fragment>
           ))}
         </g>
       </svg>

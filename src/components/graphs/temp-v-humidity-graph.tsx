@@ -10,12 +10,14 @@ import XAxis from '../graphs-parts/x-axis';
 import getTemperatureLabel from '../../utils/get-y-label';
 import getHumidityLabel from '../../utils/get-humidity-label';
 import RightDataLabel from '../graphs-parts/right-data-label';
+import Box from '@mui/material/Box';
 
 interface TempVHumidityGraphProps extends GraphProps {
+  title: string,
   hourlyWeather: HourlyWeather[],
 }
 
-const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ hourlyWeather, graphWidth, graphHeight, chartTop, chartLeft }) => {
+const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ title, hourlyWeather, graphWidth, graphHeight, chartTop, chartLeft }) => {
   const theme = useTheme();
 
   const hourlyTemps: LabeledXPoint[] = hourlyWeather.map((hourly, i) => ({
@@ -35,6 +37,19 @@ const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ hourlyWeather, 
 
   return (
     <>
+      <Box
+        sx={{
+          fontWeight: 700,
+          fontSize: '22px',
+          textAlign: 'center',
+          position: 'absolute',
+          top: '45px',
+          width: '410px',
+          left: '142px'
+        }}
+      >
+        {title}
+      </Box>
       <YAxis style={{ position: "absolute", top: `${chartTop - 1}px`, left: `${chartLeft - 89}px`}} labeledYPoints={combinedYPoints} getLabel={(y) => getTempAndHumidityLabel(getTemperatureLabel(y), 'N/A')} graphWidth={graphWidth} height={graphHeight} textSpace={65}></YAxis>
 
       <CurvyTimeGraph id="dashed" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={hourlyHumidity} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
