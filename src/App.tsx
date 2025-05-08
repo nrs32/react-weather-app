@@ -87,7 +87,7 @@ function App() {
   const weeklyMinTemp = Math.min(...allTemps.map(day => day.tempMin));
   const weeklyMaxTemp = Math.max(...allTemps.map(day => day.tempMax));
 
-  const dailyMinTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMin, xLabel: d.dayOfWeek }));
+  const dailyMinTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMin, xLabel: d.dayOfWeek, xSubLabel: d.date}));
   const dailyAvgTemp = allTemps.map((d, i) => ({ x: i, y: d.tempAvg }));
   const dailyMaxTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMax }));
 

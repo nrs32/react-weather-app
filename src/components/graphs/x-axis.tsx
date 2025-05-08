@@ -17,7 +17,7 @@ const XAxis: React.FC<XAxisProps> = ({
 }) => {
   const theme = useTheme();
 
-  const svgHeight = 40;
+  const svgHeight = 60;
   const widthOffset = 25;
   const normalizedPoints = normalizeDataPoints(data, width, svgHeight, undefined, xRange);
 
@@ -34,7 +34,7 @@ const XAxis: React.FC<XAxisProps> = ({
               x1={tickX + widthOffset}
               x2={tickX + widthOffset}
               y1={7}
-              y2={svgHeight - 23}
+              y2={svgHeight - 43}
               stroke={index % labelFrequency == 0 ? theme.palette.text.primary : theme.palette.text.secondary}
               strokeWidth="1.5"
             />
@@ -43,7 +43,18 @@ const XAxis: React.FC<XAxisProps> = ({
           {/* Labels*/}
           {ticks.map((tickX, index) => (
             index % labelFrequency == 0 &&
+            <>
               <text
+                key={index}
+                x={tickX + widthOffset}
+                y={svgHeight - 25}
+                textAnchor="middle"
+                fontSize="12"
+                fill={theme.palette.text.primary}
+              >
+                {data[index].xLabel}
+              </text>
+              {data[index].xSubLabel && <text
                 key={index}
                 x={tickX + widthOffset}
                 y={svgHeight - 5}
@@ -51,9 +62,9 @@ const XAxis: React.FC<XAxisProps> = ({
                 fontSize="12"
                 fill={theme.palette.text.primary}
               >
-                {data[index].xLabel}
-              </text>
-
+                {data[index].xSubLabel}
+              </text>}
+            </>
           ))}
         </g>
       </svg>
