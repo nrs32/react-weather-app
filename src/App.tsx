@@ -45,45 +45,61 @@ function App() {
     <>
      <h1 className='heading'> Weather Dashboard </h1>
       <WeatherCard>
-        <GradientCircularProgress
-          id="humidity"
-          value={weatherData.current.humidity}
-          label={`${weatherData.current.humidity}`}
-          labelcolor={theme.palette.teal.main}
-          labelsize={50}
-          subtitle='Humidity'
-          thickness={3.5}
-          size={140}
-          gradientstops={[theme.palette.teal.main, theme.palette.blue.main]}
-        />
-        <span style={{ paddingLeft: "30px" }}>
+        <Box
+          sx={{
+            fontWeight: 700,
+            fontSize: '22px',
+            textAlign: 'center',
+            position: 'absolute',
+            top: '45px',
+          }}
+        >
+          Current Weather
+        </Box>
+        <Box
+          sx={{
+            padding: '45px 0 0 0',
+          }}
+        >
           <GradientCircularProgress
-            id="precipitation"
-            value={weatherData.current.precipitation}
-            label={`${weatherData.current.precipitation}`}
-            labelcolor={theme.palette.pink.main}
+            id="humidity"
+            value={weatherData.current.humidity}
+            label={`${weatherData.current.humidity}`}
+            labelcolor={theme.palette.teal.main}
             labelsize={50}
-            subtitle='Precip.'
+            subtitle='Humidity'
             thickness={3.5}
             size={140}
-            gradientstops={[theme.palette.purple.main, theme.palette.pink.main]}
+            gradientstops={[theme.palette.teal.main, theme.palette.blue.main]}
           />
-        </span>
-        <span style={{ paddingLeft: "30px" }}>
-          <GradientCircularProgress
-            id="cloud_cover"
-            value={weatherData.current.cloudCover}
-            label={`${weatherData.current.cloudCover}`}
-            labelcolor={theme.palette.pink.light}
-            labelsize={50}
-            subtitle='Cloud Cover'
-            thickness={3.5}
-            size={140}
-            gradientstops={[theme.palette.pink.main, "white"]}
-          />
-        </span>
-        <p>- show current weather data:</p>
-        <p>- time, temp, (humidity, precip, cloud cover) weatherDesc, and icon for it</p>
+          <span style={{ paddingLeft: "30px" }}>
+            <GradientCircularProgress
+              id="precipitation"
+              value={weatherData.current.precipitation}
+              label={`${weatherData.current.precipitation}`}
+              labelcolor={theme.palette.pink.main}
+              labelsize={50}
+              subtitle='Precip.'
+              thickness={3.5}
+              size={140}
+              gradientstops={[theme.palette.purple.main, theme.palette.pink.main]}
+            />
+          </span>
+          <span style={{ paddingLeft: "30px" }}>
+            <GradientCircularProgress
+              id="cloud_cover"
+              value={weatherData.current.cloudCover}
+              label={`${weatherData.current.cloudCover}`}
+              labelcolor={theme.palette.pink.light}
+              labelsize={50}
+              subtitle='Cloud Cover'
+              thickness={3.5}
+              size={140}
+              gradientstops={[theme.palette.pink.main, "white"]}
+            />
+          </span>
+        </Box>
+        <p style={{ padding: '30px 0 0 0' }}>- Also show: time, temp, feels like, weatherDesc, and icon for weatherDesc</p>
       </WeatherCard>
 
       <WeatherCard width='580px' height='345px'>
@@ -99,6 +115,9 @@ function App() {
         <p>- arrows can go from one day to the next to view each day's graph</p>
         <p>- also show icon for overall weather of day (?)</p>
       </WeatherCard>
+
+      {/* TODO: map weather logos */}
+      {/* TODO: time to sunset/sunrise  */}
 
       <Box
         sx={(theme) => ({
