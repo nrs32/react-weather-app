@@ -11,6 +11,13 @@ declare module '@mui/material/styles' {
     cardBg: Palette['primary'],
     bg: Palette['primary'],
   }
+
+  interface TypeText {
+    // Extends TypeText with this new property
+    // Bc TypeText will be defined twice, and TS will merge the defs
+    secondaryLetterSpacing?: string;
+  }
+
   interface PaletteOptions {
     purple: PaletteOptions['primary'],
     pink: PaletteOptions['primary'],
@@ -46,6 +53,7 @@ const theme = createTheme({
     text: {
       primary: '#FFFFFFDE',
       secondary: '#3A3D4B',
+      secondaryLetterSpacing: '.75px',
     }
   },
 });

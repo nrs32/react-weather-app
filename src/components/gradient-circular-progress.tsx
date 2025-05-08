@@ -72,7 +72,7 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
             sx={{
               color: theme.palette.text.primary,
               fontSize: '14px',
-              letterSpacing: '.75px',
+              letterSpacing: theme.palette.text.secondaryLetterSpacing,
               textTransform: 'uppercase',
             }}>
             { subtitle }

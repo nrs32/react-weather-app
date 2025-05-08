@@ -9,6 +9,7 @@ import CurvyTimeGraph from '../graphs-parts/curvy-time-graph';
 import XAxis from '../graphs-parts/x-axis';
 import getTemperatureLabel from '../../utils/get-y-label';
 import getHumidityLabel from '../../utils/get-humidity-label';
+import RightDataLabel from '../graphs-parts/right-data-label';
 
 interface TempVHumidityGraphProps extends GraphProps {
   hourlyWeather: HourlyWeather[],
@@ -29,12 +30,19 @@ const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ hourlyWeather, 
   }));
 
   const combinedYPoints = getCombinedYRange(hourlyTemps.map(temp => temp.y));
+  const labelLeft = chartLeft + 113;
+  const labelTop = chartTop - 18;
 
   return (
     <>
       <YAxis style={{ position: "absolute", top: `${chartTop - 1}px`, left: `${chartLeft - 89}px`}} labeledYPoints={combinedYPoints} getLabel={(y) => getTempAndHumidityLabel(getTemperatureLabel(y), 'N/A')} graphWidth={graphWidth} height={graphHeight} textSpace={65}></YAxis>
+
       <CurvyTimeGraph id="dashed" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={hourlyHumidity} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
+      <RightDataLabel label="HUMIDITY" labelColor={theme.palette.pink.light} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${labelTop}px`, left: `${labelLeft - 35}px` }} data={hourlyHumidity} yRange={[0, 100]}></RightDataLabel>
+
       <CurvyTimeGraph id="line" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px`  }} data={hourlyTemps} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
+      <RightDataLabel label="TEMPERATURE" labelColor={theme.palette.purple.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${labelTop}px`, left: `${labelLeft}px`  }} data={hourlyTemps} ></RightDataLabel>
+
       <XAxis width={graphWidth} style={{ position: "absolute", top: `calc(${graphHeight}px + ${chartTop + 7}px)`, left: `${chartLeft}px` }} data={hourlyTemps} labelFrequency={4}></XAxis>
     </>
   )

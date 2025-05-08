@@ -29,9 +29,8 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
   const graphId = `curvy-time-graph-${id}`;
   const [startColor, endColor] = gradientstops;
   const svgHeight = height - SPACE_BELOW_DATA;
-  const svgWidth = width;
 
-  const normalizedPoints = normalizeDataPoints(data, svgWidth, svgHeight, yRange, xRange);
+  const normalizedPoints = normalizeDataPoints(data, width, svgHeight, yRange, xRange);
   const pathData = generateSmoothPath(normalizedPoints);
   const areaPathData = generateAreaPath(pathData, normalizedPoints, svgHeight);
 
