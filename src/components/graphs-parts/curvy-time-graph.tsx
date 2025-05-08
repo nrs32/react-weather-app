@@ -8,7 +8,7 @@ import normalizeDataPoints from '../../utils/normalize-data-points';
 
 export type GradientDirection = 'v' | 'h'; // vertical or horizontal
 
-interface CurvyGraphProps {
+export interface CurvyGraphProps {
   id: string;
   data: Point[];
   width: number;

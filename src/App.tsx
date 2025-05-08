@@ -9,12 +9,13 @@ import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
 import type { DayKey, WeatherData } from './types/weather-types';
-import CurvyTimeGraph from './components/graphs/curvy-time-graph';
+import CurvyTimeGraph from './components/graphs-parts/curvy-time-graph';
 import Box from '@mui/material/Box';
 import RawDataModal from './components/raw-data-modal';
-import XAxis from './components/graphs/x-axis';
-import YAxis from './components/graphs/y-axis';
+import XAxis from './components/graphs-parts/x-axis';
+import YAxis from './components/graphs-parts/y-axis';
 import determineYRangePoints from './utils/determine-y-range-points';
+import WeeklyTempSpreadGraph from './components/weekly-temp-spread-graph';
 
 function App() {
   const theme = useTheme();
@@ -79,22 +80,6 @@ function App() {
   }));
   ////////////////////////////////////////////////////////////////////
 
-
-  ////////////////////////////////////////////////////////////////////
-  // Get weekly graph data
-  const dayKeys: DayKey[] = Array.from({ length: 7 }, (_, i) => `day${i + 1}` as DayKey);
-  const allTemps = dayKeys.map(key => weatherData[key]);
-  const weeklyMinTemp = Math.min(...allTemps.map(day => day.tempMin));
-  const weeklyMaxTemp = Math.max(...allTemps.map(day => day.tempMax));
-
-  const dailyMinTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMin, xLabel: d.dayOfWeek, xSubLabel: d.date}));
-  const dailyAvgTemp = allTemps.map((d, i) => ({ x: i, y: d.tempAvg }));
-  const dailyMaxTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMax }));
-
-  const dailyYPoints = determineYRangePoints([weeklyMinTemp, weeklyMaxTemp], 25, (y) => {return `${Math.round(y)}°F`});
-
-  ////////////////////////////////////////////////////////////////////
-
   return (
     <>
      <h1 className='heading'> Weather Dashboard </h1>
@@ -141,18 +126,7 @@ function App() {
       </WeatherCard>
 
       <WeatherCard width='500px' height='500px'>
-        <YAxis
-          style={{ position: "absolute", top: '44px', left: '10px' }}
-          labeledYPoints={dailyYPoints}
-          graphWidth={400}
-          height={200}
-          textSpace={30}
-        >
-        </YAxis>
-        <CurvyTimeGraph id="day-max-temp" width={400} height={200} style={{ position: "absolute", top: '45px', left: '64px' }} data={dailyMaxTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
-        <CurvyTimeGraph id="day-avg-temp" width={400} height={200} style={{ position: "absolute", top: '45px', left: '64px' }} data={dailyAvgTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
-        <CurvyTimeGraph id="day-min-temp" width={400} height={200} style={{ position: "absolute", top: '45px', left: '64px' }} data={dailyMinTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
-        <XAxis width={400} style={{ position: "absolute", top: 'calc(200px + 45px)', left: '64px' }} data={dailyMinTemp}></XAxis>
+        <WeeklyTempSpreadGraph weatherData={weatherData}></WeeklyTempSpreadGraph>
 
         <p style={{ paddingTop: '260px'}}>Weekly Temp Spread</p>
         <p>TODO:</p>
