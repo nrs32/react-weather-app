@@ -1,19 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
 import normalizeDataPoints from '../../utils/normalize-data-points';
-import type { Point } from '../../types/graph-types';
+import type { LabeledXPoint } from '../../types/graph-types';
 import { useTheme } from '@mui/material';
 
 interface XAxisProps {
-  data: ({ xLabel: string } & Point)[];
-  width?: number;
+  data: LabeledXPoint[];
+  width: number;
   xRange?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
   labelFrequency?: number;   // How often tick labels should show. Every nth label will show. 5 means every 5th tick will be labeled
   style?: React.CSSProperties;
 }
 
 const XAxis: React.FC<XAxisProps> = ({
-  data, width = 400, xRange, labelFrequency = 1, style
+  data, width, xRange, labelFrequency = 1, style
 }) => {
   const theme = useTheme();
 

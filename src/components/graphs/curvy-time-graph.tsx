@@ -11,8 +11,8 @@ export type GradientDirection = 'v' | 'h'; // vertical or horizontal
 interface CurvyGraphProps {
   id: string;
   data: Point[];
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
   yRange?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
   xRange?: [number, number]; // [minY, maxY] y-axis range to be used, instead of normalized
 
@@ -27,7 +27,7 @@ interface CurvyGraphProps {
   showAreaShadow?: boolean;  // show shadow above area curve
 }
 
-const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width = 400, height = 200, yRange, xRange, showAreaShadow }) => {
+const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width, height, yRange, xRange, showAreaShadow }) => {
   const graphId = `curvy-time-graph-${id}`;
   const [startColor, endColor] = gradientstops;
   const svgHeight = height - 20;

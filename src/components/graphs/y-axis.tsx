@@ -1,53 +1,39 @@
 import React from 'react';
 import normalizeDataPoints from '../../utils/normalize-data-points';
 import { useTheme } from '@mui/material';
+import type { LabeledYPoint } from '../../types/graph-types';
 
 interface YAxisProps {
-  height?: number;
-  graphWidth?: number;
-  yRange: [number, number];  // [minY, maxY] y-axis range to be used
+  height: number;
+  graphWidth: number;        // Used to add guidelines behind the chart
   labelFrequency?: number;   // How often tick labels should show. Every nth label will show. 5 means every 5th tick will be labeled
-  totalTicks?: number;       // How many ticks to show
   style?: React.CSSProperties;
+  textSpace: number;         // How much space in px the text needs to be able to show
+  labeledYPoints: LabeledYPoint[],
 }
 
 const YAxis: React.FC<YAxisProps> = ({
-  height = 200,
-  graphWidth = 400,
-  yRange,
-  totalTicks = 25,
+  height,
+  graphWidth,
   labelFrequency = 5,
   style,
+  textSpace,
+  labeledYPoints,
 }) => {
   const theme = useTheme();
-  const [min, max] = yRange;
-  const adjustedMax = (max + 5); // So we go higher than the highest point on the chart curve
 
-  const spaceForLabelsAndTick = 65;
-  const svgWidth = spaceForLabelsAndTick + graphWidth;
-
-  const textSpace = 30;
   const textRightPadding = 7;
   const lengthOfTicks = 10;
+  const textLeftPadding = 20;
   const endOfTickMark = textSpace + textRightPadding + lengthOfTicks;
+  const svgWidth = textLeftPadding + endOfTickMark + graphWidth;
 
   const heightOffset = 10;
 
-  // TODO: instead of doing this logic here, do it in App.tsx and pass in the labels array
-  // TODO: then we can do custom logic for second chart but still use normalize
-  // TODO: we'll adjust this to take two lists, labels in one list and points in another
-  // TODO: then we can, outside of here, use logic to label ticks as (humidity, temperature) but use the same lines
-
-
   // TODO: when that stuff is done, we'll clean up everything and then make 2 components, 1 for each chart
   // TODO: where we can share and define logic specific to those charts and clean up App.tsx a ton
-  const step = (adjustedMax - min) / totalTicks;
-  const labels: number[] = [];
-  for (let i = min; i <= adjustedMax; i += step) {
-    labels.push(i);
-  }
 
-  const normalizedPoints = normalizeDataPoints(labels.map(tick => ({x: 0, y: tick})), svgWidth, height, yRange, undefined);
+  const normalizedPoints = normalizeDataPoints(labeledYPoints, svgWidth, height, undefined, undefined);
   const ticks = normalizedPoints.map((point) => point.y);
 
   return (
@@ -91,7 +77,7 @@ const YAxis: React.FC<YAxisProps> = ({
                 fontSize="12"
                 fill={theme.palette.text.primary}
               >
-                {Math.round(labels[index])}
+                {labeledYPoints[index].yLabel}
               </text>
             ) : null
           )}

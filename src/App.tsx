@@ -14,6 +14,7 @@ import Box from '@mui/material/Box';
 import RawDataModal from './components/raw-data-modal';
 import XAxis from './components/graphs/x-axis';
 import YAxis from './components/graphs/y-axis';
+import determineYRangePoints from './utils/determine-y-range-points';
 
 function App() {
   const theme = useTheme();
@@ -39,6 +40,8 @@ function App() {
 
   const weatherData = data as WeatherData;
 
+  ////////////////////////////////////////////////////////////////////
+  // Get Temp / Humidity Data
   // TODO: use hook and option for user to switch which days data they're viewing
   // Then recalc this based on selected day and display that data
   const temperaturesCurrentDay = weatherData.day1.hourlyWeather.map((hourly, i) => ({
@@ -52,6 +55,28 @@ function App() {
     y: hourly.humidity,
   }));
 
+  const currentDayTemps = temperaturesCurrentDay.map(temp => temp.y);
+  const maxTemp = Math.max(...currentDayTemps);
+  const minTemp = Math.min(...currentDayTemps);
+
+ // NOTE: Even thoygh the y values are different for these 2 calc
+ // They will be normalized to the same svg y coordinate
+ // So we can combine the lables and should line up correctly for each data set
+  const currentTempYPoints = determineYRangePoints([minTemp, maxTemp], 25, (y) => {
+    return `${Math.round(y)}°F`
+  });
+
+  const adjustedMaxHumidity = 95; // Fn will add 5 to account for chart height
+  const currentHumidityYPoints = determineYRangePoints([0, adjustedMaxHumidity], 25, (y) => {
+    return `${Math.round(y)}%`
+  });
+
+  console.log(currentTempYPoints, currentHumidityYPoints)
+
+  const combinedCurrentYPoints = currentTempYPoints.map((tempY, i) => ({
+    ...tempY,
+    yLabel: `${tempY.yLabel} • ${currentHumidityYPoints[i].yLabel}`
+  }));
   ////////////////////////////////////////////////////////////////////
 
 
@@ -65,6 +90,8 @@ function App() {
   const dailyMinTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMin, xLabel: d.dayOfWeek }));
   const dailyAvgTemp = allTemps.map((d, i) => ({ x: i, y: d.tempAvg }));
   const dailyMaxTemp = allTemps.map((d, i) => ({ x: i, y: d.tempMax }));
+
+  const dailyYPoints = determineYRangePoints([weeklyMinTemp, weeklyMaxTemp], 25, (y) => {return `${Math.round(y)}°F`});
 
   ////////////////////////////////////////////////////////////////////
 
@@ -113,12 +140,19 @@ function App() {
         <p>- time, temp, (humidity, precip, cloud cover) weatherDesc, and icon for it</p>
       </WeatherCard>
 
-      <WeatherCard width='400px' height='500px'>
-        <YAxis style={{ position: "absolute", top: '44px', left: '-8px' }} yRange={[weeklyMinTemp, weeklyMaxTemp]}></YAxis>
-        <CurvyTimeGraph id="day-max-temp" style={{ position: "absolute", top: '45px' }} data={dailyMaxTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
-        <CurvyTimeGraph id="day-avg-temp" style={{ position: "absolute", top: '45px' }} data={dailyAvgTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
-        <CurvyTimeGraph id="day-min-temp" style={{ position: "absolute", top: '45px' }} data={dailyMinTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
-        <XAxis style={{ position: "absolute", top: 'calc(200px + 45px)' }} data={dailyMinTemp}></XAxis>
+      <WeatherCard width='500px' height='500px'>
+        <YAxis
+          style={{ position: "absolute", top: '44px', left: '10px' }}
+          labeledYPoints={dailyYPoints}
+          graphWidth={400}
+          height={200}
+          textSpace={30}
+        >
+        </YAxis>
+        <CurvyTimeGraph id="day-max-temp" width={400} height={200} style={{ position: "absolute", top: '45px', left: '64px' }} data={dailyMaxTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
+        <CurvyTimeGraph id="day-avg-temp" width={400} height={200} style={{ position: "absolute", top: '45px', left: '64px' }} data={dailyAvgTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+        <CurvyTimeGraph id="day-min-temp" width={400} height={200} style={{ position: "absolute", top: '45px', left: '64px' }} data={dailyMinTemp} yRange={[weeklyMinTemp, weeklyMaxTemp]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+        <XAxis width={400} style={{ position: "absolute", top: 'calc(200px + 45px)', left: '64px' }} data={dailyMinTemp}></XAxis>
 
         <p style={{ paddingTop: '260px'}}>Weekly Temp Spread</p>
         <p>TODO:</p>
@@ -128,10 +162,18 @@ function App() {
         <p>- add label with title at top of card</p>
       </WeatherCard>
 
-      <WeatherCard width='400px' height='500px'>
-        <CurvyTimeGraph id="dashed" style={{ position: "absolute", top: '45px' }} data={humidityCurrentDay} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
-        <CurvyTimeGraph id="line" style={{ position: "absolute", top: '45px' }} data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' type="line-area"/>
-        <XAxis style={{ position: "absolute", top: 'calc(200px + 45px)' }} data={temperaturesCurrentDay} labelFrequency={4}></XAxis>
+      <WeatherCard width='500px' height='500px'>
+      <YAxis
+          style={{ position: "absolute", top: '44px', left: '25px' }}
+          labeledYPoints={combinedCurrentYPoints}
+          graphWidth={400}
+          height={200}
+          textSpace={65}
+        >
+        </YAxis>
+        <CurvyTimeGraph id="dashed" width={400} height={200} style={{ position: "absolute", top: '45px', left: '109px' }} data={humidityCurrentDay} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
+        <CurvyTimeGraph id="line" width={400} height={200} style={{ position: "absolute", top: '45px', left: '109px'  }} data={temperaturesCurrentDay} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
+        <XAxis width={400} style={{ position: "absolute", top: 'calc(200px + 45px)', left: '109px'  }} data={temperaturesCurrentDay} labelFrequency={4}></XAxis>
 
         <p style={{ paddingTop: '260px'}}>Daily Humidity and Temperature</p>
         <p>TODO:</p>
