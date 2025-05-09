@@ -31,36 +31,43 @@ const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title, we
 
   const dailyYPoints: LabeledYPoint[] = determineYRangePoints([weeklyMin, weeklyMax], 23, getTemperatureLabel);
 
-  const labelLeft = chartLeft + 125;
+  const dataTop = chartTop + 60;
+  const dataLeft = chartLeft + 70;
+  const labelLeft = dataLeft + 125;
 
   return (
-    <>
+    <Box sx={{
+      position: 'relative',
+      height: '366px',
+      width: '615px',
+    }}
+    >
       <Box
         sx={{
           fontWeight: 700,
           fontSize: '22px',
           textAlign: 'center',
           position: 'absolute',
-          top: '45px',
+          top: `${chartTop}px`,
           width: '410px',
-          left: '83px'
+          left: `${chartLeft + 63}px`
         }}
       >
         {title}
       </Box>
-      <YAxis style={{ position: "absolute", top: `${chartTop + 1}px`, left: `${chartLeft - 54}px` }} labeledYPoints={dailyYPoints} getLabel={getTemperatureLabel} graphWidth={graphWidth} height={graphHeight} textSpace={30}></YAxis>
+      <YAxis style={{ position: "absolute", top: `${dataTop + 1}px`, left: `${dataLeft - 54}px` }} labeledYPoints={dailyYPoints} getLabel={getTemperatureLabel} graphWidth={graphWidth} height={graphHeight} textSpace={30}></YAxis>
 
-      <CurvyTimeGraph id="day-max-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
-      <RightDataLabel label="MAX DAILY TEMP" labelColor={theme.palette.pink.light} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${labelLeft + 3}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
+      <CurvyTimeGraph id="day-max-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
+      <RightDataLabel label="MAX DAILY TEMP" labelColor={theme.palette.pink.light} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${labelLeft + 3}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
 
-      <CurvyTimeGraph id="day-avg-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
-      <RightDataLabel label="AVG DAILY TEMP" labelColor={theme.palette.blue.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${labelLeft + 1}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
+      <CurvyTimeGraph id="day-avg-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+      <RightDataLabel label="AVG DAILY TEMP" labelColor={theme.palette.blue.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${labelLeft + 1}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
 
-      <CurvyTimeGraph id="day-min-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={dailyMinTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
-      <RightDataLabel label="MIN DAILY TEMP" labelColor={theme.palette.pink.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${labelLeft}px` }} data={dailyMinTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
+      <CurvyTimeGraph id="day-min-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyMinTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+      <RightDataLabel label="MIN DAILY TEMP" labelColor={theme.palette.pink.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${labelLeft}px` }} data={dailyMinTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
 
-      <XAxis width={graphWidth} style={{ position: "absolute", top: `calc(${graphHeight}px + ${chartTop + 2}px)`, left: `${chartLeft}px` }} data={dailyMinTemps}></XAxis>
-    </>
+      <XAxis width={graphWidth} style={{ position: "absolute", top: `calc(${graphHeight}px + ${dataTop + 2}px)`, left: `${dataLeft}px` }} data={dailyMinTemps}></XAxis>
+    </Box>
   )
 }
 

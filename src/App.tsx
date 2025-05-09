@@ -8,14 +8,17 @@ import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
-import type { WeatherData } from './types/weather-types';
+import type { DayIndex, WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
 import RawDataModal from './components/raw-data-modal';
 import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
 import TempVHumidityGraph from './components/graphs/temp-v-humidity-graph';
+import CarouselControls from './components/carousel-controls';
+import { useState } from 'react';
 
 function App() {
   const theme = useTheme();
+  const { dayIndex, hasPrev, hasNext, onNext, onPrev } = useTempVHumidDayIndex();
 
   // TODO: considar ipinfo.io to get user lat and long
   // Then do the thing from the video where we wait for that query before doing the one that gets the weather
@@ -103,19 +106,25 @@ function App() {
       </WeatherCard>
 
       <WeatherCard width='580px' height='345px'>
-        <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={105} chartLeft={95}></WeeklyTempSpreadGraph>
+        <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={20} chartLeft={0}></WeeklyTempSpreadGraph>
       </WeatherCard>
 
-      <WeatherCard width='630px' height='500px'>
+      <WeatherCard width='738px' height='345px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>
         {/* TODO: don't hardcode day here, determine based on hook or something */}
-        <TempVHumidityGraph title={`Humidity and Temperature (${weatherData.day1.dayOfWeek} ${weatherData.day1.date})`} hourlyWeather={weatherData.day1.hourlyWeather} graphWidth={400} graphHeight={200} chartTop={105} chartLeft={145}></TempVHumidityGraph>
 
-        <p style={{ paddingTop: '337px'}}>TODO:</p>
-        <p>- add arrows somewhere, like carosoul</p>
-        <p>- arrows can go from one day to the next to view each day's graph</p>
-        <p>- also show icon for overall weather of day (?)</p>
+        <CarouselControls
+          onPrev={onPrev}
+          onNext={onNext}
+          prevLabel={hasPrev ? weatherData[`day${(dayIndex - 1) as DayIndex}`].dayOfWeek : undefined}
+          nextLabel={hasNext ? weatherData[`day${(dayIndex + 1) as DayIndex}`].dayOfWeek : undefined}
+          hasPrev={hasPrev}
+          hasNext={hasNext}
+        >
+          <TempVHumidityGraph title={`Humidity and Temperature (${weatherData[`day${dayIndex}`].dayOfWeek} ${weatherData[`day${dayIndex}`].date})`} hourlyWeather={weatherData[`day${dayIndex}`].hourlyWeather} graphWidth={400} graphHeight={200} chartTop={20} chartLeft={0}></TempVHumidityGraph>
+        </CarouselControls>
       </WeatherCard>
 
+      {/* TODO: maybe current weather stuff can be toggled in daily weather carousel like the TempVHumidity graph (e.g. weather code, hihg, low, humidity, etc) */}
       {/* TODO: map weather logos */}
       {/* TODO: time to sunset/sunrise  */}
 
@@ -145,6 +154,23 @@ function App() {
       </Box>
     </>
   )
+}
+
+function useTempVHumidDayIndex() {
+  const [dayIndex, setDayIndex] = useState<DayIndex>(1);
+
+  const hasPrev = dayIndex > 1;
+  const hasNext = dayIndex < 7;
+
+  const onNext = () => {
+    if (hasNext) setDayIndex(prev => (prev + 1) as DayIndex);
+  };
+
+  const onPrev = () => {
+    if (hasPrev) setDayIndex(prev => (prev - 1) as DayIndex);
+  };
+
+  return { dayIndex, hasPrev, hasNext, onNext, onPrev };
 }
 
 export default App

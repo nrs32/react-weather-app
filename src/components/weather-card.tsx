@@ -1,4 +1,5 @@
-import { Card, type CardProps } from '@mui/material';
+import { Card, type CardProps, type Theme } from '@mui/material';
+import { type SystemStyleObject } from '@mui/system';
 
 interface WeatherCardProps extends CardProps {
   height?: string;
@@ -17,6 +18,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ children, ...props }) => {
         height: props.height,
         padding: '45px',
         background: `linear-gradient(to bottom right, ${theme.palette.cardBg.main}, ${theme.palette.cardBg.dark})`,
+        ...(typeof props.sx === 'function' ? props.sx(theme) : (props.sx as SystemStyleObject<Theme>)) // allow user custom sx to override ours
       })}
     >
       {children}

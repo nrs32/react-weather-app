@@ -31,7 +31,9 @@ export interface DayWeather {
 	hourlyWeather: HourlyWeather[];
 }
 
-export type DayKey = `day${1 | 2 | 3 | 4 | 5 | 6 | 7}`;
+export type DayIndex = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export type DayKey = `day${DayIndex}`;
 
 export interface WeatherData {
   current: CurrentWeather;

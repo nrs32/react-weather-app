@@ -32,34 +32,41 @@ const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ title, hourlyWe
   }));
 
   const combinedYPoints = getCombinedYRange(hourlyTemps.map(temp => temp.y));
-  const labelLeft = chartLeft + 113;
-  const labelTop = chartTop - 18;
+  const dataTop = chartTop + 59;
+  const dataLeft = chartLeft + 95;
+  const labelTop = dataTop - 18;
+  const labelLeft = dataLeft + 113;
 
   return (
-    <>
+    <Box sx={{
+      position: 'relative',
+      height: '353px',
+      width: '615px',
+    }}
+    >
       <Box
         sx={{
           fontWeight: 700,
           fontSize: '22px',
           textAlign: 'center',
           position: 'absolute',
-          top: '45px',
+          top: `${chartTop}px`,
           width: '410px',
-          left: '142px'
+          left: `${chartLeft + 93}px`
         }}
       >
         {title}
       </Box>
-      <YAxis style={{ position: "absolute", top: `${chartTop - 1}px`, left: `${chartLeft - 89}px`}} labeledYPoints={combinedYPoints} getLabel={(y) => getTempAndHumidityLabel(getTemperatureLabel(y), 'N/A')} graphWidth={graphWidth} height={graphHeight} textSpace={65}></YAxis>
+      <YAxis style={{ position: "absolute", top: `${dataTop - 1}px`, left: `${dataLeft - 89}px`}} labeledYPoints={combinedYPoints} getLabel={(y) => getTempAndHumidityLabel(getTemperatureLabel(y), 'N/A')} graphWidth={graphWidth} height={graphHeight} textSpace={65}></YAxis>
 
-      <CurvyTimeGraph id="dashed" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px` }} data={hourlyHumidity} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
+      <CurvyTimeGraph id="dashed" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={hourlyHumidity} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
       <RightDataLabel label="HUMIDITY" labelColor={theme.palette.pink.light} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${labelTop}px`, left: `${labelLeft - 35}px` }} data={hourlyHumidity} yRange={[0, 100]}></RightDataLabel>
 
-      <CurvyTimeGraph id="line" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${chartTop}px`, left: `${chartLeft}px`  }} data={hourlyTemps} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
+      <CurvyTimeGraph id="line" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px`  }} data={hourlyTemps} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
       <RightDataLabel label="TEMPERATURE" labelColor={theme.palette.purple.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${labelTop}px`, left: `${labelLeft}px`  }} data={hourlyTemps} ></RightDataLabel>
 
-      <XAxis width={graphWidth} style={{ position: "absolute", top: `calc(${graphHeight}px + ${chartTop + 7}px)`, left: `${chartLeft}px` }} data={hourlyTemps} labelFrequency={4}></XAxis>
-    </>
+      <XAxis width={graphWidth} style={{ position: "absolute", top: `calc(${graphHeight}px + ${dataTop + 7}px)`, left: `${dataLeft}px` }} data={hourlyTemps} labelFrequency={4}></XAxis>
+    </Box>
   )
 }
 
