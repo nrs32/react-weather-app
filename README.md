@@ -16,6 +16,12 @@
 - [npm pkg](https://www.npmjs.com/package/openmeteo)
 - `npm install openmeteo`
 
+### Weather Icons
+- [Meteocons by Basmilius](https://basmilius.github.io/weather-icons/index-line.html)
+- [Animated SVGs](https://github.com/basmilius/weather-icons/tree/dev/production/line/svg)
+
+I used [download directory](https://download-directory.github.io) which lets you paste the url of a github directory and download it
+
 ### Use MUI
 - `npm install @mui/material @emotion/react @emotion/styled` for MUI and Emotion
 - `npm install @fontsource/roboto` to use Roboto as the default font, if wanted.
