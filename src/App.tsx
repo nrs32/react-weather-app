@@ -15,6 +15,9 @@ import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph'
 import TempVHumidityGraph from './components/graphs/temp-v-humidity-graph';
 import CarouselControls from './components/carousel-controls';
 import { useState } from 'react';
+import weatherCodes from './utils/weather-codes';
+
+const icons = import.meta.glob('./assets/weather-icons/*.svg', { eager: true, as: 'url' });
 
 function App() {
   const theme = useTheme();
@@ -43,6 +46,28 @@ function App() {
   }
 
   const weatherData = data as WeatherData;
+
+  // TODO: Delete this mess, just for now
+  const iconFiles: any[] = [];
+  const iconNames: string[] = [];
+  Object.keys(weatherCodes).forEach(key => {
+    const dayFile = weatherCodes[parseInt(key)].dayIcon;
+    const nightFile = weatherCodes[parseInt(key)].nightIcon;
+
+    if (!iconNames.includes(dayFile)) {
+      const day = Object.entries(icons).find(([path]) => path.endsWith(`${weatherCodes[parseInt(key)].dayIcon}.svg`)) || 'no';
+      iconFiles.push(day[1]);
+      iconNames.push(dayFile);
+    }
+
+    if (!iconNames.includes(nightFile)) {
+      const night = Object.entries(icons).find(([path]) => path.endsWith(`${weatherCodes[parseInt(key)].nightIcon}.svg`)) || 'no';
+      iconFiles.push(night[1]);
+      iconNames.push(nightFile);
+    }
+
+  });
+  ///////////////////////////////////////////////////
 
   return (
     <>
@@ -127,6 +152,24 @@ function App() {
       {/* TODO: maybe current weather stuff can be toggled in daily weather carousel like the TempVHumidity graph (e.g. weather code, hihg, low, humidity, etc) */}
       {/* TODO: map weather logos */}
       {/* TODO: time to sunset/sunrise  */}
+
+      {/* TODO: delete this weather card*/}
+      <WeatherCard>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          {iconFiles.map((name, i) => (
+            <Box key={name} display="flex" flexDirection="column" alignItems="center">
+              <img
+                src={name}
+                alt={name}
+                width={140}
+                height={140}
+                style={{ objectFit: 'contain' }}
+              />
+              {iconNames[i]}
+            </Box>
+          ))}
+        </div>
+      </WeatherCard>
 
       <Box
         sx={(theme) => ({

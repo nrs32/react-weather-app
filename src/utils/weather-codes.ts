@@ -30,12 +30,9 @@ const weatherCodes: {
   77: { desc: 'Snow grains', dayIcon: 'partly-cloudy-day-snow', nightIcon: 'partly-cloudy-night-snow' },
   80: { desc: 'Mild Rain showers', dayIcon: 'partly-cloudy-day-rain', nightIcon: 'partly-cloudy-night-rain' },
   81: { desc: 'Moderate Rain showers', dayIcon: 'partly-cloudy-day-rain', nightIcon: 'partly-cloudy-night-rain' },
-
   82: { desc: 'Violent Rain showers', dayIcon: 'extreme-day-rain', nightIcon: 'extreme-night-rain' },
-
   85: { desc: 'Mild Snow showers', dayIcon: 'partly-cloudy-day-snow', nightIcon: 'partly-cloudy-night-snow' },
   86: { desc: 'Heavy Snow showers', dayIcon: 'extreme-day-snow', nightIcon: 'extreme-night-snow' },
-
   95: { desc: 'Thunderstorm', dayIcon: 'thunderstorms-day-rain', nightIcon: 'thunderstorms-night-rain' },
   96: { desc: 'Thunderstorm with slight hail', dayIcon: 'thunderstorms-day-rain', nightIcon: 'thunderstorms-night-rain' },
   99: { desc: 'Thunderstorm with heavy hail', dayIcon: 'thunderstorms-day-hail', nightIcon: 'thunderstorms-night-hail' },
