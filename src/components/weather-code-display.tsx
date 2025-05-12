@@ -25,20 +25,20 @@ const WeatherCodeDisplay = ({ weatherCodeInfo, isDay }: WeatherCodeDisplayProps)
   }
 
   return (
-    <>
-    <Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', width: '180px'}}>
+      <Box sx={{ marginTop: '-15px' }}>
         <img
-        src={svg}
-        alt={svgAlt}
-        width={140}
-        height={140}
-        style={{ objectFit: 'contain' }}
-        />
+          src={svg}
+          alt={svgAlt}
+          width={140}
+          height={140}
+          style={{ objectFit: 'contain' }}
+          />
+      </Box>
+      <Box sx={{ fontSize: '20px', letterSpacing: theme.palette.text.secondaryLetterSpacing}}>
+          {weatherCodeInfo.desc.toUpperCase()}
+      </Box>
     </Box>
-    <Box sx={{ fontSize: '23px', letterSpacing: theme.palette.text.secondaryLetterSpacing}}>
-        {weatherCodeInfo.desc.toUpperCase()}
-    </Box>
-    </>
   );
 };
 

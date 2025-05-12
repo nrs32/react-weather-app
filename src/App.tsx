@@ -49,43 +49,29 @@ function App() {
   return (
     <>
      <h1 className='heading'> Weather Dashboard </h1>
-      <WeatherCard sx={{ fontWeight: 700, textAlign: 'center' }}>
-        <CurrentTempDisplay actualTemp={weatherData.current.temperature} feelsLike={weatherData.current.apparentTemperature}></CurrentTempDisplay>
-      </WeatherCard>
 
-      <WeatherCard sx={{ fontWeight: 700, textAlign: 'center' }}>
-        <WeatherCodeDisplay isDay={weatherData.current.isDay} weatherCodeInfo={weatherData.current.weatherCodeInfo}></WeatherCodeDisplay>
-      </WeatherCard>
+      <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <WeatherCard sx={{ fontWeight: 700, textAlign: 'center', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
+          <CurrentTempDisplay actualTemp={weatherData.current.temperature} feelsLike={weatherData.current.apparentTemperature}></CurrentTempDisplay>
+        </WeatherCard>
 
-      <WeatherCard>
-        <Box
-          sx={{
-            fontWeight: 700,
-            fontSize: '22px',
-            textAlign: 'center',
-            position: 'absolute',
-            top: '45px',
-          }}
-        >
-          Current Weather
-        </Box>
-        <Box
-          sx={{
-            padding: '45px 0 0 0',
-          }}
-        >
-          <GradientCircularProgress
-            id="humidity"
-            value={weatherData.current.humidity}
-            label={`${weatherData.current.humidity}`}
-            labelcolor={theme.palette.teal.main}
-            labelsize={50}
-            subtitle='Humidity'
-            thickness={3.5}
-            size={140}
-            gradientstops={[theme.palette.teal.main, theme.palette.blue.main]}
-          />
-          <span style={{ paddingLeft: "30px" }}>
+        <WeatherCard sx={{ fontWeight: 700, textAlign: 'center', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
+          <WeatherCodeDisplay isDay={weatherData.current.isDay} weatherCodeInfo={weatherData.current.weatherCodeInfo}></WeatherCodeDisplay>
+        </WeatherCard>
+
+        <WeatherCard>
+          <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 4, alignItems: 'center', height: '100%' }}>
+            <GradientCircularProgress
+              id="humidity"
+              value={weatherData.current.humidity}
+              label={`${weatherData.current.humidity}`}
+              labelcolor={theme.palette.teal.main}
+              labelsize={50}
+              subtitle='Humidity'
+              thickness={3.5}
+              size={140}
+              gradientstops={[theme.palette.teal.main, theme.palette.blue.main]}
+            />
             <GradientCircularProgress
               id="precipitation"
               value={weatherData.current.precipitation}
@@ -97,8 +83,6 @@ function App() {
               size={140}
               gradientstops={[theme.palette.purple.main, theme.palette.pink.main]}
             />
-          </span>
-          <span style={{ paddingLeft: "30px" }}>
             <GradientCircularProgress
               id="cloud_cover"
               value={weatherData.current.cloudCover}
@@ -110,32 +94,29 @@ function App() {
               size={140}
               gradientstops={[theme.palette.pink.main, "white"]}
             />
-          </span>
-        </Box>
-        <p style={{ padding: '30px 0 0 0' }}>- Also show: time, temp, feels like, weatherDesc, and icon for weatherDesc</p>
-      </WeatherCard>
+          </Box>
+        </WeatherCard>
 
-      <WeatherCard width='580px' height='345px'>
-        <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={20} chartLeft={0}></WeeklyTempSpreadGraph>
-      </WeatherCard>
+        <WeatherCard width='738px' height='340px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>
+          <CarouselControls
+            onPrev={onPrev}
+            onNext={onNext}
+            prevLabel={hasPrev ? weatherData[`day${(dayIndex - 1) as DayIndex}`].dayOfWeek : undefined}
+            nextLabel={hasNext ? weatherData[`day${(dayIndex + 1) as DayIndex}`].dayOfWeek : undefined}
+            hasPrev={hasPrev}
+            hasNext={hasNext}
+          >
+            <TempVHumidityGraph title={`Humidity and Temperature (${weatherData[`day${dayIndex}`].dayOfWeek} ${weatherData[`day${dayIndex}`].date})`} hourlyWeather={weatherData[`day${dayIndex}`].hourlyWeather} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}></TempVHumidityGraph>
+          </CarouselControls>
+        </WeatherCard>
 
-      <WeatherCard width='738px' height='345px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>
-        {/* TODO: don't hardcode day here, determine based on hook or something */}
+        <WeatherCard width='580px' height='340px'>
+          <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}></WeeklyTempSpreadGraph>
+        </WeatherCard>
 
-        <CarouselControls
-          onPrev={onPrev}
-          onNext={onNext}
-          prevLabel={hasPrev ? weatherData[`day${(dayIndex - 1) as DayIndex}`].dayOfWeek : undefined}
-          nextLabel={hasNext ? weatherData[`day${(dayIndex + 1) as DayIndex}`].dayOfWeek : undefined}
-          hasPrev={hasPrev}
-          hasNext={hasNext}
-        >
-          <TempVHumidityGraph title={`Humidity and Temperature (${weatherData[`day${dayIndex}`].dayOfWeek} ${weatherData[`day${dayIndex}`].date})`} hourlyWeather={weatherData[`day${dayIndex}`].hourlyWeather} graphWidth={400} graphHeight={200} chartTop={20} chartLeft={0}></TempVHumidityGraph>
-        </CarouselControls>
-      </WeatherCard>
-
-      {/* TODO: maybe current weather stuff can be toggled in daily weather carousel like the TempVHumidity graph (e.g. weather code, hihg, low, humidity, etc) */}
-      {/* TODO: time to sunset/sunrise  */}
+        {/* TODO: maybe current weather stuff can be toggled in daily weather carousel like the TempVHumidity graph (e.g. weather code, hihg, low, humidity, etc) */}
+        {/* TODO: time to sunset/sunrise  */}
+      </Box>
 
       <Box
         sx={(theme) => ({
