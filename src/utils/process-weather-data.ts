@@ -1,8 +1,8 @@
 import { WeatherApiResponse } from '@openmeteo/sdk/weather-api-response';
-import type { DayKey, WeatherData } from '../types/weather-types';
+import type { DayKey, WeatherCodeInfo, WeatherData } from '../types/weather-types';
 import weatherCodes from './weather-codes';
 
-const getWeatherDesc = (code: number): string => {
+const getWeatherDesc = (code: number): WeatherCodeInfo => {
   return weatherCodes[code] || "Unknown";
 }
 
@@ -108,7 +108,7 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 			apparentTemperature: Math.round(currentWeather.apparentTemperature),
 			isDay: !!currentWeather.isDay,
 			precipitation: currentWeather.precipitation,
-			weatherDesc: getWeatherDesc(currentWeather.weatherCode),
+			weatherCodeInfo: getWeatherDesc(currentWeather.weatherCode),
 			timeToSunset: getTimeToSunset(initWeatherData.daily.sunset[0], currentWeather.time),
 			timeToSunrise: getTimeToSunrise(initWeatherData.daily.sunrise[0], currentWeather.time),
 			cloudCover: currentWeather.cloudCover,

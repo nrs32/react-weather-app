@@ -5,7 +5,7 @@ export interface CurrentWeather {
   apparentTemperature: number; // Apparent temperature (Fahrenheit)
   isDay: boolean; 			  // Whether it's daytime
   precipitation: number;  // Precipitation amount (mm)
-  weatherDesc: string;    // Weather code desc
+  weatherCodeInfo: WeatherCodeInfo; // Weather code info
 	timeToSunset: string;   // Time until sunset  (x hours & y minutes)
 	timeToSunrise: string;	// Time until sunrise (x hours & y minutes)
   cloudCover: number;     // %
@@ -14,7 +14,7 @@ export interface CurrentWeather {
 export interface HourlyWeather {
   time: string; 			 // The current time h:mm AM/PM
   temperature: number; // Temperature at 2 meters above ground (Fahrenheit)
-  weatherDesc: string; // Weather code desc
+  weatherDesc: WeatherCodeInfo; // Weather code info
   humidity: number; 	 // Relative humidity at 2 meters above ground (%)
   apparentTemperature: number; // Apparent temperature (Fahrenheit)
 }
@@ -44,4 +44,10 @@ export interface WeatherData {
 	day5: DayWeather;
 	day6: DayWeather;
 	day7: DayWeather;
+}
+
+export interface WeatherCodeInfo {
+  desc: string;
+  dayIcon: string;
+  nightIcon: string;
 }

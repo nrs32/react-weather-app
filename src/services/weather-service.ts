@@ -3,7 +3,7 @@ import processWeatherData from "../utils/process-weather-data";
 import { fakeData } from "../assets/fake-data";
 
 export async function getWeather(lat: number, long: number) {
-  const useRealData: boolean = false;
+  const useRealData: boolean = true;
   const url = "https://api.open-meteo.com/v1/forecast";
 
   const params = {

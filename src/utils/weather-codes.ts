@@ -1,12 +1,10 @@
 // WMO Weather Codes modifed from
 // https://open-meteo.com/en/docs?current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code&hourly=temperature_2m,weather_code&latitude=42.88&longitude=85.81#weather_variable_documentation
 
+import type { WeatherCodeInfo } from "../types/weather-types";
+
 const weatherCodes: {
-  [key: number]: {
-    desc: string;
-    dayIcon: string;
-    nightIcon: string;
-  };
+  [key: number]: WeatherCodeInfo;
 } = {
   0: { desc: 'Clear Sky', dayIcon: 'clear-day', nightIcon: 'clear-night' },
   1: { desc: 'Mainly clear', dayIcon: 'clear-day', nightIcon: 'clear-night' },
