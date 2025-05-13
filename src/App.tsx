@@ -20,6 +20,11 @@ import WeatherCodeDisplay from './components/weather-code-display';
 import CurrentTempDisplay from './components/current-temp-display';
 import ThemedButton from './components/themed-button';
 
+
+{/* TODO: Show daily weather code with min and max temps */}
+{/* TODO: Considar clicking on day and showing houlry weather code with temps*/}
+{/* TODO: time to sunset/sunrise visualization */}
+
 interface UserLocation {
   lat: number;
   long: number;
@@ -142,9 +147,6 @@ function App() {
         <WeatherCard width='580px' height='340px'>
           <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}></WeeklyTempSpreadGraph>
         </WeatherCard>
-
-        {/* TODO: maybe current weather stuff can be toggled in daily weather carousel like the TempVHumidity graph (e.g. weather code, hihg, low, humidity, etc) */}
-        {/* TODO: time to sunset/sunrise  */}
       </Box>
 
       <Box
