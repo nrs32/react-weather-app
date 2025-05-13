@@ -25,16 +25,13 @@ interface UserLocation {
   long: number;
 }
 
+const REFRESH_INTERVAL: number = 300000; // miliseconds
+
 function App() {
   const theme = useTheme();
   const { dayIndex, hasPrev, hasNext, onNext, onPrev } = useTempVHumidDayIndex();
   const [location, setLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
-
-  // const cloudSvg = Object.values(import.meta.glob('./assets/weather-icons/cloudy.svg', { eager: true, query: '?url', import: 'default' }))[0];
-
-  // TODO: auto-refresh data at some interval
-  // TODO: maybe allow user to manually refresh (?)
 
   useEffect(() => {
     handleRefreshLocation();
@@ -49,12 +46,13 @@ function App() {
       .catch(setLocationError);
   }
 
-  const { isPending, isError: isWeatherError, data, error: weatherError } = useQuery({
+  const { isPending, isError: isWeatherError, data, error: weatherError, refetch: refetchWeatherData } = useQuery({
     // queryKey is a unique key to cache results from this call
     // e.g. controller name, route, and any params you pass the call
     queryKey: location ? ['weather', location.lat, location.long] : ['weather'],
     queryFn: () => getWeather(location!.lat, location!.long),
     enabled: !!location, // This query will not run until location has a value
+    refetchInterval: REFRESH_INTERVAL, // refetch data every miliseconds
   });
 
   // TODO: Make loading nice and handle this better
@@ -71,11 +69,15 @@ function App() {
   }
 
   const weatherData = data as WeatherData;
-
+  
   return (
     <>
      <h1 className='heading'> Weather Dashboard </h1>
-     <Box sx={{ position: 'absolute', right: '15px', top: '34px' }}><ThemedButton onClick={handleRefreshLocation} label='Refresh Location'/></Box>
+     
+     <Box sx={{ position: 'absolute', right: '15px', top: '22px', display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <ThemedButton onClick={handleRefreshLocation} label='Refresh Location'/>
+      <ThemedButton onClick={refetchWeatherData} label='Refresh Weather (Auto is 5 Min)'/>
+     </Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
         <WeatherCard sx={{ fontWeight: 700, textAlign: 'center', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
@@ -87,7 +89,7 @@ function App() {
         </WeatherCard>
 
         <WeatherCard>
-          <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 4, alignItems: 'center', height: '100%' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 4, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
             <GradientCircularProgress
               id="humidity"
               value={weatherData.current.humidity}
