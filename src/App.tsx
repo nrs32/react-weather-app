@@ -14,34 +14,56 @@ import RawDataModal from './components/raw-data-modal';
 import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
 import TempVHumidityGraph from './components/graphs/temp-v-humidity-graph';
 import CarouselControls from './components/carousel-controls';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import WeatherCodeDisplay from './components/weather-code-display';
 import CurrentTempDisplay from './components/current-temp-display';
+import ThemedButton from './components/themed-button';
+
+interface UserLocation {
+  lat: number;
+  long: number;
+}
 
 function App() {
   const theme = useTheme();
   const { dayIndex, hasPrev, hasNext, onNext, onPrev } = useTempVHumidDayIndex();
-
-  // TODO: considar ipinfo.io to get user lat and long
-  // Then do the thing from the video where we wait for that query before doing the one that gets the weather
+  const [location, setLocation] = useState<UserLocation | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
 
   // TODO: auto-refresh data at some interval
   // TODO: maybe allow user to manually refresh (?)
-  const lat: number = 42.96;
-  const long: number = -85.67;
-  const { isPending, isError, data, error } = useQuery({
-    // queryKey is a unique key to cache results from this call
-    // e.g. controller name, route, and any params you pass the call
-    queryKey: ['weather', lat, long],
-    queryFn: () => getWeather(lat, long)
-  });
 
-  if (isPending) {
-    return <span>Loading...</span>
+  useEffect(() => {
+    handleRefreshLocation();
+  }, []);
+
+  const handleRefreshLocation = () => {
+    setLocation(null);
+    setLocationError(null);
+    
+    getUserLocation()
+      .then(setLocation)
+      .catch(setLocationError);
   }
 
-  if (isError) {
-    return <span>Error: {error.message}</span>
+  const { isPending, isError: isWeatherError, data, error: weatherError } = useQuery({
+    // queryKey is a unique key to cache results from this call
+    // e.g. controller name, route, and any params you pass the call
+    queryKey: location ? ['weather', location.lat, location.long] : ['weather'],
+    queryFn: () => getWeather(location!.lat, location!.long),
+    enabled: !!location, // This query will not run until location has a value
+  });
+
+  if (location == null && !locationError) {
+    return <span>Loading Location...</span>
+  }
+  
+  if (isPending) {
+    return <span>Loading Weather Data...</span>
+  }
+
+  if (isWeatherError || locationError != null) {
+    return <span>Error: {weatherError?.message || locationError}</span>
   }
 
   const weatherData = data as WeatherData;
@@ -49,6 +71,7 @@ function App() {
   return (
     <>
      <h1 className='heading'> Weather Dashboard </h1>
+     <Box sx={{ position: 'absolute', right: '15px', top: '34px' }}><ThemedButton onClick={handleRefreshLocation} label='Refresh Location'/></Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
         <WeatherCard sx={{ fontWeight: 700, textAlign: 'center', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
@@ -120,10 +143,10 @@ function App() {
 
       <Box
         sx={(theme) => ({
-          position: 'sticky',
+          position: 'fixed',
           bottom: '7px',
           width: 'fit-content',
-          left: '100vw',
+          right: '0',
           background: theme.palette.bg.main,
           padding: '10px 5px 0 10px',
           borderRadius: '5px',
@@ -161,6 +184,27 @@ function useTempVHumidDayIndex() {
   };
 
   return { dayIndex, hasPrev, hasNext, onNext, onPrev };
+}
+
+function getUserLocation(): Promise<UserLocation> {
+    return new Promise((resolve, reject) => {
+
+    if (!navigator.geolocation) {
+      return reject('Geolocation is not supported by your browser.');
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          lat: position.coords.latitude,
+          long: position.coords.longitude,
+        });
+      },
+      (err) => {
+        reject('Unable to retrieve location. Permission denied or unavailable.');
+      }
+    );
+  });
 }
 
 export default App

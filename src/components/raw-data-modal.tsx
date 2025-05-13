@@ -8,6 +8,7 @@ import Slide from '@mui/material/Slide';
 import { type TransitionProps } from '@mui/material/transitions';
 import type { Theme } from '@mui/material';
 import type { WeatherData } from '../types/weather-types';
+import ThemedButton from './themed-button';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -49,13 +50,7 @@ const RawDataModal: React.FC<RawDataModalProps> = ({ weatherData }) => {
 
   return (
     <React.Fragment>
-      <Button
-        onClick={handleClickOpen}
-        variant="contained"
-        sx={buttonSx}
-      >
-        Raw Data
-      </Button>
+      <ThemedButton onClick={handleClickOpen} label='Raw Data'/>
 
       <Dialog
         open={open}
