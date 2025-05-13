@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import reactLogo from './assets/react.svg'
 import openMedeoLogo from './assets/open-medeo.png'
 import viteLogo from '/vite.svg'
+import cloudySvg from './assets/weather-icons/cloudy-still-tight.svg';
 import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
@@ -30,6 +31,8 @@ function App() {
   const [location, setLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
 
+  // const cloudSvg = Object.values(import.meta.glob('./assets/weather-icons/cloudy.svg', { eager: true, query: '?url', import: 'default' }))[0];
+
   // TODO: auto-refresh data at some interval
   // TODO: maybe allow user to manually refresh (?)
 
@@ -40,7 +43,7 @@ function App() {
   const handleRefreshLocation = () => {
     setLocation(null);
     setLocationError(null);
-    
+
     getUserLocation()
       .then(setLocation)
       .catch(setLocationError);
@@ -54,6 +57,7 @@ function App() {
     enabled: !!location, // This query will not run until location has a value
   });
 
+  // TODO: Make loading nice and handle this better
   if (location == null && !locationError) {
     return <span>Loading Location...</span>
   }
@@ -155,13 +159,16 @@ function App() {
           }
       })}>
         <RawDataModal weatherData={weatherData}></RawDataModal>
-        <a href="https://open-meteo.com" target="_blank">
+         <a href="https://basmilius.github.io/weather-icons/index-line.html" target="_blank" title='Meteocons by Basmilius Used For Weather Icons'>
+          <img style={{ paddingBottom: '4px' }} src={cloudySvg} width="35px" alt="Meteocons by Basmilius" />
+        </a>
+        <a href="https://open-meteo.com" target="_blank" title='Open-Meteo Used For Weather Data'>
           <img src={openMedeoLogo} width="30px" alt="Open-meteo logo" />
         </a>
-        <a href="https://vite.dev" target="_blank">
+        <a href="https://vite.dev" target="_blank" title='Built With Vite'>
           <img src={viteLogo} alt="Vite logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
+        <a href="https://react.dev" target="_blank" title='Built With React'>
           <img src={reactLogo} alt="React logo" />
         </a>
       </Box>
