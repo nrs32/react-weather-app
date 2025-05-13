@@ -2,7 +2,7 @@ import { WeatherApiResponse } from '@openmeteo/sdk/weather-api-response';
 import type { DayKey, WeatherCodeInfo, WeatherData } from '../types/weather-types';
 import weatherCodes from './weather-codes';
 
-const getWeatherDesc = (code: number): WeatherCodeInfo => {
+const getWeatherCodeInfo = (code: number): WeatherCodeInfo => {
   return weatherCodes[code] || "Unknown";
 }
 
@@ -50,6 +50,8 @@ const getInitWeatherData = (response: WeatherApiResponse) => {
 	// The code for this method is modifed from:
 	// https://open-meteo.com/en/docs?current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code&hourly=temperature_2m,weather_code&latitude=42.88&longitude=85.81
 
+	// NOTE: open-medeo uses utcOffsetSeconds paired with toISO, but I don't want to use that for conversion
+	// utcOffsetSeconds by itself, with no toISO time, makes the dates incorrect, so I removed this part of the time calculations
 	const utcOffsetSeconds = response.utcOffsetSeconds();
 	const current = response.current()!;
 	const hourly = response.hourly()!;
@@ -60,7 +62,7 @@ const getInitWeatherData = (response: WeatherApiResponse) => {
 	// NOTE: The order of weather variables in the URL query and the indices below need to match!
 	return {
 		current: {
-			time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
+			time: new Date((Number(current.time())) * 1000),
 			temperature2m: current.variables(0)!.value(),
 			relativeHumidity2m: current.variables(1)!.value(),
 			apparentTemperature: current.variables(2)!.value(),
@@ -71,7 +73,7 @@ const getInitWeatherData = (response: WeatherApiResponse) => {
 		},
 		hourly: {
 			time: [...Array((Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval())].map(
-				(_, i) => new Date((Number(hourly.time()) + i * hourly.interval() + utcOffsetSeconds) * 1000)
+				(_, i) => new Date((Number(hourly.time()) + i * hourly.interval()) * 1000)
 			),
 			temperature2m: hourly.variables(0)!.valuesArray()!,
 			weatherCode: hourly.variables(1)!.valuesArray()!,
@@ -80,17 +82,18 @@ const getInitWeatherData = (response: WeatherApiResponse) => {
 		},
 		daily: {
 			time: [...Array((Number(daily.timeEnd()) - Number(daily.time())) / daily.interval())].map(
-				(_, i) => new Date((Number(daily.time()) + i * daily.interval() + utcOffsetSeconds) * 1000)
+				(_, i) => new Date((Number(daily.time()) + i * daily.interval()) * 1000)
 			),
 			sunrise: [...Array(sunrise.valuesInt64Length())].map(
-				(_, i) => new Date((Number(sunrise.valuesInt64(i)) + utcOffsetSeconds) * 1000)
+				(_, i) => new Date((Number(sunrise.valuesInt64(i))) * 1000)
 			),
 			sunset: [...Array(sunset.valuesInt64Length())].map(
-				(_, i) => new Date((Number(sunset.valuesInt64(i)) + utcOffsetSeconds) * 1000)
+				(_, i) => new Date((Number(sunset.valuesInt64(i))) * 1000)
 			),
-			uvIndexMax: daily.variables(2)!.valuesArray()!,
-			temperature2mMax: daily.variables(3)!.valuesArray()!,
-			temperature2mMin: daily.variables(4)!.valuesArray()!,
+			temperature2mMax: daily.variables(2)!.valuesArray()!,
+			temperature2mMin: daily.variables(3)!.valuesArray()!,
+			uvIndexMax: daily.variables(4)!.valuesArray()!,
+			weatherCode: daily.variables(5)!.valuesArray()!,
 		},
 	};
 }
@@ -98,7 +101,7 @@ const getInitWeatherData = (response: WeatherApiResponse) => {
 const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 	const initWeatherData = getInitWeatherData(responses[0]); // We only have 1 location, therefore 1 response
 	const currentWeather = initWeatherData.current;
-
+	
 	// Partial here allows us to not declare the day keys when initializing the object
 	const weatherData: Partial<WeatherData> = {
 		current: {
@@ -108,7 +111,7 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 			apparentTemperature: Math.round(currentWeather.apparentTemperature),
 			isDay: !!currentWeather.isDay,
 			precipitation: currentWeather.precipitation,
-			weatherCodeInfo: getWeatherDesc(currentWeather.weatherCode),
+			weatherCodeInfo: getWeatherCodeInfo(currentWeather.weatherCode),
 			timeToSunset: getTimeToSunset(initWeatherData.daily.sunset[0], currentWeather.time),
 			timeToSunrise: getTimeToSunrise(initWeatherData.daily.sunrise[0], currentWeather.time),
 			cloudCover: currentWeather.cloudCover,
@@ -116,28 +119,23 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 	};
 
 	const hourlyTimes = initWeatherData.hourly.time;
-	let dayIndex = 0;
+	let dayIndex = 1;
+	const firstTime = hourlyTimes[0];
 	let currentDateKey = hourlyTimes[0].toLocaleDateString('en-US');
-	const yesterdaysDateKey = new Date(Date.now() - 86400000).toLocaleDateString('en-US');
+
 	for (let i = 0; i < hourlyTimes.length; i++) {
 		const baseDate = hourlyTimes[i];
 		const dateKey = baseDate.toLocaleDateString('en-US');
 
-		if (dateKey === yesterdaysDateKey) {
-			// NOTE: Our data starts with yesterday bc of UTC data from open-meteo
-			// So we skip yesterdays data when mapping to days
-			// This also means the isNextDay will be true for our first data of today
-			continue;
-		}
-
+		const isFirstHour = baseDate === firstTime;
 		const isNextDay = dateKey !== currentDateKey;
 
 		if (isNextDay) {
-      dayIndex++;
-      currentDateKey = dateKey;
-    }
+			dayIndex++;
+			currentDateKey = dateKey;
+		}
 
-		if (isNextDay) {
+		if (isFirstHour || isNextDay) {
 			const sunset = initWeatherData.daily.sunset[dayIndex - 1];
 			const sunrise = initWeatherData.daily.sunrise[dayIndex - 1];
 			const maxTemp = initWeatherData.daily.temperature2mMax[dayIndex - 1];
@@ -153,7 +151,8 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 				uvIndex: initWeatherData.daily.uvIndexMax[dayIndex - 1],
 				tempMax: maxTemp,
 				tempMin: minTemp,
-				tempAvg: avgTemp
+				tempAvg: avgTemp,
+				weatherCodeInfo: getWeatherCodeInfo(initWeatherData.daily.weatherCode[dayIndex - 1]),
 			};
 		}
 
@@ -162,7 +161,7 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 			temperature: Math.round(initWeatherData.hourly.temperature2m[i]),
 			humidity: initWeatherData.hourly.relativeHumidity2m[i],
 			apparentTemperature: Math.round(initWeatherData.hourly.apparentTemperature[i]),
-			weatherDesc: getWeatherDesc(initWeatherData.hourly.weatherCode[i]),
+			weatherCodeInfo: getWeatherCodeInfo(initWeatherData.hourly.weatherCode[i]),
 		});
 	}
 
