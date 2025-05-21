@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 import WeatherCodeDisplay from './components/weather-code-display';
 import CurrentTempDisplay from './components/current-temp-display';
 import ThemedButton from './components/themed-button';
-import TwilightDisplay from './components/twilight-display';
+import TwilightDisplay from './components/twilight-display/twilight-display';
 
 {/* TODO: Show daily weather code with min and max temps */}
 {/* TODO: Considar clicking on day and showing houlry weather code with temps*/}
@@ -130,7 +130,7 @@ function App() {
           </Box>
         </WeatherCard>
 
-        <WeatherCard width='500px' height='308px' sx={{ paddingTop: '25px' }}>
+        <WeatherCard width='500px' height='317px' sx={{ paddingTop: '25px' }}>
           <TwilightDisplay 
             timeToSunrise={weatherData.current.timeToSunrise} 
             timeToSunset={weatherData.current.timeToSunset}
