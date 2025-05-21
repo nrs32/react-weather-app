@@ -45,7 +45,7 @@ const theme = createTheme({
     },
     cardBg: {
       main: '#272934',
-      dark: '#121621',
+      dark: '#161923',
     },
     bg: {
       main: '#121621',
