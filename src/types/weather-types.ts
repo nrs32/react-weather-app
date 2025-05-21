@@ -6,9 +6,14 @@ export interface CurrentWeather {
   isDay: boolean; 			  // Whether it's daytime
   precipitation: number;  // Precipitation amount (mm)
   weatherCodeInfo: WeatherCodeInfo; // Weather code info
-	timeToSunset: string;   // Time until sunset  (x hours & y minutes)
-	timeToSunrise: string;	// Time until sunrise (x hours & y minutes)
-  cloudCover: number;     // %
+	timeToSunset: TimeToTwilight;
+	timeToSunrise: TimeToTwilight;
+  cloudCover: number;      // %
+}
+
+export interface TimeToTwilight {
+  label: string;   // Time until sunset/sunrise (x hours & y minutes)
+  percent: number; // % of time remaining to sunset/sunrise out of 12 hours
 }
 
 export interface HourlyWeather {

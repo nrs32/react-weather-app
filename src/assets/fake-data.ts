@@ -13,8 +13,14 @@ export const fakeData: WeatherData = {
       "dayIcon": "partly-cloudy-day-drizzle",
       "nightIcon": "partly-cloudy-night-drizzle"
     },
-    "timeToSunset": "10 hours & 27 minutes",
-    "timeToSunrise": "Sun has risen",
+    "timeToSunset": {
+      "label": "10 hours & 27 minutes",
+      "percent": 16.666666666,
+    },
+    "timeToSunrise": {
+      "label": "Sun has risen",
+      "percent": 100,
+    },
     "cloudCover": 95
   },
   "day1": {

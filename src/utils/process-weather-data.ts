@@ -1,5 +1,5 @@
 import { WeatherApiResponse } from '@openmeteo/sdk/weather-api-response';
-import type { DayKey, WeatherCodeInfo, WeatherData } from '../types/weather-types';
+import type { DayKey, TimeToTwilight, WeatherCodeInfo, WeatherData } from '../types/weather-types';
 import weatherCodes from './weather-codes';
 
 const getWeatherCodeInfo = (code: number): WeatherCodeInfo => {
@@ -14,36 +14,49 @@ const getTimeString = (date: Date): string => {
 	});
 }
 
-const getTimeToSunset = (sunset: Date, currentTime: Date): string => {
+const getTimeToSunset = (sunset: Date, currentTime: Date): TimeToTwilight => {
 	const diffMs = sunset.getTime() - currentTime.getTime();
 
-	if (diffMs <= 0) return 'Sun has set';
-
-	const totalMinutes = Math.floor(diffMs / 60000);
-	const hours = Math.floor(totalMinutes / 60);
-	const minutes = totalMinutes % 60;
-
-	if (hours === 0) {
-		return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
-	}
-
-	return `${hours} hour${hours !== 1 ? 's' : ''} & ${minutes} minute${minutes !== 1 ? 's' : ''}`;
+	if (diffMs <= 0) return {
+		label: 'Sun has set',
+		percent: 100,
+	};
+	
+	const timeToTwilight = getTimeToTwilight(diffMs);
+	return {...timeToTwilight, label: `${timeToTwilight.label} to sunset`};
 }
 
-const getTimeToSunrise = (sunrise: Date, currentTime: Date): string => {
+const getTimeToSunrise = (sunrise: Date, currentTime: Date): TimeToTwilight => {
 	const diffMs = sunrise.getTime() - currentTime.getTime();
 
-	if (diffMs <= 0) return 'Sun has risen';
+	if (diffMs <= 0) return {
+		label: 'Sun has risen',
+		percent: 100,
+	};
 
+	const timeToTwilight = getTimeToTwilight(diffMs);
+	return {...timeToTwilight, label: `${timeToTwilight.label} to sunrise`};
+}
+
+const getTimeToTwilight = (diffMs: number): TimeToTwilight => {
 	const totalMinutes = Math.floor(diffMs / 60000);
 	const hours = Math.floor(totalMinutes / 60);
 	const minutes = totalMinutes % 60;
 
+	const hoursRemaining = Math.round(totalMinutes / 60);
+	const percentTimeRemaining = ((12 - hoursRemaining) / 12) * 100
+
 	if (hours === 0) {
-		return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+		return {
+			label:  `${minutes} minute${minutes !== 1 ? 's' : ''}`,
+			percent: percentTimeRemaining,
+		};
 	}
 
-	return `${hours} hour${hours !== 1 ? 's' : ''} & ${minutes} minute${minutes !== 1 ? 's' : ''}`;
+	return {
+		label: `${hours} hour${hours !== 1 ? 's' : ''} & ${minutes} minute${minutes !== 1 ? 's' : ''}`,
+		percent: percentTimeRemaining,
+	};
 }
 
 const getInitWeatherData = (response: WeatherApiResponse) => {
@@ -110,7 +123,7 @@ const processWeatherData = (responses: WeatherApiResponse[]): WeatherData => {
 			humidity: currentWeather.relativeHumidity2m,
 			apparentTemperature: Math.round(currentWeather.apparentTemperature),
 			isDay: !!currentWeather.isDay,
-			precipitation: currentWeather.precipitation,
+			precipitation: Math.round(currentWeather.precipitation),
 			weatherCodeInfo: getWeatherCodeInfo(currentWeather.weatherCode),
 			timeToSunset: getTimeToSunset(initWeatherData.daily.sunset[0], currentWeather.time),
 			timeToSunrise: getTimeToSunrise(initWeatherData.daily.sunrise[0], currentWeather.time),

@@ -36,7 +36,7 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
         {...props}
         value={100}
         sx={{
-          color: '#3A3D4B',
+          color: theme.palette.text.secondary,
         }}
       />
 
