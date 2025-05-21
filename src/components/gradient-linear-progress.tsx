@@ -30,7 +30,7 @@ const GradientLinearProgress: React.FC<GradientLinearProgressProps> = (props: Gr
         variant="determinate"
         sx={{
           width: '100%',
-          height: '6px',
+          height: '8px',
           borderRadius: '5px',
           background: theme.palette.text.secondary, // unused track
           '& .MuiLinearProgress-bar': {

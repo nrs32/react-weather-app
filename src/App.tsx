@@ -133,6 +133,66 @@ function App() {
           </Box>
         </WeatherCard>
 
+        <WeatherCard width='500px' height='290px'>
+          <Box display='flex' flexDirection='column' gap={3} sx={{ marginTop: '-7px' }}>
+
+            <Box display='flex' flexDirection='row' justifyContent='space-evenly' alignItems='flex-end' gap={2}>
+              <Box display='flex' flexDirection='column' alignItems='center'>
+                <img src={sunsetSvg} alt="Sunset" width={140} height={140} />
+                <span style={{ color: theme.palette.text.primary, fontSize: '18px', fontWeight: 700, letterSpacing: theme.palette.text.secondaryLetterSpacing, marginTop: '-15px' }}>SUNSET - {weatherData.day1.sunset}</span>
+              </Box>
+
+              <Box display='flex' flexDirection='column' alignItems='center'>
+                <img src={sunriseSvg} alt="Sunrise" width={140} height={140} />
+                <span style={{ color: theme.palette.text.primary, fontSize: '18px', fontWeight: 700, letterSpacing: theme.palette.text.secondaryLetterSpacing, marginTop: '-17px' }}>SUNRISE - {weatherData.day1.sunrise}</span>
+              </Box>
+            </Box>
+
+            <Box display='flex' flexDirection='column' gap={3} sx={{ marginTop: '25px' }}>
+
+              <Box display='flex' flexDirection='row' sx={{ padding: '10px 0'}} gap={1}>
+                <Box display='flex' flexDirection='column' flex={1}>
+                  <span style={{ 
+                      color: theme.palette.text.primary, 
+                      paddingBottom: '9px',
+                      marginTop: '-13px', 
+                      textTransform: 'capitalize',
+                      textAlign: 'right',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      letterSpacing: theme.palette.text.secondaryLetterSpacing,
+                  }}>{weatherData.current.timeToSunset.label}</span>
+                  <GradientLinearProgress
+                    id="sunset_countdown"
+                    value={weatherData.current.timeToSunset.percent}
+                    gradientstops={[theme.palette.blue.main, theme.palette.pink.main]}
+                  />
+                </Box>
+              </Box>
+
+              <Box display='flex' flexDirection='row' sx={{ padding: '10px 0'}} gap={1}>
+                <Box display='flex' flexDirection='column' flex={1} >
+                  <span style={{ 
+                      color: theme.palette.text.primary, 
+                      paddingBottom: '9px',
+                      marginTop: '-13px', 
+                      textTransform: 'capitalize',
+                      textAlign: 'right',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      letterSpacing: theme.palette.text.secondaryLetterSpacing,
+                  }}>{weatherData.current.timeToSunrise.label}</span>
+                  <GradientLinearProgress
+                    id="sunrise_countdown"
+                    value={weatherData.current.timeToSunrise.percent}
+                    gradientstops={[theme.palette.teal.main, theme.palette.purple.main]}
+                  />
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </WeatherCard>
+
         <WeatherCard width='738px' height='340px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>
           <CarouselControls
             onPrev={onPrev}
@@ -148,62 +208,6 @@ function App() {
 
         <WeatherCard width='580px' height='340px'>
           <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}></WeeklyTempSpreadGraph>
-        </WeatherCard>
-
-        <WeatherCard width='500px' height='240px'>
-          <Box display='flex' flexDirection='column' gap={2}>
-
-            <Box display='flex' flexDirection='row' justifyContent='space-evenly' alignItems='flex-end' gap={2}>
-              <Box display='flex' flexDirection='column' alignItems='center'>
-                <img src={sunsetSvg} alt="Sunset" width={70} height={70} />
-                <span style={{ color: theme.palette.text.primary, fontSize: '14px', fontWeight: 700, letterSpacing: theme.palette.text.secondaryLetterSpacing }}>SUNSET - {weatherData.day1.sunset}</span>
-              </Box>
-
-              <Box display='flex' flexDirection='column' alignItems='center'>
-                <img src={sunriseSvg} alt="Sunrise" width={70} height={70} />
-                <span style={{ color: theme.palette.text.primary, fontSize: '14px', fontWeight: 700, letterSpacing: theme.palette.text.secondaryLetterSpacing, marginTop: '-2px' }}>SUNRISE - {weatherData.day1.sunrise}</span>
-              </Box>
-            </Box>
-
-            <Box display='flex' flexDirection='column' gap={3} sx={{ marginTop: '25px' }}>
-
-              <Box display='flex' flexDirection='row' sx={{ padding: '10px 0'}} gap={1}>
-                <Box display='flex' flexDirection='column' flex={1}>
-                  <span style={{ 
-                      color: theme.palette.text.primary, 
-                      fontSize: '14px', 
-                      paddingBottom: '9px',
-                      marginTop: '-13px', 
-                      textTransform: 'capitalize',
-                      textAlign: 'right',
-                  }}>{weatherData.current.timeToSunset.label}</span>
-                  <GradientLinearProgress
-                    id="sunset_countdown"
-                    value={weatherData.current.timeToSunset.percent}
-                    gradientstops={[theme.palette.blue.main, theme.palette.pink.main]}
-                  />
-                </Box>
-              </Box>
-
-              <Box display='flex' flexDirection='row' sx={{ padding: '10px 0'}} gap={1}>
-                <Box display='flex' flexDirection='column' flex={1} >
-                  <span style={{ 
-                      color: theme.palette.text.primary, 
-                      fontSize: '14px', 
-                      paddingBottom: '9px',
-                      marginTop: '-13px', 
-                      textTransform: 'capitalize',
-                      textAlign: 'right',
-                  }}>{weatherData.current.timeToSunrise.label}</span>
-                  <GradientLinearProgress
-                    id="sunrise_countdown"
-                    value={weatherData.current.timeToSunrise.percent}
-                    gradientstops={[theme.palette.teal.main, theme.palette.purple.main]}
-                  />
-                </Box>
-              </Box>
-            </Box>
-          </Box>
         </WeatherCard>
       </Box>
 
