@@ -19,8 +19,12 @@ import FooterAttribution from './components/footer-attribution';
 
 // TODO: Show daily weather code with min and max temps 
 // TODO: Considar clicking on day and showing houlry weather code with temps
+//
 // TODO: do something cool for loading.
-// TODO: implememt smooth scroll? Maybe different speed scrolls too?
+// TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
+// TODO: implememt smooth scroll with gsap? Maybe different speed scrolls / stagger too?
+// TODO: animation graph svgs to draw themselves. Probs cant use gsap svg bc of area, 
+//       but can use gsap to animate slow reveal of svg underneath or something?
 
 interface UserLocation {
   lat: number;
