@@ -5,6 +5,9 @@ import React, { useEffect } from 'react';
 import normalizeDataPoints from '../../utils/normalize-data-points';
 import gsap from 'gsap';
 import usePrevious from '../../utils/use-previous-hook';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export type GradientDirection = 'v' | 'h'; // vertical or horizontal
 
@@ -29,7 +32,7 @@ export interface CurvyGraphProps {
 
 const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width, height, yRange, xRange, showAreaShadow }) => {
   const prevData = usePrevious(data);
-
+  
   const graphId = `curvy-time-graph-${id}`;
   const [startColor, endColor] = gradientstops;
   const svgHeight = height - SPACE_BELOW_DATA;
@@ -72,15 +75,55 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
   );
 
   useEffect(() => {
+    // This effect re-animates on scroll triggers (not data)
+
+    // Reset the graph to width 0 so we re-animate on data changes
+    gsap.set(`#${graphId}-clip-rect`, { attr: { width: 0 } });
+
+    // Use gsap to tween on the clipPath rect element (by id) 
+    const tween = gsap.to(`#${graphId}-clip-rect`, {
+      scrollTrigger: {
+        trigger: `#${graphId}-svg`,
+        start: 'bottom bottom', // when the bottom of the SVG hits bottom of viewport we start animation
+        end: 'top bottom', // when the top of the SVG hits the bottom of the viewport we leave animation zone
+        toggleActions: 'play none reverse none', // play onEnter, onLeave, onEnterBack, onLeaveBack
+      },
+
+      duration: 2, // seconds
+
+      // animate the width attribute of clipPath rect from its set width (0) to the width we specify here
+      attr: { width },
+
+      // start reveal quickly and then slow down (out)
+      // use power2 which is a steeper speed curve than the default of 1, for a more pronounced deceleration.
+      ease: 'power2.out',
+    });
+
+    return () => {
+      // if this component unmounts or id changes
+      // cleanup gsap animation and scrollTriggers for this graph 
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+
+  }, [graphId, width]);
+
+  
+  useEffect(() => {
+    // This effect re-animates on data changes (not scroll triggers)
+
     const weHaveNoData = !data || data.length === 0;
     const dataHasNoChanges = JSON.stringify(prevData) === JSON.stringify(data);
 
     if (weHaveNoData || dataHasNoChanges) return;
 
-    // Reset the graph to width 0 so we re-animate
-    gsap.set(`#${graphId}-clip-rect`, {
-      attr: { width: 0 },
-    });
+    // Check if the chart is currently in the viewport
+    const inViewport = ScrollTrigger.isInViewport(`#${graphId}-svg`);
+
+    if (!inViewport) return;
+
+    // Reset the graph to width 0 so we re-animate on data changes
+    gsap.set(`#${graphId}-clip-rect`, { attr: { width: 0 } });
 
     // Use gsap to tween on the clipPath rect element (by id) 
     const tween = gsap.to(`#${graphId}-clip-rect`, {
@@ -95,13 +138,15 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
     });
 
     return () => {
-      tween.kill(); // cleanup gsap animation if this component unmounts or id changes
+      // if this component unmounts or id changes
+      // cleanup gsap animation and scrollTriggers for this graph 
+      tween.kill();
     };
-  }, [graphId, data, width]);
+  }, [data]);
 
   return (
     <div style={style}>
-      <svg width={width} height={height}>
+      <svg id={`${graphId}-svg`} width={width} height={height}>
         <defs>
           {renderGradient(false)}
 

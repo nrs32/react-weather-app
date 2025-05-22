@@ -25,6 +25,7 @@ I used [download directory](https://download-directory.github.io) which lets you
 ### Use GSAP for animation 
 - [GSAP](https://gsap.com/)
 - [Docs](https://gsap.com/docs/v3/)
+- [Scroll Trigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/)
 
 ### Use MUI
 - `npm install @mui/material @emotion/react @emotion/styled` for MUI and Emotion
