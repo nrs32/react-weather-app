@@ -17,14 +17,15 @@ import ThemedButton from './components/themed-button';
 import TwilightDisplay from './components/twilight-display/twilight-display';
 import FooterAttribution from './components/footer-attribution';
 
+// TODO: refactor curvyTimeGraph bc too much is going on in there, possibly extract animations out of there completely so parent can handle?
+// TODO: make temperature areas animate one after another (min, avg, max) and same with temp v humidity
+// TODO: and make labels appear at the end
+//
 // TODO: Show daily weather code with min and max temps 
 // TODO: Considar clicking on day and showing houlry weather code with temps
 //
-// TODO: do something cool for loading.
 // TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
 // TODO: implememt smooth scroll with gsap? Maybe different speed scrolls / stagger too?
-// TODO: animation graph svgs to draw themselves. Probs cant use gsap svg bc of area, 
-//       but can use gsap to animate slow reveal of svg underneath or something?
 
 interface UserLocation {
   lat: number;
