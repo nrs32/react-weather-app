@@ -22,6 +22,10 @@
 
 I used [download directory](https://download-directory.github.io) which lets you paste the url of a github directory and download it
 
+### Use GSAP for animation 
+- [GSAP](https://gsap.com/)
+- [Docs](https://gsap.com/docs/v3/)
+
 ### Use MUI
 - `npm install @mui/material @emotion/react @emotion/styled` for MUI and Emotion
 - `npm install @fontsource/roboto` to use Roboto as the default font, if wanted.

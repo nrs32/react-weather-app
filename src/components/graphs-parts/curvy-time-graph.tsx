@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { SPACE_BELOW_DATA, type Point } from '../../types/graph-types';
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import normalizeDataPoints from '../../utils/normalize-data-points';
+import gsap from 'gsap';
+import usePrevious from '../../utils/use-previous-hook';
 
 export type GradientDirection = 'v' | 'h'; // vertical or horizontal
 
@@ -26,6 +28,8 @@ export interface CurvyGraphProps {
 }
 
 const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width, height, yRange, xRange, showAreaShadow }) => {
+  const prevData = usePrevious(data);
+
   const graphId = `curvy-time-graph-${id}`;
   const [startColor, endColor] = gradientstops;
   const svgHeight = height - SPACE_BELOW_DATA;
@@ -55,58 +59,94 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
 
   // SVG Gradient Definition
   const renderGradient = (isTransparent: boolean) => (
-    <defs>
-      <linearGradient
-        id={`${graphId}${isTransparent ? "_transparent" : ""}`}
-        x1="0%"
-        y1="0%"
-        x2={gradientDirection === 'h' ? '100%' : '0%'}
-        y2={gradientDirection === 'h' ? '0%' : '100%'}
-      >
-        <stop offset="0%" stopColor={startColor} stopOpacity={isTransparent ? "0.5" : "1"}/>
-        <stop offset="100%" stopColor={endColor} stopOpacity={isTransparent ? "0" : "1"}/>
-      </linearGradient>
-    </defs>
+    <linearGradient
+      id={`${graphId}${isTransparent ? "_transparent" : ""}`}
+      x1="0%"
+      y1="0%"
+      x2={gradientDirection === 'h' ? '100%' : '0%'}
+      y2={gradientDirection === 'h' ? '0%' : '100%'}
+    >
+      <stop offset="0%" stopColor={startColor} stopOpacity={isTransparent ? "0.5" : "1"}/>
+      <stop offset="100%" stopColor={endColor} stopOpacity={isTransparent ? "0" : "1"}/>
+    </linearGradient>
   );
+
+  useEffect(() => {
+    const weHaveNoData = !data || data.length === 0;
+    const dataHasNoChanges = JSON.stringify(prevData) === JSON.stringify(data);
+
+    if (weHaveNoData || dataHasNoChanges) return;
+
+    // Reset the graph to width 0 so we re-animate
+    gsap.set(`#${graphId}-clip-rect`, {
+      attr: { width: 0 },
+    });
+
+    // Use gsap to tween on the clipPath rect element (by id) 
+    const tween = gsap.to(`#${graphId}-clip-rect`, {
+      duration: 2, // seconds
+
+      // animate the width attribute of clipPath rect from its set width (0) to the width we specify here
+      attr: { width },
+
+      // start reveal quickly and then slow down (out)
+      // use power2 which is a steeper speed curve than the default of 1, for a more pronounced deceleration.
+      ease: 'power2.out',
+    });
+
+    return () => {
+      tween.kill(); // cleanup gsap animation if this component unmounts or id changes
+    };
+  }, [graphId, data, width]);
 
   return (
     <div style={style}>
       <svg width={width} height={height}>
-        {renderGradient(false)}
+        <defs>
+          {renderGradient(false)}
 
-        {type === 'area' && (
-          <>
-            {showAreaShadow &&
-              <defs>
-                <filter id="areaShadow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow
-                    dx="0"
-                    dy="-2" // shadow up 2 px
-                    stdDeviation="4"  // softness
-                    floodColor="rgba(0, 0, 0, 0.15)" />
-                </filter>
-              </defs>
-            }
+          {type === 'area' && showAreaShadow && 
+            <filter id="areaShadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow
+                dx="0"
+                dy="-2" // shadow up 2 px
+                stdDeviation="4"  // softness
+                floodColor="rgba(0, 0, 0, 0.15)" />
+            </filter>
+          }
+
+          {type === 'line-area' && renderGradient(true)}
+
+          {/* clipPath is the clipping region that restricts visuals to the clip path
+              rect defines the actual shape of that visual area, which is a rectangle for us */}
+          <clipPath id={`${graphId}-clip`}>
+            <rect id={`${graphId}-clip-rect`} x="0" y="0" width="0" height={height} />
+          </clipPath>
+        </defs>
+
+        {/* g is just a way to group stuff like a div or span. 
+            We're using it to group our svg content that we want to clip and slowly reveal with animation */}
+        <g clipPath={`url(#${graphId}-clip)`}>
+          {type === 'area' && (
             <path d={areaPathData} css={css`
               fill: url(#${graphId});
               filter: url(#areaShadow);
             `} />
-          </>
-        )}
+          )}
 
-        {type === 'dashed-line' && (
-          <path d={pathData} css={dashedLineStyle} />
-        )}
+          {type === 'dashed-line' && (
+            <path d={pathData} css={dashedLineStyle} />
+          )}
 
-        {type === 'line-area' && (
-          <>
-            {renderGradient(true)}
-            <path d={areaPathData} css={css`
-              fill: url(#${graphId}_transparent);
-            `}/>
-            <path d={pathData} css={lineStyle} />
-          </>
-        )}
+          {type === 'line-area' && (
+            <>
+              <path d={areaPathData} css={css`
+                fill: url(#${graphId}_transparent);
+              `}/>
+              <path d={pathData} css={lineStyle} />
+            </>
+          )}
+        </g>
       </svg>
     </div>
   );
