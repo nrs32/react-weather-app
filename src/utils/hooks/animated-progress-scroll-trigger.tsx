@@ -34,6 +34,7 @@ export default function useAnimatedProgressScrollTrigger({
 				// as throttling could miss the last value
 				setAnimatedValue(Math.round(valueRef.current.v)); 
 			},
+      delay: .3,
       paused: true, // So we don't run until we are scroll-triggered
       immediateRender: false,
     });
