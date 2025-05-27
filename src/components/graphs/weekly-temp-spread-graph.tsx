@@ -58,21 +58,21 @@ const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title, we
       </Box>
       <YAxis style={{ position: "absolute", top: `${dataTop + 1}px`, left: `${dataLeft - 54}px` }} labeledYPoints={dailyYPoints} getLabel={getTemperatureLabel} graphWidth={graphWidth} height={graphHeight} textSpace={30}></YAxis>
 
-      <CurvyTimeGraphAnimator id="day-max-temp" width={graphWidth} data={dailyMaxTemps}>
+      <CurvyTimeGraphAnimator id="day-max-temp" width={graphWidth} data={dailyMaxTemps} delay={3}>
         {(refs) => (
           <CurvyTimeGraph animationRefs={refs} id="day-max-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
         )}
       </CurvyTimeGraphAnimator>
       <RightDataLabel label="MAX DAILY TEMP" labelColor={theme.palette.pink.light} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${labelLeft + 3}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
 
-      <CurvyTimeGraphAnimator id="day-avg-temp" width={graphWidth} data={dailyAvgTemps}>
+      <CurvyTimeGraphAnimator id="day-avg-temp" width={graphWidth} data={dailyAvgTemps} delay={1.5}>
         {(refs) => (
           <CurvyTimeGraph animationRefs={refs} id="day-avg-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
         )}
       </CurvyTimeGraphAnimator>
       <RightDataLabel label="AVG DAILY TEMP" labelColor={theme.palette.blue.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${labelLeft + 1}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
 
-      <CurvyTimeGraphAnimator id="day-min-temp" width={graphWidth} data={dailyMinTemps}>
+      <CurvyTimeGraphAnimator id="day-min-temp" width={graphWidth} data={dailyMinTemps} delay={0}>
         {(refs) => (
           <CurvyTimeGraph animationRefs={refs} id="day-min-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyMinTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
         )}

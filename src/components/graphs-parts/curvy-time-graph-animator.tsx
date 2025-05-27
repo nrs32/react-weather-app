@@ -13,6 +13,7 @@ export interface CurvyTimeGraphAnimatorProps {
   id: string;
   data: Point[];
   width: number;
+	delay: number; // delay before beginning animation
 
 	// children allows us to be a wrapper component and pass refs to the child graph without defining the child graph here
 	// This way we don't need to pass child graph props to this animator wrapper
@@ -30,7 +31,7 @@ export interface CurvyTimeGraphAnimatorProps {
   }) => React.ReactNode;
 }
 
-const CurvyTimeGraphAnimator: React.FC<CurvyTimeGraphAnimatorProps> = ({ id, data, width, children }) => {
+const CurvyTimeGraphAnimator: React.FC<CurvyTimeGraphAnimatorProps> = ({ id, data, width, delay, children }) => {
   const prevData = usePrevious(data);
 	const clipPathRectRef = useRef<SVGRectElement>(null);
 	const svgRootRef = useRef<SVGSVGElement>(null);
@@ -42,16 +43,9 @@ const CurvyTimeGraphAnimator: React.FC<CurvyTimeGraphAnimatorProps> = ({ id, dat
     // Reset the graph to width 0 so we re-animate on data changes
     gsap.set(clipPathRectRef.current, { attr: { width: 0 } });
 
-    // Use gsap to tween on the clipPath rect element (by id) 
+		// Use gsap to tween on the clipPath rect element
     const tween = gsap.to(clipPathRectRef.current, {
-      scrollTrigger: {
-        trigger: svgRootRef.current,
-        start: 'bottom bottom', // when the bottom of the SVG hits bottom of viewport we start animation
-        end: 'top bottom', // when the top of the SVG hits the bottom of the viewport we leave animation zone
-        toggleActions: 'play none reverse none', // play onEnter, onLeave, onEnterBack, onLeaveBack
-      },
-
-      duration: 2, // seconds
+			duration: 2, // seconds
 
       // animate the width attribute of clipPath rect from its set width (0) to the width we specify here
       attr: { width },
@@ -59,12 +53,61 @@ const CurvyTimeGraphAnimator: React.FC<CurvyTimeGraphAnimatorProps> = ({ id, dat
       // start reveal quickly and then slow down (out)
       // use power2 which is a steeper speed curve than the default of 1, for a more pronounced deceleration.
       ease: 'power2.out',
+			paused: true, // pause to start
     });
 
+		let delayedCallInstance: gsap.core.Tween | null = null;  // for cancelation
+
+		// Use gsap to tween on the clipPath rect element
+		const startTrigger = ScrollTrigger.create({
+			trigger: svgRootRef.current,
+			start: 'bottom bottom', // when the bottom of the SVG hits bottom of viewport
+			end: 'bottom bottom',
+			onEnter: () => {
+				// when we're scrolling down and the bottom of the svg hits the bottom of the view port
+				if (delayedCallInstance) delayedCallInstance.kill();
+				
+				// We should always delay the animation when it is re-triggered
+				delayedCallInstance = gsap.delayedCall(delay ?? 0, () => {
+					tween.restart(true);
+					delayedCallInstance = null;
+				});
+			},
+
+			onEnterBack: () => {},
+			onLeave: () => {},
+
+			onLeaveBack: () => {},
+		});
+
+		// start: bottom bottom paired with end: top bottom, doesn't work
+		// Because we want our end, onLeaveBack to be triggered after the start already leaves the viewport
+		// So we need separate triggers.
+		const endTrigger = ScrollTrigger.create({
+			trigger: svgRootRef.current,
+			start: 'top bottom', // when the top of the SVG hits bottom of viewport
+			end: 'top bottom', 
+			onEnter: () => {},
+			onEnterBack: () => {},
+			onLeave: () => {},
+			onLeaveBack: () => {
+				// when we're scrolling up and the top of the svg hits the bottom of the viewport
+
+				// cancel the onEnter animation
+				if (delayedCallInstance) {
+					delayedCallInstance.kill();
+					delayedCallInstance = null;
+				}
+
+				tween.pause(0); // Pause the animation at the beginning
+			},
+		});
+		
     return () => {
       // if this component unmounts or id changes
       // cleanup gsap animation and scrollTriggers for this graph 
-      tween.scrollTrigger?.kill();
+			startTrigger.kill();
+			endTrigger.kill();
       tween.kill();
     };
 
@@ -88,11 +131,12 @@ const CurvyTimeGraphAnimator: React.FC<CurvyTimeGraphAnimatorProps> = ({ id, dat
     // Reset the graph to width 0 so we re-animate on data changes
     gsap.set(clipPathRectRef.current, { attr: { width: 0 } });
 
-    // Use gsap to tween on the clipPath rect element (by id) 
+    // Use gsap to tween on the clipPath rect element
     const tween = gsap.to(clipPathRectRef.current, {
+			delay,
       duration: 2, // seconds
-
-      // animate the width attribute of clipPath rect from its set width (0) to the width we specify here
+      
+			// animate the width attribute of clipPath rect from its set width (0) to the width we specify here
       attr: { width },
 
       // start reveal quickly and then slow down (out)

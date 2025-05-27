@@ -97,7 +97,7 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
           {/* clipPath is the clipping region that restricts visuals to the clip path
               rect defines the actual shape of that visual area, which is a rectangle for us */}
           <clipPath id={`${graphId}-clip`}>
-            <rect ref={animationRefs?.clipPathRect} id={`${graphId}-clip-rect`} x="0" y="0" width={width} height={height} />
+            <rect ref={animationRefs?.clipPathRect} id={`${graphId}-clip-rect`} x="0" y="0" width={animationRefs ? 0 : width} height={height} />
           </clipPath>
         </defs>
 
