@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material/styles';
 import { Box, CircularProgress, type CircularProgressProps } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import gsap from 'gsap';
 import userThrottle from '../utils/hooks/throttled-hook';
 
@@ -24,20 +25,50 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
   const valueRef = useRef({ v: 0 });
 
   useEffect(() => {
-    // use gsap tween to animate the value of valueRef to create an animation of the circular gradient results
     const tween = gsap.to(valueRef.current, {
-      duration: props.value! / 75,
+      duration: props.value! / 75, // so every progress appears at each % at the same time. 100% takes 1.3 sec, 33 takes .44 sec etc.
       v: props.value,
       ease: 'none',
       onUpdate: () => {
         throttledSetAnimatedValue(Math.round(valueRef.current.v));
-      }
+      },
+      paused: true, // So we don't run until we are scroll-triggered
     });
 
-    return () => {
-      tween.kill();
-    }
-  }, [props.value]);
+		const startTrigger = ScrollTrigger.create({
+			trigger: `#circular-gradient-${label}-box`,
+			start: 'bottom bottom',
+			end: 'bottom bottom',
+			onEnter: () => {
+        tween.restart(true);
+			},
+			onEnterBack: () => { },
+			onLeave: () => { },
+			onLeaveBack: () => { },
+		});
+
+		const endTrigger = ScrollTrigger.create({
+			trigger: `#circular-gradient-${label}-box`,
+			start: 'top bottom',
+			end: 'top bottom',
+			onEnter: () => { },
+			onEnterBack: () => { },
+			onLeave: () => { },
+			onLeaveBack: () => {
+				tween.pause(0);
+        setAnimatedValue(0);
+			},
+		});
+
+		return () => {
+			// if this component unmounts or id changes
+			// cleanup gsap animation and scrollTriggers for this graph 
+			startTrigger.kill();
+			endTrigger.kill();
+			tween.kill();
+		};
+
+	}, [props.value]);
 
   return (
     <Box position="relative" display="inline-flex">
@@ -65,6 +96,7 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
       {/* The filled track */}
       <CircularProgress
         {...props}
+        id={`circular-gradient-${label}-box`}
         value={animatedValue}
         variant="determinate"
         sx={{
