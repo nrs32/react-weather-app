@@ -10,6 +10,7 @@ import type React from 'react';
 import getTemperatureLabel from '../../utils/get-y-label';
 import RightDataLabel from '../graphs-parts/right-data-label';
 import Box from '@mui/material/Box';
+import CurvyTimeGraphAnimator from '../graphs-parts/curvy-time-graph-animator';
 
 interface WeeklyTempSpreadGraphProps extends GraphProps {
   title: string;
@@ -57,13 +58,25 @@ const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title, we
       </Box>
       <YAxis style={{ position: "absolute", top: `${dataTop + 1}px`, left: `${dataLeft - 54}px` }} labeledYPoints={dailyYPoints} getLabel={getTemperatureLabel} graphWidth={graphWidth} height={graphHeight} textSpace={30}></YAxis>
 
-      <CurvyTimeGraph id="day-max-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
+      <CurvyTimeGraphAnimator id="day-max-temp" width={graphWidth} data={dailyMaxTemps}>
+        {(refs) => (
+          <CurvyTimeGraph animationRefs={refs} id="day-max-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.pink.main, theme.palette.pink.light]} gradientDirection='h' type="area"/>
+        )}
+      </CurvyTimeGraphAnimator>
       <RightDataLabel label="MAX DAILY TEMP" labelColor={theme.palette.pink.light} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${labelLeft + 3}px` }} data={dailyMaxTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
 
-      <CurvyTimeGraph id="day-avg-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+      <CurvyTimeGraphAnimator id="day-avg-temp" width={graphWidth} data={dailyAvgTemps}>
+        {(refs) => (
+          <CurvyTimeGraph animationRefs={refs} id="day-avg-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+        )}
+      </CurvyTimeGraphAnimator>
       <RightDataLabel label="AVG DAILY TEMP" labelColor={theme.palette.blue.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${labelLeft + 1}px` }} data={dailyAvgTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
 
-      <CurvyTimeGraph id="day-min-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyMinTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+      <CurvyTimeGraphAnimator id="day-min-temp" width={graphWidth} data={dailyMinTemps}>
+        {(refs) => (
+          <CurvyTimeGraph animationRefs={refs} id="day-min-temp" width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={dailyMinTemps} yRange={[weeklyMin, weeklyMax]} gradientstops={[theme.palette.purple.main, theme.palette.pink.main]} gradientDirection='h' showAreaShadow={true} type="area"/>
+        )}
+      </CurvyTimeGraphAnimator>
       <RightDataLabel label="MIN DAILY TEMP" labelColor={theme.palette.pink.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${labelLeft}px` }} data={dailyMinTemps} yRange={[weeklyMin, weeklyMax]}></RightDataLabel>
 
       <XAxis width={graphWidth} style={{ position: "absolute", top: `calc(${graphHeight}px + ${dataTop + 2}px)`, left: `${dataLeft}px` }} data={dailyMinTemps}></XAxis>

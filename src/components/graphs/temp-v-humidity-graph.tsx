@@ -11,6 +11,7 @@ import getTemperatureLabel from '../../utils/get-y-label';
 import getHumidityLabel from '../../utils/get-humidity-label';
 import RightDataLabel from '../graphs-parts/right-data-label';
 import Box from '@mui/material/Box';
+import CurvyTimeGraphAnimator from '../graphs-parts/curvy-time-graph-animator';
 
 interface TempVHumidityGraphProps extends GraphProps {
   title: string,
@@ -59,10 +60,18 @@ const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ title, hourlyWe
       </Box>
       <YAxis style={{ position: "absolute", top: `${dataTop - 1}px`, left: `${dataLeft - 89}px`}} labeledYPoints={combinedYPoints} getLabel={(y) => getTempAndHumidityLabel(getTemperatureLabel(y), 'N/A')} graphWidth={graphWidth} height={graphHeight} textSpace={65}></YAxis>
 
-      <CurvyTimeGraph id='dashed' width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={hourlyHumidity} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
+      <CurvyTimeGraphAnimator id="dashed" width={graphWidth} data={hourlyHumidity}>
+        {(refs) => (
+          <CurvyTimeGraph animationRefs={refs} id='dashed' width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={hourlyHumidity} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
+        )}
+      </CurvyTimeGraphAnimator>
       <RightDataLabel label="HUMIDITY" labelColor={theme.palette.pink.light} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${labelTop}px`, left: `${labelLeft - 35}px` }} data={hourlyHumidity} yRange={[0, 100]}></RightDataLabel>
 
-      <CurvyTimeGraph id='line' width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px`  }} data={hourlyTemps} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
+      <CurvyTimeGraphAnimator id="line" width={graphWidth} data={hourlyTemps}>
+        {(refs) => (
+          <CurvyTimeGraph animationRefs={refs} id='line' width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px`  }} data={hourlyTemps} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
+        )}
+      </CurvyTimeGraphAnimator>
       <RightDataLabel label="TEMPERATURE" labelColor={theme.palette.purple.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${labelTop}px`, left: `${labelLeft}px`  }} data={hourlyTemps} ></RightDataLabel>
 
       <XAxis width={graphWidth} style={{ position: "absolute", top: `calc(${graphHeight}px + ${dataTop + 7}px)`, left: `${dataLeft}px` }} data={hourlyTemps} labelFrequency={4}></XAxis>

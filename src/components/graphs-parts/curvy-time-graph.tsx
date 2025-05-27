@@ -1,10 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { SPACE_BELOW_DATA, type Point } from '../../types/graph-types';
 import { css } from '@emotion/react';
-import React, { useEffect } from 'react';
 import normalizeDataPoints from '../../utils/normalize-data-points';
 import gsap from 'gsap';
-import usePrevious from '../../utils/use-previous-hook';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -28,11 +26,15 @@ export interface CurvyGraphProps {
   // dashed-line is a dashed line, no area
   type: 'line-area' | 'area' | 'dashed-line';
   showAreaShadow?: boolean;  // show shadow above area curve
+
+  // These refs can be passed in to allow a parent component to animate graph elements.
+  animationRefs?: {
+    clipPathRect: React.Ref<SVGRectElement>;
+    svgRoot: React.Ref<SVGSVGElement>;
+  }
 }
 
-const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width, height, yRange, xRange, showAreaShadow }) => {
-  const prevData = usePrevious(data);
-  
+const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientstops, gradientDirection = 'v', type, width, height, yRange, xRange, showAreaShadow, animationRefs }) => {  
   const graphId = `curvy-time-graph-${id}`;
   const [startColor, endColor] = gradientstops;
   const svgHeight = height - SPACE_BELOW_DATA;
@@ -74,76 +76,6 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
     </linearGradient>
   );
 
-  useEffect(() => {
-    // This effect re-animates on scroll triggers (not data)
-
-    // Reset the graph to width 0 so we re-animate on data changes
-    gsap.set(`#${graphId}-clip-rect`, { attr: { width: 0 } });
-
-    // Use gsap to tween on the clipPath rect element (by id) 
-    const tween = gsap.to(`#${graphId}-clip-rect`, {
-      scrollTrigger: {
-        trigger: `#${graphId}-svg`,
-        start: 'bottom bottom', // when the bottom of the SVG hits bottom of viewport we start animation
-        end: 'top bottom', // when the top of the SVG hits the bottom of the viewport we leave animation zone
-        toggleActions: 'play none reverse none', // play onEnter, onLeave, onEnterBack, onLeaveBack
-      },
-
-      duration: 2, // seconds
-
-      // animate the width attribute of clipPath rect from its set width (0) to the width we specify here
-      attr: { width },
-
-      // start reveal quickly and then slow down (out)
-      // use power2 which is a steeper speed curve than the default of 1, for a more pronounced deceleration.
-      ease: 'power2.out',
-    });
-
-    return () => {
-      // if this component unmounts or id changes
-      // cleanup gsap animation and scrollTriggers for this graph 
-      tween.scrollTrigger?.kill();
-      tween.kill();
-    };
-
-  }, [graphId, width]);
-
-  
-  useEffect(() => {
-    // This effect re-animates on data changes (not scroll triggers)
-
-    const weHaveNoData = !data || data.length === 0;
-    const dataHasNoChanges = JSON.stringify(prevData) === JSON.stringify(data);
-
-    if (weHaveNoData || dataHasNoChanges) return;
-
-    // Check if the chart is currently in the viewport
-    const inViewport = ScrollTrigger.isInViewport(`#${graphId}-svg`);
-
-    if (!inViewport) return;
-
-    // Reset the graph to width 0 so we re-animate on data changes
-    gsap.set(`#${graphId}-clip-rect`, { attr: { width: 0 } });
-
-    // Use gsap to tween on the clipPath rect element (by id) 
-    const tween = gsap.to(`#${graphId}-clip-rect`, {
-      duration: 2, // seconds
-
-      // animate the width attribute of clipPath rect from its set width (0) to the width we specify here
-      attr: { width },
-
-      // start reveal quickly and then slow down (out)
-      // use power2 which is a steeper speed curve than the default of 1, for a more pronounced deceleration.
-      ease: 'power2.out',
-    });
-
-    return () => {
-      // if this component unmounts or id changes
-      // cleanup gsap animation and scrollTriggers for this graph 
-      tween.kill();
-    };
-  }, [data]);
-
   return (
     <div style={style}>
       <svg id={`${graphId}-svg`} width={width} height={height}>
@@ -165,13 +97,13 @@ const CurvyTimeGraph: React.FC<CurvyGraphProps> = ({ id, style, data, gradientst
           {/* clipPath is the clipping region that restricts visuals to the clip path
               rect defines the actual shape of that visual area, which is a rectangle for us */}
           <clipPath id={`${graphId}-clip`}>
-            <rect id={`${graphId}-clip-rect`} x="0" y="0" width="0" height={height} />
+            <rect ref={animationRefs?.clipPathRect} id={`${graphId}-clip-rect`} x="0" y="0" width={width} height={height} />
           </clipPath>
         </defs>
 
         {/* g is just a way to group stuff like a div or span. 
             We're using it to group our svg content that we want to clip and slowly reveal with animation */}
-        <g clipPath={`url(#${graphId}-clip)`}>
+        <g ref={animationRefs?.svgRoot} clipPath={`url(#${graphId}-clip)`}>
           {type === 'area' && (
             <path d={areaPathData} css={css`
               fill: url(#${graphId});
