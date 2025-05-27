@@ -1,6 +1,8 @@
 import { useTheme } from '@mui/material/styles';
 import { Box, LinearProgress, type LinearProgressProps } from '@mui/material';
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import useThrottle from '../utils/hooks/throttled-hook';
+import useAnimatedProgressScrollTrigger from '../utils/hooks/animated-progress-scroll-trigger';
 
 interface GradientLinearProgressProps extends LinearProgressProps {
   id: string; // unique ID per instance
@@ -12,6 +14,19 @@ const GradientLinearProgress: React.FC<GradientLinearProgressProps> = (props: Gr
   const { id } = props;
   const theme = useTheme();
   const gradientId = `linear-progress-${id}`;
+  const progressId = `linear-gradient-${id}`;
+
+  const [animatedValue, setAnimatedValue] = useState(0);
+  const throttledSetAnimatedValue = useThrottle(setAnimatedValue, 60);
+  const valueRef = useRef({ v: 0 });
+
+  useAnimatedProgressScrollTrigger({
+    elementId: progressId,
+    value: props.value!,
+    throttledSetAnimatedValue,
+    setAnimatedValue,
+    valueRef,
+  });
 
   return (
     <Box position="relative" display="inline-flex" flexGrow={1}>
@@ -27,6 +42,8 @@ const GradientLinearProgress: React.FC<GradientLinearProgressProps> = (props: Gr
 
       <LinearProgress 
         {...props} 
+        id={progressId}
+        value={animatedValue}
         variant="determinate"
         sx={{
           width: '100%',

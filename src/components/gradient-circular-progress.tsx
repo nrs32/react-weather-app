@@ -1,9 +1,7 @@
 import { useTheme } from '@mui/material/styles';
 import { Box, CircularProgress, type CircularProgressProps } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import gsap from 'gsap';
-import userThrottle from '../utils/hooks/throttled-hook';
+import React, { useRef, useState } from 'react';
+import useThrottle from '../utils/hooks/throttled-hook';
 import useAnimatedProgressScrollTrigger from '../utils/hooks/animated-progress-scroll-trigger';
 
 interface GradientCircularProgressProps extends CircularProgressProps {
@@ -20,13 +18,14 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
   const { id, label, labelcolor, labelsize, subtitle } = props;
   const theme = useTheme();
   const gradientId = `circle-progress-${id}`;
+  const progressId = `circular-gradient-${label}`;
 
   const [animatedValue, setAnimatedValue] = useState(0);
-  const throttledSetAnimatedValue = userThrottle(setAnimatedValue, 60);
+  const throttledSetAnimatedValue = useThrottle(setAnimatedValue, 60);
   const valueRef = useRef({ v: 0 });
 
   useAnimatedProgressScrollTrigger({
-    elementId: `circular-gradient-${label}-box`,
+    elementId: progressId,
     value: props.value!,
     throttledSetAnimatedValue,
     setAnimatedValue,
@@ -59,7 +58,7 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
       {/* The filled track */}
       <CircularProgress
         {...props}
-        id={`circular-gradient-${label}-box`}
+        id={progressId}
         value={animatedValue}
         variant="determinate"
         sx={{
