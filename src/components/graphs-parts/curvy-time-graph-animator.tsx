@@ -2,7 +2,7 @@
 import { type Point } from '../../types/graph-types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import usePrevious from '../../utils/use-previous-hook';
+import usePrevious from '../../utils/hooks/use-previous-hook';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);

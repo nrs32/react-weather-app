@@ -67,7 +67,7 @@ const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ title, hourlyWe
       </CurvyTimeGraphAnimator>
       <RightDataLabel label="HUMIDITY" labelColor={theme.palette.pink.light} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${labelTop}px`, left: `${labelLeft - 35}px` }} data={hourlyHumidity} yRange={[0, 100]}></RightDataLabel>
 
-      <CurvyTimeGraphAnimator id="line" width={graphWidth} data={hourlyTemps} delay={.75}>
+      <CurvyTimeGraphAnimator id="line" width={graphWidth} data={hourlyTemps} delay={.5}>
         {(refs) => ( 
           <CurvyTimeGraph animationRefs={refs} id='line' width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px`  }} data={hourlyTemps} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
         )}

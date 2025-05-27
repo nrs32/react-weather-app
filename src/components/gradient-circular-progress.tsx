@@ -1,6 +1,8 @@
 import { useTheme } from '@mui/material/styles';
 import { Box, CircularProgress, type CircularProgressProps } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import userThrottle from '../utils/hooks/throttled-hook';
 
 interface GradientCircularProgressProps extends CircularProgressProps {
   id: string; // unique ID per instance
@@ -16,6 +18,26 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
   const { id, label, labelcolor, labelsize, subtitle } = props;
   const theme = useTheme();
   const gradientId = `circle-progress-${id}`;
+
+  const [animatedValue, setAnimatedValue] = useState(0);
+  const throttledSetAnimatedValue = userThrottle(setAnimatedValue, 60);
+  const valueRef = useRef({ v: 0 });
+
+  useEffect(() => {
+    // use gsap tween to animate the value of valueRef to create an animation of the circular gradient results
+    const tween = gsap.to(valueRef.current, {
+      duration: props.value! / 75,
+      v: props.value,
+      ease: 'none',
+      onUpdate: () => {
+        throttledSetAnimatedValue(Math.round(valueRef.current.v));
+      }
+    });
+
+    return () => {
+      tween.kill();
+    }
+  }, [props.value]);
 
   return (
     <Box position="relative" display="inline-flex">
@@ -43,6 +65,7 @@ const GradientCircularProgress: React.FC<GradientCircularProgressProps> = (props
       {/* The filled track */}
       <CircularProgress
         {...props}
+        value={animatedValue}
         variant="determinate"
         sx={{
           position: 'absolute',
