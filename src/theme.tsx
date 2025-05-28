@@ -51,7 +51,7 @@ const theme = createTheme({
       main: '#121621',
     },
     text: {
-      primary: '#FFFFFFDE',
+      primary: '#E0E1E2',
       secondary: '#3A3D4B',
       secondaryLetterSpacing: '.75px',
     }
