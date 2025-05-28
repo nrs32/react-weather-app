@@ -1,20 +1,20 @@
 import type { WeatherData } from "../types/weather-types";
 
-export const fakeData: WeatherData = {
+export const fakeData: WeatherData =  {
   "current": {
-    "time": "5:00 PM",
-    "temperature": 63,
-    "humidity": 72,
-    "apparentTemperature": 62,
+    "time": "5:15 PM",
+    "temperature": 62,
+    "humidity": 75,
+    "apparentTemperature": 61,
     "isDay": true,
     "precipitation": 0,
     "weatherCodeInfo": {
-      "desc": "Light Drizzle",
-      "dayIcon": "partly-cloudy-day-drizzle",
-      "nightIcon": "partly-cloudy-night-drizzle"
+      "desc": "Light Rain",
+      "dayIcon": "partly-cloudy-day-rain",
+      "nightIcon": "partly-cloudy-night-rain"
     },
     "timeToSunset": {
-      "label": "4 hours & 11 minutes to sunset",
+      "label": "3 hours & 56 minutes to sunset",
       "percent": 66.66666666666666
     },
     "timeToSunrise": {
