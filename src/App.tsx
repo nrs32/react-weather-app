@@ -17,9 +17,9 @@ import WeatherAtAGlance from './features/weather-at-a-glance/weather-at-a-glance
 import WeatherDials from './features/weather-dials';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import LocationLoadingMap from './features/location-loading';
 
 gsap.registerPlugin(ScrollTrigger);
-
 // TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
 
 interface UserLocation {
@@ -57,7 +57,7 @@ function App() {
 
   // TODO: Make loading nice and handle this better
   if (!location && !locationError) {
-    return <span>Loading Location...</span>
+    return <LocationLoadingMap></LocationLoadingMap>
   }
   
   if (isPending) {
