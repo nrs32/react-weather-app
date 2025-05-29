@@ -2,6 +2,7 @@ import { Typography, useTheme } from '@mui/material';
 import type { HourlyWeather as HourlyWeatherData } from '../types/weather-types';
 import AtAGlanceHour from './at-a-glance-hour';
 import { Box } from '@mui/material';
+import { useEffect, useRef } from 'react';
 
 type HourlyWeatherProps = {
   dayOfWeek: string;
@@ -11,12 +12,20 @@ type HourlyWeatherProps = {
 
 const HourlyWeather = ({ dayOfWeek, date, hourlyWeather }: HourlyWeatherProps) => {
   const theme = useTheme();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = 0; // Reset horizontal scroll on date change
+    }
+  }, [date]); 
 
   return (
     <>
       <Typography sx={{ fontSize: '20px', fontWeight: 700, margin: '30px 0 15px 0' }}>Hourly Weather ({dayOfWeek} {date})</Typography>
 
       <Box
+          ref={scrollRef}
           sx={{
           display: 'flex',
           flexDirection: 'row',
