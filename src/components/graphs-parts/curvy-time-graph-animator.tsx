@@ -5,8 +5,6 @@ import gsap from 'gsap';
 import usePrevious from '../../utils/hooks/use-previous-hook';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export type GradientDirection = 'v' | 'h'; // vertical or horizontal
 
 export interface CurvyTimeGraphAnimatorProps {

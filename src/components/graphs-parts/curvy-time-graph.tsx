@@ -2,10 +2,6 @@
 import { SPACE_BELOW_DATA, type Point } from '../../types/graph-types';
 import { css } from '@emotion/react';
 import normalizeDataPoints from '../../utils/normalize-data-points';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export type GradientDirection = 'v' | 'h'; // vertical or horizontal
 

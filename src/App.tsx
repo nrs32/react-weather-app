@@ -15,9 +15,12 @@ import FooterAttribution from './features/footer-attribution';
 import TempVHumidityCarousel from './features/temp-v-humidity-carousel';
 import WeatherAtAGlance from './features/weather-at-a-glance/weather-at-a-glance';
 import WeatherDials from './features/weather-dials';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
-// TODO: implememt smooth scroll with gsap? Maybe different speed scrolls / stagger too?
 
 interface UserLocation {
   lat: number;
@@ -69,12 +72,12 @@ function App() {
   
   return (
     <>
-     <h1 className='heading'> Weather Dashboard </h1>
-     
-     <Box sx={{ position: 'absolute', right: '15px', top: '22px', display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <h1 className='heading'> Weather Dashboard </h1>
+      
+      <Box sx={{ position: 'absolute', right: '15px', top: '22px', display: 'flex', flexDirection: 'column', gap: 1 }}>
       <ThemedButton onClick={handleRefreshLocation} label='Refresh Location'/>
       <ThemedButton onClick={refetchWeatherData} label='Refresh Weather (Auto is 5 Min)'/>
-     </Box>
+      </Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: "100px" }}>
         <CurrentTempCard actualTemp={weatherData.current.temperature} feelsLike={weatherData.current.apparentTemperature}></CurrentTempCard>
