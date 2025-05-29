@@ -1,6 +1,7 @@
 import { Box, useTheme } from '@mui/material';
 import { dayKeys, type DayKey, type WeatherData } from '../../types/weather-types';
 import AtAGlanceDay from './at-a-glance-day';
+import { scrollbarStyles } from '../../utils/scrollbar-styles';
 
 type WeeklyWeatherProps = {
 	weatherData: WeatherData;
@@ -21,16 +22,7 @@ const WeeklyWeather = ({ weatherData, selectedDay, dayClicked }: WeeklyWeatherPr
 				gap: 2, // spacing between days
 				paddingBottom: '15px',
 
-				'&::-webkit-scrollbar': {
-					height: '8px',
-				},
-				'&::-webkit-scrollbar-track': {
-					backgroundColor: 'transparent', // Hides background
-				},
-				'&::-webkit-scrollbar-thumb': {
-					backgroundColor: theme.palette.lightGrey.main,
-					borderRadius: '4px',
-				},
+				...scrollbarStyles(theme)
 			}}
 		>
 			{dayKeys.map((key) => (
