@@ -1,7 +1,7 @@
 import { type DayIndex, type WeatherData } from '../types/weather-types';
 import TempVHumidityGraph from './graphs/temp-v-humidity-graph';
-import CarouselControls from './carousel-controls';
-import WeatherCard from './weather-card';
+import CarouselControls from '../components/carousel-controls';
+import WeatherCard from '../components/weather-card';
 import { useState } from 'react';
 
 type TempVHumidityCarouselProps = {

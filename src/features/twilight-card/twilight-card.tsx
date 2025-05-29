@@ -5,7 +5,7 @@ import type { TimeToTwilight } from '../../types/weather-types';
 import { Box, useTheme } from '@mui/material';
 import TwilightCountdown from './twilight-countdown';
 import TwilightTimes from './twilight-times';
-import WeatherCard from '../weather-card';
+import WeatherCard from '../../components/weather-card';
 
 type TwilightCardProps = {
   timeToSunset: TimeToTwilight;

@@ -5,16 +5,16 @@ import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import type { WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
-import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
+import WeeklyTempSpreadGraph from './features/graphs/weekly-temp-spread-graph';
 import { useEffect, useState } from 'react';
-import WeatherCodeCard from './components/weather-code-card';
-import CurrentTempCard from './components/current-temp-card';
+import WeatherCodeCard from './features/weather-code-card';
+import CurrentTempCard from './features/current-temp-card';
 import ThemedButton from './components/themed-button';
-import TwilightCard from './components/twilight-card/twilight-card';
-import FooterAttribution from './components/footer-attribution';
-import TempVHumidityCarousel from './components/temp-v-humidity-carousel';
-import WeatherAtAGlance from './components/weather-at-a-glance/weather-at-a-glance';
-import WeatherDials from './components/weather-dials';
+import TwilightCard from './features/twilight-card/twilight-card';
+import FooterAttribution from './features/footer-attribution';
+import TempVHumidityCarousel from './features/temp-v-humidity-carousel';
+import WeatherAtAGlance from './features/weather-at-a-glance/weather-at-a-glance';
+import WeatherDials from './features/weather-dials';
 
 // TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
 // TODO: implememt smooth scroll with gsap? Maybe different speed scrolls / stagger too?

@@ -4,14 +4,14 @@ import type React from 'react';
 import type { HourlyWeather } from '../../types/weather-types';
 import type { GraphProps, LabeledXPoint, LabeledYPoint, Point } from '../../types/graph-types';
 import determineYRangePoints from '../../utils/determine-y-range-points';
-import YAxis from '../graphs-parts/y-axis';
-import CurvyTimeGraph from '../graphs-parts/curvy-time-graph';
-import XAxis from '../graphs-parts/x-axis';
+import YAxis from '../../components/graphs-parts/y-axis';
+import CurvyTimeGraph from '../../components/graphs-parts/curvy-time-graph';
+import XAxis from '../../components/graphs-parts/x-axis';
 import getTemperatureLabel from '../../utils/get-y-label';
 import getHumidityLabel from '../../utils/get-humidity-label';
-import RightDataLabel from '../graphs-parts/right-data-label';
+import RightDataLabel from '../../components/graphs-parts/right-data-label';
 import Box from '@mui/material/Box';
-import CurvyTimeGraphAnimator from '../graphs-parts/curvy-time-graph-animator';
+import CurvyTimeGraphAnimator from '../../components/graphs-parts/curvy-time-graph-animator';
 
 interface TempVHumidityGraphProps extends GraphProps {
   title: string,

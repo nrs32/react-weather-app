@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/material';
-import WeatherCard from './weather-card';
-import GradientCircularProgress from './gradient-circular-progress';
+import WeatherCard from '../components/weather-card';
+import GradientCircularProgress from '../components/gradient-circular-progress';
 
 type WeatherDialProps = {
   humidity: number;

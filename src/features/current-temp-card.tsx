@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/material';
-import WeatherCard from './weather-card';
+import WeatherCard from '../components/weather-card';
 
 type CurrentTempCardProps = {
   actualTemp: number;

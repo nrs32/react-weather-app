@@ -1,6 +1,6 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import type { WeatherCodeInfo } from '../../types/weather-types';
-import LoopingConveyerText from '../looping-conveyer-text';
+import LoopingConveyerText from '../../components/looping-conveyer-text';
 import { getWeatherIcon } from '../../utils/get-weather-icon';
 
 type AtAGlanceDayProps = {

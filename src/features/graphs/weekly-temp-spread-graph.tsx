@@ -2,15 +2,15 @@ import { useTheme } from '@mui/material/styles';
 
 import { dayKeys, type DayWeather, type WeatherData } from '../../types/weather-types';
 import determineYRangePoints from '../../utils/determine-y-range-points';
-import YAxis from '../graphs-parts/y-axis';
-import CurvyTimeGraph from '../graphs-parts/curvy-time-graph';
-import XAxis from '../graphs-parts/x-axis';
+import YAxis from '../../components/graphs-parts/y-axis';
+import CurvyTimeGraph from '../../components/graphs-parts/curvy-time-graph';
+import XAxis from '../../components/graphs-parts/x-axis';
 import type { GraphProps, LabeledXPoint, LabeledYPoint, Point } from '../../types/graph-types';
 import type React from 'react';
 import getTemperatureLabel from '../../utils/get-y-label';
-import RightDataLabel from '../graphs-parts/right-data-label';
+import RightDataLabel from '../../components/graphs-parts/right-data-label';
 import Box from '@mui/material/Box';
-import CurvyTimeGraphAnimator from '../graphs-parts/curvy-time-graph-animator';
+import CurvyTimeGraphAnimator from '../../components/graphs-parts/curvy-time-graph-animator';
 
 interface WeeklyTempSpreadGraphProps extends GraphProps {
   title: string;

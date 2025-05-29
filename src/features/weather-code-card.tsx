@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/material';
 import type { WeatherCodeInfo } from '../types/weather-types';
 import { getWeatherIcon } from '../utils/get-weather-icon';
-import WeatherCard from './weather-card';
+import WeatherCard from '../components/weather-card';
 
 type WeatherCodeCardProps = {
     weatherCodeInfo: WeatherCodeInfo;

@@ -1,5 +1,5 @@
 
-import GradientLinearProgress from '../gradient-linear-progress';
+import GradientLinearProgress from '../../components/gradient-linear-progress';
 import type { TimeToTwilight } from '../../types/weather-types';
 import { Box, Typography, useTheme, type SxProps } from '@mui/material';
 

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import React from 'react';
-import RawDataModal from './raw-data-modal';
+import RawDataModal from '../components/raw-data-modal';
 import reactLogo from '../assets/react.svg'
 import openMedeoLogo from '../assets/open-medeo.png'
 import viteLogo from '/vite.svg'

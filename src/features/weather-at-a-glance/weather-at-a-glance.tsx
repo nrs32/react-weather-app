@@ -1,7 +1,7 @@
 import type { DayKey, WeatherData } from '../../types/weather-types';
 import WeeklyWeather from './weekly-weather';
 import HourlyWeather from './hourly-weather';
-import WeatherCard from '../weather-card';
+import WeatherCard from '../../components/weather-card';
 import { useState } from 'react';
 
 type WeatherAtAGlanceProps = {
