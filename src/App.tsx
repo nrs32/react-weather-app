@@ -17,8 +17,7 @@ import ThemedButton from './components/themed-button';
 import TwilightDisplay from './components/twilight-display/twilight-display';
 import FooterAttribution from './components/footer-attribution';
 import WeeklyWeather from './components/weekly-weather';
-
-// TODO: Considar clicking on day and showing houlry weather code with temps
+import HourlyWeather from './components/hourly-weather';
 //
 // TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
 // TODO: implememt smooth scroll with gsap? Maybe different speed scrolls / stagger too?
@@ -137,8 +136,9 @@ function App() {
             sunset={weatherData.day1.sunset}/>
         </WeatherCard>
 
-        <WeatherCard width='580px' height='280px'>
+        <WeatherCard width='580px' height='533px'>
           <WeeklyWeather weatherData={weatherData}/>
+          <HourlyWeather dayOfWeek={weatherData.day5.dayOfWeek} date={weatherData.day5.date} hourlyWeather={weatherData.day5.hourlyWeather}></HourlyWeather>
         </WeatherCard>
 
         <WeatherCard width='738px' height='340px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>

@@ -14,7 +14,7 @@ type AtAGlanceDayProps = {
 
 const AtAGlanceDay = ({ weatherCodeInfo, isDay, date, dayOfWeek, tempMax, tempMin }: AtAGlanceDayProps) => {
   const theme = useTheme();
-  const MIN_WIDTH = 150;
+  const WIDTH = 150;
   const PADDING = 16;
 
   const { svg, svgAlt } = getWeatherIcon(weatherCodeInfo, isDay);
@@ -22,10 +22,10 @@ const AtAGlanceDay = ({ weatherCodeInfo, isDay, date, dayOfWeek, tempMax, tempMi
   return (
     <Box
       sx={{
-        border: `1px solid ${theme.palette.cardBg.light}`,
+        border: `3px solid ${theme.palette.bg.main}`,
         background: theme.palette.bg.main,
         borderRadius: '8px',
-        minWidth: MIN_WIDTH,
+        width: WIDTH,
         height: 250,
         display: 'flex',
         flexDirection: 'column',
@@ -34,6 +34,11 @@ const AtAGlanceDay = ({ weatherCodeInfo, isDay, date, dayOfWeek, tempMax, tempMi
         padding: `${PADDING}px`,
         boxSizing: 'border-box',
         textAlign: 'center',
+
+        '&:hover': {
+          border: `3px solid ${theme.palette.lightGrey.main}`,
+          cursor: 'pointer',
+        }
       }}
     >
       <Typography sx={{ fontSize: '20px', fontWeight: 700 }}>{dayOfWeek}</Typography>
@@ -47,7 +52,7 @@ const AtAGlanceDay = ({ weatherCodeInfo, isDay, date, dayOfWeek, tempMax, tempMi
         style={{ objectFit: 'contain', marginTop: '-15px' }}
       />
       <Box title={weatherCodeInfo.desc.toUpperCase()} sx={{ overflow: 'hidden', width: '100%', marginTop: '-12px' }}>
-        <LoopingConveyerText text={weatherCodeInfo.desc.toUpperCase()} containerWidth={MIN_WIDTH - (PADDING*2)}/>
+        <LoopingConveyerText text={weatherCodeInfo.desc.toUpperCase()} containerWidth={WIDTH - (PADDING*2)}/>
       </Box>
       <Typography variant="h6">{Math.round(tempMax)}° / {Math.round(tempMin)}</Typography>
     </Box>

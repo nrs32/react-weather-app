@@ -9,6 +9,7 @@ declare module '@mui/material/styles' {
     teal: Palette['primary'],
     blue: Palette['primary'],
     cardBg: Palette['primary'],
+    lightGrey: Palette['primary'],
     bg: Palette['primary'],
   }
 
@@ -24,6 +25,7 @@ declare module '@mui/material/styles' {
     teal: PaletteOptions['primary'],
     blue: PaletteOptions['primary'],
     cardBg: PaletteOptions['primary'],
+    lightGrey: PaletteOptions['primary'],
     bg: PaletteOptions['primary'],
   }
 }
@@ -46,6 +48,9 @@ const theme = createTheme({
     cardBg: {
       main: '#272934',
       dark: '#161923',
+    },
+    lightGrey: {
+      main:'#6c6f7e'
     },
     bg: {
       main: '#121621',
