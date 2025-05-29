@@ -1,0 +1,44 @@
+import { type DayIndex, type WeatherData } from '../types/weather-types';
+import CarouselControls from './carousel-controls';
+import TempVHumidityGraph from './graphs/temp-v-humidity-graph';
+import { useState } from 'react';
+
+type TempVHumidityCarouselProps = {
+	weatherData: WeatherData;
+};
+
+const TempVHumidityCarousel = ({ weatherData }: TempVHumidityCarouselProps) => {
+	const { dayIndex, hasPrev, hasNext, onNext, onPrev } = useTempVHumidDayIndex();
+
+	return (
+		<CarouselControls
+			onPrev={onPrev}
+			onNext={onNext}
+			prevLabel={hasPrev ? weatherData[`day${(dayIndex - 1) as DayIndex}`].dayOfWeek : undefined}
+			nextLabel={hasNext ? weatherData[`day${(dayIndex + 1) as DayIndex}`].dayOfWeek : undefined}
+			hasPrev={hasPrev}
+			hasNext={hasNext}
+		>
+			<TempVHumidityGraph title={`Humidity and Temperature (${weatherData[`day${dayIndex}`].dayOfWeek} ${weatherData[`day${dayIndex}`].date})`} hourlyWeather={weatherData[`day${dayIndex}`].hourlyWeather} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}></TempVHumidityGraph>
+		</CarouselControls>
+	);
+};
+
+function useTempVHumidDayIndex() {
+  const [dayIndex, setDayIndex] = useState<DayIndex>(1);
+
+  const hasPrev = dayIndex > 1;
+  const hasNext = dayIndex < 7;
+
+  const onNext = () => {
+    if (hasNext) setDayIndex(prev => (prev + 1) as DayIndex);
+  };
+
+  const onPrev = () => {
+    if (hasPrev) setDayIndex(prev => (prev - 1) as DayIndex);
+  };
+
+  return { dayIndex, hasPrev, hasNext, onNext, onPrev };
+}
+
+export default TempVHumidityCarousel;

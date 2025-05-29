@@ -5,11 +5,9 @@ import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
-import type { DayIndex, WeatherData } from './types/weather-types';
+import type { WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
 import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
-import TempVHumidityGraph from './components/graphs/temp-v-humidity-graph';
-import CarouselControls from './components/carousel-controls';
 import { useEffect, useState } from 'react';
 import WeatherCodeDisplay from './components/weather-code-display';
 import CurrentTempDisplay from './components/current-temp-display';
@@ -18,7 +16,8 @@ import TwilightDisplay from './components/twilight-display/twilight-display';
 import FooterAttribution from './components/footer-attribution';
 import WeeklyWeather from './components/weekly-weather';
 import HourlyWeather from './components/hourly-weather';
-//
+import TempVHumidityCarousel from './components/temp-v-humidity-carousel';
+
 // TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
 // TODO: implememt smooth scroll with gsap? Maybe different speed scrolls / stagger too?
 
@@ -31,7 +30,6 @@ const REFRESH_INTERVAL: number = 300000; // miliseconds
 
 function App() {
   const theme = useTheme();
-  const { dayIndex, hasPrev, hasNext, onNext, onPrev } = useTempVHumidDayIndex();
   const [location, setLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
 
@@ -142,16 +140,7 @@ function App() {
         </WeatherCard>
 
         <WeatherCard width='738px' height='340px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>
-          <CarouselControls
-            onPrev={onPrev}
-            onNext={onNext}
-            prevLabel={hasPrev ? weatherData[`day${(dayIndex - 1) as DayIndex}`].dayOfWeek : undefined}
-            nextLabel={hasNext ? weatherData[`day${(dayIndex + 1) as DayIndex}`].dayOfWeek : undefined}
-            hasPrev={hasPrev}
-            hasNext={hasNext}
-          >
-            <TempVHumidityGraph title={`Humidity and Temperature (${weatherData[`day${dayIndex}`].dayOfWeek} ${weatherData[`day${dayIndex}`].date})`} hourlyWeather={weatherData[`day${dayIndex}`].hourlyWeather} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}></TempVHumidityGraph>
-          </CarouselControls>
+          <TempVHumidityCarousel weatherData={weatherData}/>
         </WeatherCard>
 
         <WeatherCard width='580px' height='340px'>
@@ -162,23 +151,6 @@ function App() {
       <FooterAttribution weatherData={weatherData}/>
     </>
   )
-}
-
-function useTempVHumidDayIndex() {
-  const [dayIndex, setDayIndex] = useState<DayIndex>(1);
-
-  const hasPrev = dayIndex > 1;
-  const hasNext = dayIndex < 7;
-
-  const onNext = () => {
-    if (hasNext) setDayIndex(prev => (prev + 1) as DayIndex);
-  };
-
-  const onPrev = () => {
-    if (hasPrev) setDayIndex(prev => (prev - 1) as DayIndex);
-  };
-
-  return { dayIndex, hasPrev, hasNext, onNext, onPrev };
 }
 
 function getUserLocation(): Promise<UserLocation> {
