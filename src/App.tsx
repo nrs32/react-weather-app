@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query'
 import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
-import GradientCircularProgress from './components/gradient-circular-progress'
 import type { WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
 import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
@@ -14,10 +13,9 @@ import CurrentTempCard from './components/current-temp-card';
 import ThemedButton from './components/themed-button';
 import TwilightCard from './components/twilight-card/twilight-card';
 import FooterAttribution from './components/footer-attribution';
-import WeeklyWeather from './components/weather-at-a-glance/weekly-weather';
-import HourlyWeather from './components/weather-at-a-glance/hourly-weather';
 import TempVHumidityCarousel from './components/temp-v-humidity-carousel';
 import WeatherAtAGlance from './components/weather-at-a-glance/weather-at-a-glance';
+import WeatherDials from './components/weather-dials';
 
 // TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
 // TODO: implememt smooth scroll with gsap? Maybe different speed scrolls / stagger too?
@@ -83,44 +81,11 @@ function App() {
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: "100px" }}>
         <CurrentTempCard actualTemp={weatherData.current.temperature} feelsLike={weatherData.current.apparentTemperature}></CurrentTempCard>
         <WeatherCodeCard isDay={weatherData.current.isDay} weatherCodeInfo={weatherData.current.weatherCodeInfo}></WeatherCodeCard>
-
-        <WeatherCard>
-          <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 4, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-            <GradientCircularProgress
-              id="humidity"
-              value={weatherData.current.humidity}
-              label={`${weatherData.current.humidity}`}
-              labelcolor={theme.palette.teal.main}
-              labelsize={50}
-              subtitle='Humidity'
-              thickness={3.5}
-              size={140}
-              gradientstops={[theme.palette.teal.main, theme.palette.blue.main]}
-            />
-            <GradientCircularProgress
-              id="precipitation"
-              value={weatherData.current.precipitation}
-              label={`${weatherData.current.precipitation}`}
-              labelcolor={theme.palette.pink.main}
-              labelsize={50}
-              subtitle='Precip.'
-              thickness={3.5}
-              size={140}
-              gradientstops={[theme.palette.purple.main, theme.palette.pink.main]}
-            />
-            <GradientCircularProgress
-              id="cloud_cover"
-              value={weatherData.current.cloudCover}
-              label={`${weatherData.current.cloudCover}`}
-              labelcolor={theme.palette.pink.light}
-              labelsize={50}
-              subtitle='Cloud Cover'
-              thickness={3.5}
-              size={140}
-              gradientstops={[theme.palette.pink.main, "white"]}
-            />
-          </Box>
-        </WeatherCard>
+        
+        <WeatherDials 
+          humidity={weatherData.current.humidity} 
+          precipitation={weatherData.current.precipitation} 
+          cloudCover={weatherData.current.cloudCover}/>
 
         <TwilightCard 
           timeToSunrise={weatherData.current.timeToSunrise} 
