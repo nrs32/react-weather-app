@@ -9,8 +9,8 @@ import type { WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
 import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
 import { useEffect, useState } from 'react';
-import WeatherCodeDisplay from './components/weather-code-display';
-import CurrentTempDisplay from './components/current-temp-display';
+import WeatherCodeCard from './components/weather-code-card';
+import CurrentTempCard from './components/current-temp-card';
 import ThemedButton from './components/themed-button';
 import TwilightCard from './components/twilight-card/twilight-card';
 import FooterAttribution from './components/footer-attribution';
@@ -81,13 +81,8 @@ function App() {
      </Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: "100px" }}>
-        <WeatherCard sx={{ fontWeight: 700, textAlign: 'center', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
-          <CurrentTempDisplay actualTemp={weatherData.current.temperature} feelsLike={weatherData.current.apparentTemperature}></CurrentTempDisplay>
-        </WeatherCard>
-
-        <WeatherCard sx={{ fontWeight: 700, textAlign: 'center', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
-          <WeatherCodeDisplay isDay={weatherData.current.isDay} weatherCodeInfo={weatherData.current.weatherCodeInfo}></WeatherCodeDisplay>
-        </WeatherCard>
+        <CurrentTempCard actualTemp={weatherData.current.temperature} feelsLike={weatherData.current.apparentTemperature}></CurrentTempCard>
+        <WeatherCodeCard isDay={weatherData.current.isDay} weatherCodeInfo={weatherData.current.weatherCodeInfo}></WeatherCodeCard>
 
         <WeatherCard>
           <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 4, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
