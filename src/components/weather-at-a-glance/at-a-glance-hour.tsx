@@ -1,6 +1,6 @@
 import { Box, Typography, useTheme } from '@mui/material';
-import type { WeatherCodeInfo } from '../types/weather-types';
-import { getWeatherIcon } from '../utils/get-weather-icon';
+import type { WeatherCodeInfo } from '../../types/weather-types';
+import { getWeatherIcon } from '../../utils/get-weather-icon';
 
 type AtAGlanceHourProps = {
   weatherCodeInfo: WeatherCodeInfo;

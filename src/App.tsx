@@ -5,7 +5,7 @@ import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
-import type { DayKey, WeatherData } from './types/weather-types';
+import type { WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
 import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
 import { useEffect, useState } from 'react';
@@ -14,9 +14,10 @@ import CurrentTempDisplay from './components/current-temp-display';
 import ThemedButton from './components/themed-button';
 import TwilightDisplay from './components/twilight-display/twilight-display';
 import FooterAttribution from './components/footer-attribution';
-import WeeklyWeather from './components/weekly-weather';
-import HourlyWeather from './components/hourly-weather';
+import WeeklyWeather from './components/weather-at-a-glance/weekly-weather';
+import HourlyWeather from './components/weather-at-a-glance/hourly-weather';
 import TempVHumidityCarousel from './components/temp-v-humidity-carousel';
+import WeatherAtAGlance from './components/weather-at-a-glance/weather-at-a-glance';
 
 // TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
 // TODO: implememt smooth scroll with gsap? Maybe different speed scrolls / stagger too?
@@ -32,7 +33,6 @@ function App() {
   const theme = useTheme();
   const [location, setLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
-  const [dayOfHourlyWeather, setDayOfHourlyWeather] = useState<DayKey>('day1');
 
   useEffect(() => {
     handleRefreshLocation();
@@ -136,8 +136,7 @@ function App() {
         </WeatherCard>
 
         <WeatherCard width='580px' height='533px'>
-          <WeeklyWeather weatherData={weatherData} dayClicked={setDayOfHourlyWeather} selectedDay={dayOfHourlyWeather}/>
-          <HourlyWeather dayOfWeek={weatherData[dayOfHourlyWeather].dayOfWeek} date={weatherData[dayOfHourlyWeather].date} hourlyWeather={weatherData[dayOfHourlyWeather].hourlyWeather}></HourlyWeather>
+          <WeatherAtAGlance weatherData={weatherData}/>
         </WeatherCard>
 
         <WeatherCard width='738px' height='340px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>

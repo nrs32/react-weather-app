@@ -1,5 +1,5 @@
 import { Typography, useTheme } from '@mui/material';
-import type { HourlyWeather as HourlyWeatherData } from '../types/weather-types';
+import type { HourlyWeather as HourlyWeatherData } from '../../types/weather-types';
 import AtAGlanceHour from './at-a-glance-hour';
 import { Box } from '@mui/material';
 import { useEffect, useRef } from 'react';

@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/material';
-import { dayKeys, type DayKey, type WeatherData } from '../types/weather-types';
+import { dayKeys, type DayKey, type WeatherData } from '../../types/weather-types';
 import AtAGlanceDay from './at-a-glance-day';
 
 type WeeklyWeatherProps = {
