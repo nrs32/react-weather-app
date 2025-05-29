@@ -5,7 +5,7 @@ import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
-import type { DayIndex, DayKey, WeatherData } from './types/weather-types';
+import type { DayIndex, WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
 import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
 import TempVHumidityGraph from './components/graphs/temp-v-humidity-graph';
@@ -16,7 +16,7 @@ import CurrentTempDisplay from './components/current-temp-display';
 import ThemedButton from './components/themed-button';
 import TwilightDisplay from './components/twilight-display/twilight-display';
 import FooterAttribution from './components/footer-attribution';
-import AtAGlanceDay from './components/at-a-glance-day';
+import WeeklyWeather from './components/weekly-weather';
 
 // TODO: Considar clicking on day and showing houlry weather code with temps
 //
@@ -72,7 +72,6 @@ function App() {
   }
 
   const weatherData = data as WeatherData;
-  const dayKeys: DayKey[] = Array.from({ length: 7 }, (_, i) => `day${i + 1}` as DayKey);
   
   return (
     <>
@@ -139,36 +138,7 @@ function App() {
         </WeatherCard>
 
         <WeatherCard width='580px' height='280px'>
-          {/* TODO: own component */}
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                overflowX: 'auto',
-                whiteSpace: 'nowrap',
-                gap: 2, // spacing between days
-                paddingBottom: '15px',
-
-                '&::-webkit-scrollbar': {
-                  height: '8px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  backgroundColor: 'transparent', // Hides background
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: '#6c6f7e',
-                  borderRadius: '4px',
-                },
-              }}
-            >
-              {dayKeys.map((key) => (
-                <AtAGlanceDay
-                  key={`at-a-glance-day-${key}`}
-                  {...weatherData[key]}
-                  isDay={weatherData.current.isDay}
-                />
-              ))}
-            </Box>
+          <WeeklyWeather weatherData={weatherData}/>
         </WeatherCard>
 
         <WeatherCard width='738px' height='340px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>

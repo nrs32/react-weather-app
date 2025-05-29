@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 
-import type { DayKey, DayWeather, WeatherData } from '../../types/weather-types';
+import { dayKeys, type DayWeather, type WeatherData } from '../../types/weather-types';
 import determineYRangePoints from '../../utils/determine-y-range-points';
 import YAxis from '../graphs-parts/y-axis';
 import CurvyTimeGraph from '../graphs-parts/curvy-time-graph';
@@ -20,7 +20,6 @@ interface WeeklyTempSpreadGraphProps extends GraphProps {
 const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title, weatherData, graphWidth, graphHeight, chartTop, chartLeft }) => {
   const theme = useTheme();
 
-  const dayKeys: DayKey[] = Array.from({ length: 7 }, (_, i) => `day${i + 1}` as DayKey);
   const allTemps: DayWeather[] = dayKeys.map(key => weatherData[key]);
 
   const weeklyMin: number = Math.min(...allTemps.map(day => day.tempMin));

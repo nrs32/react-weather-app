@@ -41,6 +41,8 @@ export type DayIndex = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export type DayKey = `day${DayIndex}`;
 
+export const dayKeys: DayKey[] = Array.from({ length: 7 }, (_, i) => `day${i + 1}` as DayKey);
+
 export interface WeatherData {
   current: CurrentWeather;
   day1: DayWeather;
