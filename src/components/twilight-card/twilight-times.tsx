@@ -1,13 +1,13 @@
 
 import { Box, Typography, useTheme, type SxProps } from '@mui/material';
 
-type TwilightTimeDisplayProps = {
+type TwilightTimesProps = {
 	icon: string;
 	iconAlt: string;
 	label: string;
 };
 
-const TwilightTimeDisplay: React.FC<TwilightTimeDisplayProps> = ({ icon, iconAlt, label }) => {
+const TwilightTimes: React.FC<TwilightTimesProps> = ({ icon, iconAlt, label }) => {
 	const theme = useTheme();
 
 	const twilightTimeLabelStyles: SxProps = {
@@ -25,4 +25,4 @@ const TwilightTimeDisplay: React.FC<TwilightTimeDisplayProps> = ({ icon, iconAlt
 	);
 };
 
-export default TwilightTimeDisplay;
+export default TwilightTimes;

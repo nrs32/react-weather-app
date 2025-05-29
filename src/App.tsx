@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import WeatherCodeDisplay from './components/weather-code-display';
 import CurrentTempDisplay from './components/current-temp-display';
 import ThemedButton from './components/themed-button';
-import TwilightDisplay from './components/twilight-display/twilight-display';
+import TwilightCard from './components/twilight-card/twilight-card';
 import FooterAttribution from './components/footer-attribution';
 import WeeklyWeather from './components/weather-at-a-glance/weekly-weather';
 import HourlyWeather from './components/weather-at-a-glance/hourly-weather';
@@ -127,13 +127,11 @@ function App() {
           </Box>
         </WeatherCard>
 
-        <WeatherCard width='500px' height='317px' sx={{ paddingTop: '25px' }}>
-          <TwilightDisplay 
-            timeToSunrise={weatherData.current.timeToSunrise} 
-            timeToSunset={weatherData.current.timeToSunset}
-            sunrise={weatherData.day1.sunrise}
-            sunset={weatherData.day1.sunset}/>
-        </WeatherCard>
+        <TwilightCard 
+          timeToSunrise={weatherData.current.timeToSunrise} 
+          timeToSunset={weatherData.current.timeToSunset}
+          sunrise={weatherData.day1.sunrise}
+          sunset={weatherData.day1.sunset}/>
 
         <WeatherCard width='580px' height='533px'>
           <WeatherAtAGlance weatherData={weatherData}/>
