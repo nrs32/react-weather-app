@@ -28,10 +28,12 @@ interface UserLocation {
 }
 
 const REFRESH_INTERVAL: number = 300000; // miliseconds
+const MIN_LOCATION_DELAY: number = 5000;
 
 function App() {
   const [location, setLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const minLocationDelayDone = useMinLoadingDelay(MIN_LOCATION_DELAY);
 
   useEffect(() => {
     handleRefreshLocation();
@@ -56,7 +58,7 @@ function App() {
   });
 
   // TODO: Make loading nice and handle this better
-  if (!location && !locationError) {
+  if ((!location && !locationError) || !minLocationDelayDone) {
     return <LocationLoadingMap></LocationLoadingMap>
   }
   
@@ -127,6 +129,23 @@ function getUserLocation(): Promise<UserLocation> {
       }
     );
   });
+}
+
+function useMinLoadingDelay(minDelayMs: number) {
+  const [delayDone, setDelayDone] = useState(true);
+
+  useEffect(() => {
+      setDelayDone(false);
+
+      const timer = setTimeout(() => {
+        setDelayDone(true);
+      }, minDelayMs);
+
+      return () => clearTimeout(timer);
+    
+  }, [minDelayMs]);
+
+  return delayDone;
 }
 
 export default App
