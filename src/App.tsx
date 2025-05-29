@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material/styles';
 import { useQuery } from '@tanstack/react-query'
 
 import './App.scss';
@@ -28,7 +27,6 @@ interface UserLocation {
 const REFRESH_INTERVAL: number = 300000; // miliseconds
 
 function App() {
-  const theme = useTheme();
   const [location, setLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
 
@@ -93,13 +91,9 @@ function App() {
           sunrise={weatherData.day1.sunrise}
           sunset={weatherData.day1.sunset}/>
 
-        <WeatherCard width='580px' height='533px'>
-          <WeatherAtAGlance weatherData={weatherData}/>
-        </WeatherCard>
+        <WeatherAtAGlance weatherData={weatherData}/>
 
-        <WeatherCard width='738px' height='340px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>
-          <TempVHumidityCarousel weatherData={weatherData}/>
-        </WeatherCard>
+        <TempVHumidityCarousel weatherData={weatherData}/>
 
         <WeatherCard width='580px' height='340px'>
           <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}></WeeklyTempSpreadGraph>
