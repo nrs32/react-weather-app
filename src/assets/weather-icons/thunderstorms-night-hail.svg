@@ -26,7 +26,7 @@
 
     <!-- Animated rain bars -->
     <symbol id="e" overflow="visible" viewBox="0 0 128 56">
-      <path fill="#0a5ad4" d="M8 56a8 8 0 01-8-8V8a8 8 0 0116 0v40a8 8 0 01-8 8Z" opacity="0">
+      <path fill="#3f7bd6" d="M8 56a8 8 0 01-8-8V8a8 8 0 0116 0v40a8 8 0 01-8 8Z" opacity="0">
         <animateTransform id="x1"
                           attributeName="transform"
                           type="translate"
@@ -41,7 +41,7 @@
                 dur=".67s"
                 begin="0.5s; y1.end+0.67s" />
       </path>
-      <path fill="#0a5ad4" d="M64 56a8 8 0 01-8-8V8a8 8 0 0116 0v40a8 8 0 01-8 8Z" opacity="0">
+      <path fill="#3f7bd6" d="M64 56a8 8 0 01-8-8V8a8 8 0 0116 0v40a8 8 0 01-8 8Z" opacity="0">
         <animateTransform id="x2"
                           attributeName="transform"
                           type="translate"
@@ -56,7 +56,7 @@
                 dur=".67s"
                 begin="1.17s; y2.end+0.67s" />
       </path>
-      <path fill="#0a5ad4" d="M120 56a8 8 0 01-8-8V8a8 8 0 0116 0v40a8 8 0 01-8 8Z" opacity="0">
+      <path fill="#3f7bd6" d="M120 56a8 8 0 01-8-8V8a8 8 0 0116 0v40a8 8 0 01-8 8Z" opacity="0">
         <animateTransform id="x3"
                           attributeName="transform"
                           type="translate"
