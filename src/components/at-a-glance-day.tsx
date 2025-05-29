@@ -1,6 +1,7 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import type { WeatherCodeInfo } from '../types/weather-types';
 import LoopingConveyerText from './looping-conveyer-text';
+import { getWeatherIcon } from '../utils/get-weather-icon';
 
 type AtAGlanceDayProps = {
   weatherCodeInfo: WeatherCodeInfo;
@@ -16,20 +17,7 @@ const AtAGlanceDay = ({ weatherCodeInfo, isDay, date, dayOfWeek, tempMax, tempMi
   const MIN_WIDTH = 150;
   const PADDING = 16;
 
-  const icons = import.meta.glob('../assets/weather-icons/*.svg', { eager: true, query: '?url', import: 'default' });
-  const iconPaths = Object.entries(icons) as [string, string][];
-
-  let svg: string = '';
-  let svgAlt: string = '';
-
-  if (isDay) {
-    svg = iconPaths.find(([path]) => path.endsWith(`${weatherCodeInfo.dayIcon}.svg`))![1];
-    svgAlt = weatherCodeInfo.dayIcon;
-
-  } else {
-    svg = iconPaths.find(([path]) => path.endsWith(`${weatherCodeInfo.nightIcon}.svg`))![1];
-    svgAlt = weatherCodeInfo.nightIcon;
-  }
+  const { svg, svgAlt } = getWeatherIcon(weatherCodeInfo, isDay);
 
   return (
     <Box

@@ -1,5 +1,6 @@
 import { Box, useTheme } from '@mui/material';
 import type { WeatherCodeInfo } from '../types/weather-types';
+import { getWeatherIcon } from '../utils/get-weather-icon';
 
 type WeatherCodeDisplayProps = {
     weatherCodeInfo: WeatherCodeInfo;
@@ -9,20 +10,7 @@ type WeatherCodeDisplayProps = {
 const WeatherCodeDisplay = ({ weatherCodeInfo, isDay }: WeatherCodeDisplayProps) => {
   const theme = useTheme();
 
-  const icons = import.meta.glob('../assets/weather-icons/*.svg', { eager: true, query: '?url', import: 'default' });
-  const iconPaths = Object.entries(icons) as [string, string][];
-
-  let svg: string = '';
-  let svgAlt: string = '';
-
-  if (isDay) {
-    svg = iconPaths.find(([path]) => path.endsWith(`${weatherCodeInfo.dayIcon}.svg`))![1];
-    svgAlt = weatherCodeInfo.dayIcon;
-
-  } else {
-    svg = iconPaths.find(([path]) => path.endsWith(`${weatherCodeInfo.nightIcon}.svg`))![1];
-    svgAlt = weatherCodeInfo.nightIcon;
-  }
+  const { svg, svgAlt } = getWeatherIcon(weatherCodeInfo, isDay);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', width: '180px'}}>
