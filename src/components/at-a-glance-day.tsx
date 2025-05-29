@@ -10,9 +10,11 @@ type AtAGlanceDayProps = {
   dayOfWeek: string;
   tempMax: number;
   tempMin: number;
+  isSelected: boolean;
+  dayClicked: () => void;
 };
 
-const AtAGlanceDay = ({ weatherCodeInfo, isDay, date, dayOfWeek, tempMax, tempMin }: AtAGlanceDayProps) => {
+const AtAGlanceDay = ({ weatherCodeInfo, isDay, date, dayOfWeek, tempMax, tempMin, isSelected, dayClicked }: AtAGlanceDayProps) => {
   const theme = useTheme();
   const WIDTH = 150;
   const PADDING = 16;
@@ -21,6 +23,7 @@ const AtAGlanceDay = ({ weatherCodeInfo, isDay, date, dayOfWeek, tempMax, tempMi
 
   return (
     <Box
+      className={isSelected ? 'is-selected' : ''}
       sx={{
         border: `3px solid ${theme.palette.bg.main}`,
         background: theme.palette.bg.main,
@@ -34,12 +37,18 @@ const AtAGlanceDay = ({ weatherCodeInfo, isDay, date, dayOfWeek, tempMax, tempMi
         padding: `${PADDING}px`,
         boxSizing: 'border-box',
         textAlign: 'center',
+        cursor: 'pointer',
 
-        '&:hover': {
+        '&:hover, &.is-selected': {
           border: `3px solid ${theme.palette.lightGrey.main}`,
-          cursor: 'pointer',
+        },
+        
+        '&:hover': {
+          background: theme.palette.cardBg.main,
         }
       }}
+
+      onClick={dayClicked}
     >
       <Typography sx={{ fontSize: '20px', fontWeight: 700 }}>{dayOfWeek}</Typography>
       <Typography sx={{ fontSize: '17px', fontWeight: 700, marginTop: '-6px' }}>{date}</Typography>

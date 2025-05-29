@@ -5,7 +5,7 @@ import './App.scss';
 import { getWeather } from './services/weather-service'
 import WeatherCard from './components/weather-card'
 import GradientCircularProgress from './components/gradient-circular-progress'
-import type { WeatherData } from './types/weather-types';
+import type { DayKey, WeatherData } from './types/weather-types';
 import Box from '@mui/material/Box';
 import WeeklyTempSpreadGraph from './components/graphs/weekly-temp-spread-graph';
 import { useEffect, useState } from 'react';
@@ -32,6 +32,7 @@ function App() {
   const theme = useTheme();
   const [location, setLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const [dayOfHourlyWeather, setDayOfHourlyWeather] = useState<DayKey>('day1');
 
   useEffect(() => {
     handleRefreshLocation();
@@ -135,8 +136,8 @@ function App() {
         </WeatherCard>
 
         <WeatherCard width='580px' height='533px'>
-          <WeeklyWeather weatherData={weatherData}/>
-          <HourlyWeather dayOfWeek={weatherData.day5.dayOfWeek} date={weatherData.day5.date} hourlyWeather={weatherData.day5.hourlyWeather}></HourlyWeather>
+          <WeeklyWeather weatherData={weatherData} dayClicked={setDayOfHourlyWeather} selectedDay={dayOfHourlyWeather}/>
+          <HourlyWeather dayOfWeek={weatherData[dayOfHourlyWeather].dayOfWeek} date={weatherData[dayOfHourlyWeather].date} hourlyWeather={weatherData[dayOfHourlyWeather].hourlyWeather}></HourlyWeather>
         </WeatherCard>
 
         <WeatherCard width='738px' height='340px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>

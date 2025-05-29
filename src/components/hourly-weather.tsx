@@ -38,7 +38,7 @@ const HourlyWeather = ({ dayOfWeek, date, hourlyWeather }: HourlyWeatherProps) =
           }}
       >
         {hourlyWeather.map(hourly => (
-          <AtAGlanceHour key={hourly.time} weatherCodeInfo={hourly.weatherCodeInfo} isDay={hourly.time.endsWith('PM')} temperature={hourly.temperature} time={hourly.time}></AtAGlanceHour>
+          <AtAGlanceHour key={hourly.time} weatherCodeInfo={hourly.weatherCodeInfo} isDay={hourly.isDay} temperature={hourly.temperature} time={hourly.time}></AtAGlanceHour>
         ))}
       </Box>
     </>

@@ -22,6 +22,7 @@ export interface HourlyWeather {
   weatherCodeInfo: WeatherCodeInfo; // Weather code info
   humidity: number; 	 // Relative humidity at 2 meters above ground (%)
   apparentTemperature: number; // Apparent temperature (Fahrenheit)
+  isDay: boolean;
 }
 
 export interface DayWeather {
