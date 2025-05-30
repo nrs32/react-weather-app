@@ -93,6 +93,13 @@ const WeatherLoading = ({  }: WeatherLoadingProps) => {
           justifyContent: 'center',
         }}>
       </Box>
+      <Box sx={{ 
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        padding: '5px 10px',
+        background: theme.palette.bg.main,
+      }}>Icons from <a href="https://basmilius.github.io/weather-icons/index-line.html" target='_blank'>Basmilius</a></Box>
     </>
   );
 };
