@@ -18,22 +18,19 @@ const WeatherLoading = ({  }: WeatherLoadingProps) => {
     document.fonts.ready.then(() => {
       if (!textRef.current) return;
 
-      const rawText = textRef.current.textContent || '';
-        // Wrap each character (including spaces) in a span
-        const wrappedText = [...rawText].map(char => {
-          if (char === ' ') {
-            // Use &nbsp; for visible space and fixed width to keep spacing consistent
-            return `<span style="display:inline-block; width:0.5em;">&nbsp;</span>`;
-          }
-          // normal char span
-          return `<span style="display:inline-block;">${char}</span>`;
-        }).join('');
+      // Wrap each character (including spaces) in a span
+      const wrappedText = [..."LOADING WEATHER DATA . . ."].map(char => {
+        if (char === ' ') {
+          // Use &nbsp; for visible space and fixed width to keep spacing consistent
+          return `<span style="display:inline-block; width:0.5em;">&nbsp;</span>`;
+        }
+        // normal char span
+        return `<span style="display:inline-block;">${char}</span>`;
+      }).join('');
 
-        textRef.current.innerHTML = wrappedText;
+      textRef.current.innerHTML = wrappedText;
 
-        const chars = textRef.current.querySelectorAll('span');
-
-      gsap.set(chars, { y: 0, display: 'inline-block' });
+      const chars = textRef.current.querySelectorAll('span');
 
       const upDuration = 0.8;
       const downDuration = 0.8;
@@ -95,7 +92,6 @@ const WeatherLoading = ({  }: WeatherLoadingProps) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        LOADING WEATHER DATA . . .
       </Box>
     </>
   );

@@ -93,7 +93,7 @@ const WeatherGridSweep = () => {
     const duration = 18;
 
     const animate = (target: HTMLDivElement, offsetX = 0, offsetY = 0, delay = 0) => {
-      gsap.set(target, { x: startX + offsetX, y: startY + offsetY });
+      gsap.set(target, { x: startX + offsetX, y: startY + offsetY, opacity: 1 });
 
       gsap.to(target, {
         x: endX + offsetX,
@@ -155,6 +155,7 @@ const WeatherGridSweep = () => {
             flexWrap: 'wrap',
             width: '100%',
             height: '100%',
+            opacity: 0, // before animated into place
             background: theme.palette.bg.main,
           }}
         >
@@ -195,6 +196,7 @@ const WeatherGridSweep = () => {
             flexWrap: 'wrap',
             width: '100%',
             height: '100%',
+            opacity: 0, // before animated into place
             background: theme.palette.bg.main,
           }}
         >

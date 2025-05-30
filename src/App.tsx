@@ -18,12 +18,10 @@ import WeatherDials from './features/weather-dials';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import LocationLoadingMap from './features/location-loading';
-import WeatherGridSweep from './features/weather-loading/weather-grid-sweep';
+import WeatherLoading from './features/weather-loading/weather-loading';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
-// TODO: gsap weather icons animation while loading weather data - at least one animation cycle, and after the loading one
 // TODO: refactoring and cleanup 
 
 interface UserLocation {
@@ -33,11 +31,17 @@ interface UserLocation {
 
 const REFRESH_INTERVAL: number = 300000; // miliseconds
 const MIN_LOCATION_DELAY: number = 5000;
+const MIN_WEATHER_DELAY: number = 10500;
 
 function App() {
   const [location, setLocation] = useState<UserLocation | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
   const minLocationDelayDone = useMinLoadingDelay(MIN_LOCATION_DELAY);
+  const locationReady = (location || locationError) && minLocationDelayDone;
+
+  const [startWeatherDelay, setStartWeatherDelay] = useState(false);
+  const [weatherDelayHasStarted, setWeatherDelayHasStarted] = useState(false);
+  const minWeatherLoadingDelayDone = useMinLoadingDelay(startWeatherDelay ? MIN_WEATHER_DELAY : 0);
 
   useEffect(() => {
     handleRefreshLocation();
@@ -46,10 +50,30 @@ function App() {
   const handleRefreshLocation = () => {
     setLocation(null);
     setLocationError(null);
+    setStartWeatherDelay(false);
+    setWeatherDelayHasStarted(false);
 
     getUserLocation()
       .then(setLocation)
       .catch(setLocationError);
+  }
+
+  useEffect(() => {
+    if (locationReady) {
+      setStartWeatherDelay(true);
+      setWeatherDelayHasStarted(true); 
+    }
+  }, [locationReady]);
+
+  const handleRefetchWeatherData = () => {
+    setStartWeatherDelay(false); 
+    setWeatherDelayHasStarted(false);
+
+    setTimeout(() => {
+      refetchWeatherData();
+      setStartWeatherDelay(true); 
+      setWeatherDelayHasStarted(true);
+    }, 300);
   }
 
   const { isPending, isError: isWeatherError, data, error: weatherError, refetch: refetchWeatherData } = useQuery({
@@ -61,13 +85,12 @@ function App() {
     refetchInterval: REFRESH_INTERVAL, // refetch data every miliseconds
   });
 
-  // TODO: Make loading nice and handle this better
-  if ((!location && !locationError) || !minLocationDelayDone) {
+  if (!locationReady) {
     return <LocationLoadingMap/>
   }
   
-  if (isPending || true) {
-    return <span><WeatherGridSweep/>Loading Weather Data...</span>
+  if (isPending || !minWeatherLoadingDelayDone || !weatherDelayHasStarted) {
+    return <WeatherLoading/>
   }
 
   if (isWeatherError || locationError != null) {
@@ -82,7 +105,7 @@ function App() {
       
       <Box sx={{ position: 'absolute', right: '15px', top: '22px', display: 'flex', flexDirection: 'column', gap: 1 }}>
       <ThemedButton onClick={handleRefreshLocation} label='Refresh Location'/>
-      <ThemedButton onClick={refetchWeatherData} label='Refresh Weather (Auto is 5 Min)'/>
+      <ThemedButton onClick={handleRefetchWeatherData} label='Refresh Weather (Auto is 5 Min)'/>
       </Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: "100px" }}>
