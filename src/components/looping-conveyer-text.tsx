@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import gsap from 'gsap';
-import { useTheme } from '@emotion/react';
 
 /* THIS COMPONENT WAS WRITTEN BY CHAT GPT (& MODIFIED) */
 

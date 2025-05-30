@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import React from 'react';
 import normalizeDataPoints from '../../utils/normalize-data-points';
 import type { LabeledXPoint } from '../../types/graph-types';

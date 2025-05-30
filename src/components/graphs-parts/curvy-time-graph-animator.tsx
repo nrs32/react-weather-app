@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { type Point } from '../../types/graph-types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';

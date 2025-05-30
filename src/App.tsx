@@ -16,10 +16,7 @@ import { useAppLoading } from './utils/hooks/user-app-loading';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// TODO: refactoring and cleanup for loading animation pages
-
 function App() {
- 
   const {
     isLoading,
     loadingScreen,
