@@ -18,9 +18,13 @@ import WeatherDials from './features/weather-dials';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import LocationLoadingMap from './features/location-loading';
+import WeatherGridSweep from './features/weather-loading/weather-grid-sweep';
 
 gsap.registerPlugin(ScrollTrigger);
+
 // TODO: gsap text split use with loading text for location/weather data? and force the text to show for at least 1 animation cycle
+// TODO: gsap weather icons animation while loading weather data - at least one animation cycle, and after the loading one
+// TODO: refactoring and cleanup 
 
 interface UserLocation {
   lat: number;
@@ -59,11 +63,11 @@ function App() {
 
   // TODO: Make loading nice and handle this better
   if ((!location && !locationError) || !minLocationDelayDone) {
-    return <LocationLoadingMap></LocationLoadingMap>
+    return <LocationLoadingMap/>
   }
   
-  if (isPending) {
-    return <span>Loading Weather Data...</span>
+  if (isPending || true) {
+    return <span><WeatherGridSweep/>Loading Weather Data...</span>
   }
 
   if (isWeatherError || locationError != null) {

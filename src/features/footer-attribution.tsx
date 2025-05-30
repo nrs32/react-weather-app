@@ -5,7 +5,7 @@ import reactLogo from '../assets/react.svg'
 import openMedeoLogo from '../assets/open-medeo.png'
 import viteLogo from '/vite.svg'
 import gsapLogo from '../assets/gsap.svg'
-import cloudySvg from '../assets/weather-icons/cloudy-still-tight.svg';
+import cloudySvg from '../assets/cloudy-still-meteocon.svg';
 import type { WeatherData } from '../types/weather-types';
 
 interface FooterAttributionProps {
