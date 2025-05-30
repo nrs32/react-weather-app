@@ -1,35 +1,21 @@
-import { Box, useTheme } from '@mui/material';
+import { Box, useTheme, type Theme } from '@mui/material';
 import WeatherGridSweep from './weather-grid-sweep';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-type WeatherLoadingProps = {
-};
-
-const WeatherLoading = ({  }: WeatherLoadingProps) => {
+const WeatherLoading = () => {
   const theme = useTheme();
 
-   const textRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
   if (!textRef.current) return;
 
-    // Wait for fonts to load first
+    // Wait for fonts to load
     document.fonts.ready.then(() => {
       if (!textRef.current) return;
 
-      // Wrap each character (including spaces) in a span
-      const wrappedText = [..."LOADING WEATHER DATA . . ."].map(char => {
-        if (char === ' ') {
-          // Use &nbsp; for visible space and fixed width to keep spacing consistent
-          return `<span style="display:inline-block; width:0.5em;">&nbsp;</span>`;
-        }
-        // normal char span
-        return `<span style="display:inline-block;">${char}</span>`;
-      }).join('');
-
-      textRef.current.innerHTML = wrappedText;
-
+      textRef.current.innerHTML = splitChars('LOADING WEATHER DATA . . .');
       const chars = textRef.current.querySelectorAll('span');
 
       const upDuration = 0.8;
@@ -40,7 +26,8 @@ const WeatherLoading = ({  }: WeatherLoadingProps) => {
       const timelines: gsap.core.Timeline[] = [];
 
       chars.forEach((char, i) => {
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: 0 });
+        // repeat infinitely, pausing after each timeline completion
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: pauseDuration }); 
 
         tl.to(char, {
           y: -40,
@@ -51,19 +38,16 @@ const WeatherLoading = ({  }: WeatherLoadingProps) => {
           y: 0,
           duration: downDuration,
           ease: 'power1.inOut',
-        })
-        .to(char, {
-          y: 0,
-          duration: pauseDuration,
         });
 
+        // stagger each timeline so characters bounce consecutively
         tl.delay(i * staggerDelay);
 
         timelines.push(tl);
       });
 
-      // Cleanup on unmount
       return () => {
+        // kill timelines on unmount
         timelines.forEach(tl => tl.kill());
       };
     });
@@ -72,6 +56,7 @@ const WeatherLoading = ({  }: WeatherLoadingProps) => {
   return (
     <>
       <WeatherGridSweep/>
+
       <Box 
         ref={textRef}
         sx={{
@@ -83,25 +68,49 @@ const WeatherLoading = ({  }: WeatherLoadingProps) => {
           fontWeight: 700,
           fontSize: '27px',
           borderRadius: '10px',
-          backgroundColor: `${theme.palette.bg.main}0D`, // semi-transparent dark
-          backdropFilter: 'blur(10px)', // blur behind the element
-          WebkitBackdropFilter: 'blur(10px)', // for Safari support
           width: '100%',
           height: '153px', 
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+
+          // frosted glass blur effect 
+          backgroundColor: `${theme.palette.bg.main}0D`,
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)', // (safari)
         }}>
       </Box>
-      <Box sx={{ 
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        padding: '5px 10px',
-        background: theme.palette.bg.main,
-      }}>Icons from <a href="https://basmilius.github.io/weather-icons/index-line.html" target='_blank'>Basmilius</a></Box>
+
+      <IconCreditDiv theme={theme}></IconCreditDiv>
     </>
   );
 };
+
+const splitChars = (text: string) => {
+  // Wrap each character (including spaces) in a span
+  // Could not get this working with char split in gsap SplitText with preserveSpaces
+  return [...text].map(char => {
+    if (char === ' ') {
+      // Use &nbsp; and width for spaces
+      return `<span style="display:inline-block; width:0.5em;">&nbsp;</span>`;
+    }
+
+    return `<span style="display:inline-block;">${char}</span>`;
+  }).join('');
+}
+
+const IconCreditDiv = ({theme}: { theme: Theme}) => {
+  return (
+    <Box sx={{ 
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      padding: '5px 10px',
+      background: theme.palette.bg.main,
+    }}>
+      Icons from <a href="https://basmilius.github.io/weather-icons/index-line.html" target='_blank'>Basmilius</a>
+    </Box>
+  );
+}
 
 export default WeatherLoading;

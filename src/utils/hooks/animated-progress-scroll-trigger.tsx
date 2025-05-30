@@ -32,7 +32,6 @@ export default function useAnimatedProgressScrollTrigger({
 				// as throttling could miss the last value
 				setAnimatedValue(Math.round(valueRef.current.v)); 
 			},
-      delay: .3,
       paused: true, // So we don't run until we are scroll-triggered
       immediateRender: false,
     });
@@ -42,6 +41,7 @@ export default function useAnimatedProgressScrollTrigger({
       start: 'bottom bottom',
       end: 'bottom bottom',
       onEnter: () => {
+        tween.delay(.6);
         tween.restart(true);
       },
     });
@@ -51,6 +51,7 @@ export default function useAnimatedProgressScrollTrigger({
       start: 'top bottom',
       end: 'top bottom',
       onLeaveBack: () => {
+        tween.delay(0);
         tween.pause(0);
         throttledSetAnimatedValue(0);
       },
