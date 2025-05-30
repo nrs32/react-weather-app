@@ -82,8 +82,8 @@ const WeatherGridSweep = () => {
     <Box
       sx={{
         position: 'relative',
-        width: '100vw',
-        height: '100vh',
+        width: 'calc(100vw - 10px)',
+        height: 'calc(100vh - 16px)',
         overflow: 'hidden',
       }}
     >

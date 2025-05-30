@@ -108,7 +108,7 @@ const IconCreditDiv = ({theme}: { theme: Theme}) => {
       padding: '5px 10px',
       background: theme.palette.bg.main,
     }}>
-      Icons from <a href="https://basmilius.github.io/weather-icons/index-line.html" target='_blank'>Basmilius</a>
+      Icons from <a href="https://basmilius.github.io/weather-icons/index-line.html" target='_blank' style={{ color: 'white' }}>Basmilius</a>
     </Box>
   );
 }
