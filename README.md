@@ -1,6 +1,6 @@
 # Weather App Notes
 
-### Scaffolding:
+### Scaffolding: <img src="./src//assets//react.svg" alt="react logo" width="20" style="vertical-align: middle;" /> <img src="./public//vite.svg" alt="vite logo" width="20" style="vertical-align: middle;" />
 `npm create vite@latest react-weather-app -- --template react-ts`
 
 `npm install`
@@ -9,20 +9,20 @@
 
 `npm install sass-embedded` for scss.
 
-### Weather API
+### Weather API <img src="./src//assets//open-medeo.png" alt="open-medeo logo" width="20" style="vertical-align: middle;" />
 - [Open-meteo](https://open-meteo.com/)
 - Current weather and forcast free
 - 10,000 requests per day
 - [npm pkg](https://www.npmjs.com/package/openmeteo)
 - `npm install openmeteo`
 
-### Weather Icons
+### Weather Icons <img src="./src//assets//cloudy-still-meteocon.svg" alt="Meteocons icon" width="20" style="vertical-align: middle;" />
 - [Meteocons by Basmilius](https://basmilius.github.io/weather-icons/index-line.html)
 - [Animated SVGs](https://github.com/basmilius/weather-icons/tree/dev/production/line/svg)
 
 I used [download directory](https://download-directory.github.io) which lets you paste the url of a github directory and download it
 
-### GSAP for animation 
+### GSAP for animation <img src="./src//assets//gsap.svg" alt="gsap logo" width="20" style="vertical-align: middle;" />
 - [GSAP](https://gsap.com/)
 - [Docs](https://gsap.com/docs/v3/)
 - [Scroll Trigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/)
@@ -167,8 +167,12 @@ import ThreeDRotation from '@mui/icons-material/ThreeDRotation';
 Just append themename for icon style other than default, e.g. Twotone theme is exported as `@mui/icons-material/DeleteTwoTone`;
 
 # Design Inspiration 
+[pikisuperstar / Freepik](http://www.freepik.com) <img src="./src//assets//freepik-icon.png" alt="Freepik icon" width="20" style="vertical-align: middle;" />
 ![dashboard example](./src//assets//dashboard-example.jpg)
-[pikisuperstar / Freepik](http://www.freepik.com)
+
+# Palette
+![palette](./src//assets//weather-app-palette.png)
+
 ___
 ___
 ___
