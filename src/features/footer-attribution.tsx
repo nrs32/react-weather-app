@@ -6,6 +6,7 @@ import openMedeoLogo from '../assets/open-medeo.png'
 import viteLogo from '/vite.svg'
 import gsapLogo from '../assets/gsap.svg'
 import cloudySvg from '../assets/cloudy-still-meteocon.svg';
+import freepikLogo from '../assets/freepik-icon.png';
 import type { WeatherData } from '../types/weather-types';
 
 interface FooterAttributionProps {
@@ -31,6 +32,9 @@ const FooterAttribution: React.FC<FooterAttributionProps> = ({ weatherData }) =>
       <RawDataModal weatherData={weatherData}></RawDataModal>
       <a href="https://gsap.com" target="_blank" title='GSAP used for animations'>
         <img src={gsapLogo} alt="GSAP logo" width="40px" style={{ marginBottom: '7px' }}/>
+      </a>
+      <a href="http://www.freepik.com" target="_blank" title='Design Inspired By pikisuperstar / Freepik'>
+        <img style={{ filter: 'invert(1)' }} src={freepikLogo} width="30px" alt="Freepik Logo" />
       </a>
       <a href="https://basmilius.github.io/weather-icons/index-line.html" target="_blank" title='Meteocons by Basmilius Used For Weather Icons'>
         <img style={{ paddingBottom: '4px' }} src={cloudySvg} width="35px" alt="Meteocons by Basmilius" />

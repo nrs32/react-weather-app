@@ -166,6 +166,9 @@ import ThreeDRotation from '@mui/icons-material/ThreeDRotation';
 ```
 Just append themename for icon style other than default, e.g. Twotone theme is exported as `@mui/icons-material/DeleteTwoTone`;
 
+# Design Inspiration 
+![dashboard example](./src//assets//dashboard-example.jpg)
+[pikisuperstar / Freepik](http://www.freepik.com)
 ___
 ___
 ___
