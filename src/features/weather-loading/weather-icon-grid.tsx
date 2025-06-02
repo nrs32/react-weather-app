@@ -69,6 +69,7 @@ const WeatherIconGrid = ({ gridRef, blockCols, blockRows, gridCols, gridRows, sv
   return (
     <Box
       ref={gridRef}
+      aria-hidden="true"
       sx={{
         position: 'absolute',
         display: 'flex',
@@ -96,6 +97,7 @@ const WeatherIconGrid = ({ gridRef, blockCols, blockRows, gridCols, gridRows, sv
                 <img
                   src={url}
                   alt=""
+                  role="presentation"
                   width={svgSize}
                   height={svgSize}
                   style={{ objectFit: 'contain' }}

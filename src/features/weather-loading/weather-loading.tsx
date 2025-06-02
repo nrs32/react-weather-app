@@ -1,4 +1,4 @@
-import { Box, useTheme, type Theme } from '@mui/material';
+import { Box, Typography, useTheme, type Theme } from '@mui/material';
 import WeatherGridSweep from './weather-grid-sweep';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
@@ -57,7 +57,7 @@ const WeatherLoading = () => {
     <>
       <WeatherGridSweep/>
 
-      <Box 
+      <Typography
         ref={textRef}
         sx={{
           position: 'fixed',
@@ -79,7 +79,7 @@ const WeatherLoading = () => {
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)', // (safari)
         }}>
-      </Box>
+      </Typography>
 
       <IconCreditDiv theme={theme}></IconCreditDiv>
     </>
