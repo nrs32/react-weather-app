@@ -7,8 +7,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { type TransitionProps } from '@mui/material/transitions';
 import type { Theme } from '@mui/material';
-import type { WeatherData } from '../types/weather-types';
 import ThemedButton from './themed-button';
+import { WeatherContext } from '../App';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -19,11 +19,8 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface RawDataModalProps {
-  weatherData: WeatherData;
-}
-
-const RawDataModal: React.FC<RawDataModalProps> = ({ weatherData }) => {
+const RawDataModal = () => {
+  const weatherData = React.useContext(WeatherContext)!;
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {

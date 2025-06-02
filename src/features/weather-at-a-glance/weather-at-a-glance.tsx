@@ -1,19 +1,17 @@
-import type { DayKey, WeatherData } from '../../types/weather-types';
+import type { DayKey } from '../../types/weather-types';
 import WeeklyWeather from './weekly-weather';
 import HourlyWeather from './hourly-weather';
 import WeatherCard from '../../components/weather-card';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { WeatherContext } from '../../App';
 
-type WeatherAtAGlanceProps = {
-  weatherData: WeatherData;
-};
-
-const WeatherAtAGlance = ({ weatherData }: WeatherAtAGlanceProps) => {
+const WeatherAtAGlance = () => {
+  const weatherData = useContext(WeatherContext)!;
   const [dayOfHourlyWeather, setDayOfHourlyWeather] = useState<DayKey>('day1');
 
   return (
     <WeatherCard width='580px' height='533px'>
-      <WeeklyWeather weatherData={weatherData} dayClicked={setDayOfHourlyWeather} selectedDay={dayOfHourlyWeather}/>
+      <WeeklyWeather dayClicked={setDayOfHourlyWeather} selectedDay={dayOfHourlyWeather}/>
       <HourlyWeather dayOfWeek={weatherData[dayOfHourlyWeather].dayOfWeek} date={weatherData[dayOfHourlyWeather].date} hourlyWeather={weatherData[dayOfHourlyWeather].hourlyWeather}></HourlyWeather>
     </WeatherCard>
   );

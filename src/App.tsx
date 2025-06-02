@@ -13,8 +13,12 @@ import WeatherDials from './features/weather-dials';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { useAppLoading } from './utils/hooks/user-app-loading';
+import { createContext } from 'react';
+import type { WeatherData } from './types/weather-types';
 
 gsap.registerPlugin(ScrollTrigger);
+
+export const WeatherContext = createContext<WeatherData | undefined>(undefined);
 
 function App() {
   const {
@@ -32,17 +36,17 @@ function App() {
   const weatherData = data!;
 
   return (
-    <>
+    <WeatherContext.Provider value={weatherData}>
       <h1 className='heading'> Weather Dashboard </h1>
       
       <Box sx={{ position: 'absolute', right: '15px', top: '22px', display: 'flex', flexDirection: 'column', gap: 1 }}>
-      <ThemedButton onClick={refreshLocation!} label='Refresh Location'/>
-      <ThemedButton onClick={refetchWeatherData!} label='Refresh Weather (Auto is 5 Min)'/>
+        <ThemedButton onClick={refreshLocation!} label='Refresh Location'/>
+        <ThemedButton onClick={refetchWeatherData!} label='Refresh Weather (Auto is 5 Min)'/>
       </Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: "100px" }}>
-        <CurrentTempCard actualTemp={weatherData.current.temperature} feelsLike={weatherData.current.apparentTemperature}></CurrentTempCard>
-        <WeatherCodeCard isDay={weatherData.current.isDay} weatherCodeInfo={weatherData.current.weatherCodeInfo}></WeatherCodeCard>
+        <CurrentTempCard actualTemp={weatherData.current.temperature} feelsLike={weatherData.current.apparentTemperature}/>
+        <WeatherCodeCard isDay={weatherData.current.isDay} weatherCodeInfo={weatherData.current.weatherCodeInfo}/>
         
         <WeatherDials 
           humidity={weatherData.current.humidity} 
@@ -55,17 +59,17 @@ function App() {
           sunrise={weatherData.day1.sunrise}
           sunset={weatherData.day1.sunset}/>
 
-        <WeatherAtAGlance weatherData={weatherData}/>
+        <WeatherAtAGlance/>
 
-        <TempVHumidityCarousel weatherData={weatherData}/>
+        <TempVHumidityCarousel/>
 
         <WeatherCard width='580px' height='340px'>
-          <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} weatherData={weatherData} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}></WeeklyTempSpreadGraph>
+          <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}/>
         </WeatherCard>
       </Box>
 
-      <FooterAttribution weatherData={weatherData}/>
-    </>
+      <FooterAttribution/>
+    </WeatherContext.Provider>
   )
 }
 

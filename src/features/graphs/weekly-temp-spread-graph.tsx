@@ -11,13 +11,15 @@ import getTemperatureLabel from '../../utils/get-y-label';
 import RightDataLabel from '../../components/graphs-parts/right-data-label';
 import Box from '@mui/material/Box';
 import CurvyTimeGraphAnimator from '../../components/graphs-parts/curvy-time-graph-animator';
+import { useContext } from 'react';
+import { WeatherContext } from '../../App';
 
 interface WeeklyTempSpreadGraphProps extends GraphProps {
   title: string;
-  weatherData: WeatherData,
 }
 
-const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title, weatherData, graphWidth, graphHeight, chartTop, chartLeft }) => {
+const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title, graphWidth, graphHeight, chartTop, chartLeft }) => {
+  const weatherData = useContext(WeatherContext)!;
   const theme = useTheme();
 
   const allTemps: DayWeather[] = dayKeys.map(key => weatherData[key]);

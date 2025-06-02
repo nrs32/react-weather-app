@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import React from 'react';
 import RawDataModal from '../components/raw-data-modal';
 import reactLogo from '../assets/react.svg'
 import openMedeoLogo from '../assets/open-medeo.png'
@@ -7,13 +6,8 @@ import viteLogo from '/vite.svg'
 import gsapLogo from '../assets/gsap.svg'
 import cloudySvg from '../assets/cloudy-still-meteocon.svg';
 import freepikLogo from '../assets/freepik-icon.png';
-import type { WeatherData } from '../types/weather-types';
 
-interface FooterAttributionProps {
-  weatherData: WeatherData;
-}
-
-const FooterAttribution: React.FC<FooterAttributionProps> = ({ weatherData }) => {
+const FooterAttribution = () => {
 
   return (
     <Box
@@ -29,7 +23,7 @@ const FooterAttribution: React.FC<FooterAttributionProps> = ({ weatherData }) =>
           paddingLeft: '11px',
         }
       })}>
-      <RawDataModal weatherData={weatherData}></RawDataModal>
+      <RawDataModal></RawDataModal>
       <a href="https://gsap.com" target="_blank" title='GSAP used for animations'>
         <img src={gsapLogo} alt="GSAP logo" width="40px" style={{ marginBottom: '7px' }}/>
       </a>

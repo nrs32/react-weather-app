@@ -1,15 +1,17 @@
 import { Box, useTheme } from '@mui/material';
-import { dayKeys, type DayKey, type WeatherData } from '../../types/weather-types';
+import { dayKeys, type DayKey } from '../../types/weather-types';
 import AtAGlanceDay from './at-a-glance-day';
 import { scrollbarStyles } from '../../utils/scrollbar-styles';
+import { useContext } from 'react';
+import { WeatherContext } from '../../App';
 
 type WeeklyWeatherProps = {
-	weatherData: WeatherData;
 	selectedDay: DayKey;
 	dayClicked: (dayKey: DayKey) => void;
 };
 
-const WeeklyWeather = ({ weatherData, selectedDay, dayClicked }: WeeklyWeatherProps) => {
+const WeeklyWeather = ({ selectedDay, dayClicked }: WeeklyWeatherProps) => {
+	const weatherData = useContext(WeatherContext)!;
 	const theme = useTheme();
 
 	return (

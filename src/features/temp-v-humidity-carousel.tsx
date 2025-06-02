@@ -1,14 +1,13 @@
-import { type DayIndex, type WeatherData } from '../types/weather-types';
+import { type DayIndex } from '../types/weather-types';
 import TempVHumidityGraph from './graphs/temp-v-humidity-graph';
 import CarouselControls from '../components/carousel-controls';
 import WeatherCard from '../components/weather-card';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { WeatherContext } from '../App';
 
-type TempVHumidityCarouselProps = {
-	weatherData: WeatherData;
-};
+const TempVHumidityCarousel = () => {
+	const weatherData = useContext(WeatherContext)!;
 
-const TempVHumidityCarousel = ({ weatherData }: TempVHumidityCarouselProps) => {
 	const { dayIndex, hasPrev, hasNext, onNext, onPrev } = useTempVHumidDayIndex();
 
 	return (
