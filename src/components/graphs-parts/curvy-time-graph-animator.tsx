@@ -1,7 +1,7 @@
 import { type Point } from '../../types/graph-types';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import usePrevious from '../../utils/hooks/use-previous-hook';
+import usePrevious from '../../hooks/use-previous-hook';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export type GradientDirection = 'v' | 'h'; // vertical or horizontal

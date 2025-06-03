@@ -12,7 +12,7 @@ import WeatherAtAGlance from './features/weather-at-a-glance/weather-at-a-glance
 import WeatherDials from './features/weather-dials';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import { useAppLoading } from './utils/hooks/user-app-loading';
+import { useAppLoading } from './hooks/user-app-loading';
 import { createContext } from 'react';
 import type { WeatherData } from './types/weather-types';
 

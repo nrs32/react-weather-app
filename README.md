@@ -37,7 +37,24 @@ I used [download directory](https://download-directory.github.io) which lets you
 
 ### MUI
 - `npm install @mui/material @emotion/react @emotion/styled` for MUI and Emotion
-- `npm install @fontsource/roboto` to use Roboto as the default font, if wanted.
+- `npm install @fontsource/roboto` to use Roboto as the default font, if wanted. 
+  
+  Also add
+  ```
+  // To use MUI's default font, Roboto
+  import '@fontsource/roboto/300.css';
+  import '@fontsource/roboto/400.css';
+  import '@fontsource/roboto/500.css';
+  import '@fontsource/roboto/700.css';
+  ```
+  to an entry file like main.tsx
+  
+  And set the styles in entry scss file like index.scss or App.scss like this
+  ```
+  body {
+    font-family: 'Roboto', sans-serif;
+  }
+  ```
 - [Customization](https://mui.com/material-ui/customization/how-to-customize/)
 - [Theming](https://mui.com/material-ui/customization/theme-components/)
 

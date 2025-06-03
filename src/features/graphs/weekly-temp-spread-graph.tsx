@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 
-import { dayKeys, type DayWeather, type WeatherData } from '../../types/weather-types';
+import { dayKeys, type DayWeather } from '../../types/weather-types';
 import determineYRangePoints from '../../utils/determine-y-range-points';
 import YAxis from '../../components/graphs-parts/y-axis';
 import CurvyTimeGraph from '../../components/graphs-parts/curvy-time-graph';

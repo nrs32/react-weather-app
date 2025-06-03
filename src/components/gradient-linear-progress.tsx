@@ -1,8 +1,8 @@
 import { useTheme } from '@mui/material/styles';
 import { Box, LinearProgress, type LinearProgressProps } from '@mui/material';
 import React, { useRef, useState } from 'react';
-import useThrottle from '../utils/hooks/throttled-hook';
-import useAnimatedProgressScrollTrigger from '../utils/hooks/animated-progress-scroll-trigger';
+import useThrottle from '../hooks/throttled-hook';
+import useAnimatedProgressScrollTrigger from '../hooks/animated-progress-scroll-trigger';
 
 interface GradientLinearProgressProps extends LinearProgressProps {
   id: string; // unique ID per instance

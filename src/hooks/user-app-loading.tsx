@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getWeather } from '../../services/weather-service';
-import LocationLoadingMap from '../../features/location-loading';
-import WeatherLoading from '../../features/weather-loading/weather-loading';
-import type { WeatherData } from '../../types/weather-types';
+import { getWeather } from '../services/weather-service';
+import LocationLoadingMap from '../features/location-loading';
+import WeatherLoading from '../features/weather-loading/weather-loading';
+import type { WeatherData } from '../types/weather-types';
 
 const REFRESH_INTERVAL = 300000;
 const MIN_LOCATION_DELAY = 5000;
