@@ -7,7 +7,7 @@ import determineYRangePoints from '../../utils/determine-y-range-points';
 import YAxis from '../../components/graphs-parts/y-axis';
 import CurvyTimeGraph from '../../components/graphs-parts/curvy-time-graph';
 import XAxis from '../../components/graphs-parts/x-axis';
-import getTemperatureLabel from '../../utils/get-y-label';
+import getTemperatureLabel from '../../utils/get-temperature-label';
 import getHumidityLabel from '../../utils/get-humidity-label';
 import RightDataLabel from '../../components/graphs-parts/right-data-label';
 import Box from '@mui/material/Box';

@@ -7,7 +7,7 @@ import CurvyTimeGraph from '../../components/graphs-parts/curvy-time-graph';
 import XAxis from '../../components/graphs-parts/x-axis';
 import type { GraphProps, LabeledXPoint, LabeledYPoint, Point } from '../../types/graph-types';
 import type React from 'react';
-import getTemperatureLabel from '../../utils/get-y-label';
+import getTemperatureLabel from '../../utils/get-temperature-label';
 import RightDataLabel from '../../components/graphs-parts/right-data-label';
 import Box from '@mui/material/Box';
 import CurvyTimeGraphAnimator from '../../components/graphs-parts/curvy-time-graph-animator';
