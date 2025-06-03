@@ -5,9 +5,9 @@
 
 `npm install`
 
-`npm run dev`
-
 `npm install sass-embedded` for scss.
+
+`npm run dev`
 
 ### Weather API <img src="./src//assets//open-medeo.png" alt="open-medeo logo" width="20" style="vertical-align: middle;" />
 - [Open-meteo](https://open-meteo.com/)
