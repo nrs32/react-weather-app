@@ -1527,8 +1527,8 @@ export const fakeData: WeatherData =  {
       },
       {
         "time": "11:00 PM",
-        "temperature": 74,
-        "humidity": 77,
+        "temperature": 73,
+        "humidity": 78,
         "apparentTemperature": 73,
         "weatherCodeInfo": {
           "desc": "Overcast",

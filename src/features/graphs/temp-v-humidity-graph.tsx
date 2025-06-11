@@ -1,81 +1,119 @@
+import { CurvyGraph, type HexColor, type LabeledXPoint, type LabeledYPoint, type Point } from 'curvy-graphs'
+import { generateLabeledYPoints } from 'curvy-graphs/parts';
 import { useTheme } from '@mui/material/styles';
-
 import type React from 'react';
-import type { HourlyWeather } from '../../types/weather-types';
-import type { GraphProps, LabeledXPoint, LabeledYPoint, Point } from '../../types/graph-types';
-import determineYRangePoints from '../../utils/determine-y-range-points';
-import YAxis from '../../components/graphs-parts/y-axis';
-import CurvyTimeGraph from '../../components/graphs-parts/curvy-time-graph';
-import XAxis from '../../components/graphs-parts/x-axis';
-import getTemperatureLabel from '../../utils/get-temperature-label';
-import getHumidityLabel from '../../utils/get-humidity-label';
-import RightDataLabel from '../../components/graphs-parts/right-data-label';
-import Box from '@mui/material/Box';
-import CurvyTimeGraphAnimator from '../../components/graphs-parts/curvy-time-graph-animator';
 
-interface TempVHumidityGraphProps extends GraphProps {
-  title: string,
+import getTemperatureLabel from '../../utils/get-temperature-label';
+import type { HourlyWeather } from '../../types/weather-types';
+import getHumidityLabel from '../../utils/get-humidity-label';
+import { useScrollTriggeredChartData } from '../../hooks/use-scroll-trigger-animation';
+import { useCallback, useMemo, useRef, useState } from 'react';
+
+interface TempVHumidityGraphProps {
   hourlyWeather: HourlyWeather[],
 }
 
-const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ title, hourlyWeather, graphWidth, graphHeight, chartTop, chartLeft }) => {
-  const theme = useTheme();
+const WIDTH = 613;
+const defaultData = {
+  humidity: [],
+  temps: [],
+};
 
-  const hourlyTemps: LabeledXPoint[] = hourlyWeather.map((hourly, i) => ({
+const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ hourlyWeather }) => {
+  const theme = useTheme();
+  const curvyGraphRef = useRef<HTMLDivElement>(null);
+  const [ chartData, setChartData ] = useState<{
+    humidity: Point[],
+    temps: (LabeledXPoint & Point)[],
+  }>(defaultData);
+  
+
+  const hourlyTemps: (LabeledXPoint & Point)[] = useMemo(() => hourlyWeather.map((hourly, i) => ({
     x: i,
     y: hourly.temperature,
     xLabel: hourly.time
-  }));
+  })), [hourlyWeather]);
 
-  const hourlyHumidity: Point[] = hourlyWeather.map((hourly, i) => ({
+  const hourlyHumidity: Point[] = useMemo(() => hourlyWeather.map((hourly, i) => ({
     x: i,
     y: hourly.humidity,
-  }));
+  })), [hourlyWeather]);
 
-  const combinedYPoints = getCombinedYRange(hourlyTemps.map(temp => temp.y));
-  const dataTop = chartTop + 59;
-  const dataLeft = chartLeft + 95;
-  const labelTop = dataTop - 18;
-  const labelLeft = dataLeft + 113;
+  const combinedYPoints = getCombinedYRange(hourlyTemps.map(temp => temp.y) as number[]);
 
+  const setDefaultData = useCallback(() => {
+    setChartData(defaultData);
+  }, [defaultData]);
+
+  const setActualData = useCallback(() => {
+    setChartData({
+      humidity: hourlyHumidity,
+      temps: hourlyTemps,
+    });
+  }, [hourlyHumidity, hourlyTemps]);
+
+  // Everything memo-ized since this method triggers methods that change state, otherwise causing infinite loops
+  useScrollTriggeredChartData({ ref: curvyGraphRef, setDefaultData,setActualData });
+  
   return (
-    <Box sx={{
-      position: 'relative',
-      height: '353px',
-      width: '615px',
-    }}
-    >
-      <Box
-        sx={{
-          fontWeight: 700,
-          fontSize: '22px',
-          textAlign: 'center',
-          position: 'absolute',
-          top: `${chartTop}px`,
-          width: '410px',
-          left: `${chartLeft + 93}px`
+    <div ref={curvyGraphRef}>
+      <CurvyGraph
+        chartTitle='Humidity and Temperature (Sun 6/1)'
+        spaceBelowData={20}
+        width={WIDTH}
+        height={310}
+        textColor={theme.palette.text.primary as HexColor}
+        animate={true}
+        yAxis={{
+          labeledPoints: combinedYPoints,
+          getExtendedYLabel: (y) => getTempAndHumidityLabel(getTemperatureLabel(y), 'N/A'),
+          labelFrequency: 5,
         }}
-      >
-        {title}
-      </Box>
-      <YAxis style={{ position: "absolute", top: `${dataTop - 1}px`, left: `${dataLeft - 89}px`}} labeledYPoints={combinedYPoints} getLabel={(y) => getTempAndHumidityLabel(getTemperatureLabel(y), 'N/A')} graphWidth={graphWidth} height={graphHeight} textSpace={65}></YAxis>
-
-      <CurvyTimeGraphAnimator id="dashed" width={graphWidth} data={hourlyHumidity} delay={0}>
-        {(refs) => (
-          <CurvyTimeGraph animationRefs={refs} id='dashed' width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px` }} data={hourlyHumidity} yRange={[0, 100]} gradientstops={[theme.palette.pink.main, "white"]} gradientDirection='h' type="dashed-line"/>
-        )}
-      </CurvyTimeGraphAnimator>
-      <RightDataLabel label="HUMIDITY" labelColor={theme.palette.pink.light} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${labelTop}px`, left: `${labelLeft - 35}px` }} data={hourlyHumidity} yRange={[0, 100]}></RightDataLabel>
-
-      <CurvyTimeGraphAnimator id="line" width={graphWidth} data={hourlyTemps} delay={.5}>
-        {(refs) => ( 
-          <CurvyTimeGraph animationRefs={refs} id='line' width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${dataTop}px`, left: `${dataLeft}px`  }} data={hourlyTemps} gradientstops={[theme.palette.teal.main, theme.palette.purple.main]} type="line-area"/>
-        )}
-      </CurvyTimeGraphAnimator>
-      <RightDataLabel label="TEMPERATURE" labelColor={theme.palette.purple.main} width={graphWidth} height={graphHeight} style={{ position: "absolute", top: `${labelTop}px`, left: `${labelLeft}px`  }} data={hourlyTemps} ></RightDataLabel>
-
-      <XAxis width={graphWidth} style={{ position: "absolute", top: `calc(${graphHeight}px + ${dataTop + 7}px)`, left: `${dataLeft}px` }} data={hourlyTemps} labelFrequency={4}></XAxis>
-    </Box>
+        dataSets={[
+          {
+            id: 'humidity',
+            graphStyle: 'dashed-line',
+            label: 'HUMIDITY',
+            labelColor: theme.palette.pink.light,
+            gradientColorStops: [theme.palette.pink.main, "white"],
+            gradientDirection: 'h',
+            yRange: [0, 100],
+            animationDelay: 0,
+            data: chartData.humidity,
+          },
+          {
+            id: 'temperature-line',
+            graphStyle: 'line',
+            label: 'TEMPERATURE',
+            labelColor: theme.palette.purple.main,
+            gradientColorStops: [theme.palette.teal.main, theme.palette.purple.main],
+            gradientDirection: 'v',
+            animationDelay: 0.5,
+            data: chartData.temps,
+          },
+          {
+            id: 'temperature-area',
+            graphStyle: 'area',
+            label: '',
+            labelColor: theme.palette.purple.main,
+            gradientColorStops: [theme.palette.teal.main, theme.palette.purple.main],
+            gradientTransparencyStops: [0.5, 0],
+            gradientDirection: 'v',
+            animationDelay: 0.5,
+            data: chartData.temps,
+          },
+        ]}
+        xAxis={{
+          labeledPoints: hourlyTemps,
+          labelFrequency: 4,
+        }}
+        styles={{
+          rightDataLabels: {
+            textStyle: { letterSpacing: '.75px' },
+          },
+        }}
+      />
+    </div>
   )
 }
 
@@ -89,12 +127,12 @@ const getCombinedYRange = (temperatures: number[]): LabeledYPoint[] => {
   // So we can combine the lables for each data set
   // And they should line up correctly on the graph
 
-  const totalDataPoints = 23;
+  const totalDataPoints = 24;
   const maxTemp: number = Math.max(...temperatures);
   const minTemp: number = Math.min(...temperatures);
-  const tempLabels: LabeledYPoint[] = determineYRangePoints([minTemp, maxTemp], totalDataPoints, getTemperatureLabel);
+  const tempLabels: LabeledYPoint[] = generateLabeledYPoints([minTemp, maxTemp], totalDataPoints, getTemperatureLabel);
 
-  const humidityLabels: LabeledYPoint[] = determineYRangePoints([0, 100], totalDataPoints, getHumidityLabel);
+  const humidityLabels: LabeledYPoint[] = generateLabeledYPoints([0, 100], totalDataPoints, getHumidityLabel);
 
   return tempLabels.map((tempY, i) => ({
     ...tempY,
