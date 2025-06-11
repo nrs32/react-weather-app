@@ -64,7 +64,7 @@ function App() {
         <TempVHumidityCarousel/>
 
         <WeatherCard width='580px' height='340px'>
-          <WeeklyTempSpreadGraph title={"Temperature Trend This Week"} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}/>
+          <WeeklyTempSpreadGraph title={"Temperature Trend This Week"}/>
         </WeatherCard>
       </Box>
 
