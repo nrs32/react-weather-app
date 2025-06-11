@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "curvy-graphs": "file:C:/Users/nsietsema/Documents/Git/React Playground/curvy-graphs/packages/curvy-graphs/curvy-graphs-0.1.0/package",
+    "curvy-graphs": "file:C:/Users/nsietsema/Documents/Git/React Playground/curvy-graphs/packages/curvy-graphs/curvy-graphs-1.0.0-beta.4/package",
     "@emotion/css": "^11.13.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
