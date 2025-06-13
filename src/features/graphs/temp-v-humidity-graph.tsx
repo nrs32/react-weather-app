@@ -10,6 +10,7 @@ import { useScrollTriggeredChartData } from '../../hooks/use-scroll-trigger-anim
 import { useCallback, useMemo, useRef, useState } from 'react';
 
 interface TempVHumidityGraphProps {
+  title: string;
   hourlyWeather: HourlyWeather[],
 }
 
@@ -19,7 +20,7 @@ const defaultData = {
   temps: [],
 };
 
-const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ hourlyWeather }) => {
+const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ title, hourlyWeather }) => {
   const theme = useTheme();
   const curvyGraphRef = useRef<HTMLDivElement>(null);
   const [ chartData, setChartData ] = useState<{
@@ -58,7 +59,7 @@ const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ hourlyWeather }
   return (
     <div ref={curvyGraphRef}>
       <CurvyGraph
-        chartTitle='Humidity and Temperature (Sun 6/1)'
+        chartTitle={title}
         spaceBelowData={20}
         width={WIDTH}
         height={310}

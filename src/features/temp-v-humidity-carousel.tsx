@@ -11,7 +11,7 @@ const TempVHumidityCarousel = () => {
 	const { dayIndex, hasPrev, hasNext, onNext, onPrev } = useTempVHumidDayIndex();
 
 	return (
-		<WeatherCard width='738px' height='340px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>
+		<WeatherCard width='738px' height='305px' sx={{ paddingLeft: '0', paddingRight: '5px'}}>
 			<CarouselControls
 				onPrev={onPrev}
 				onNext={onNext}
@@ -20,7 +20,7 @@ const TempVHumidityCarousel = () => {
 				hasPrev={hasPrev}
 				hasNext={hasNext}
 			>
-				<TempVHumidityGraph title={`Humidity and Temperature (${weatherData[`day${dayIndex}`].dayOfWeek} ${weatherData[`day${dayIndex}`].date})`} hourlyWeather={weatherData[`day${dayIndex}`].hourlyWeather} graphWidth={400} graphHeight={200} chartTop={7} chartLeft={0}></TempVHumidityGraph>
+				<TempVHumidityGraph title={`Humidity and Temperature (${weatherData[`day${dayIndex}`].dayOfWeek} ${weatherData[`day${dayIndex}`].date})`} hourlyWeather={weatherData[`day${dayIndex}`].hourlyWeather}></TempVHumidityGraph>
 			</CarouselControls>
 		</WeatherCard>
 	);
