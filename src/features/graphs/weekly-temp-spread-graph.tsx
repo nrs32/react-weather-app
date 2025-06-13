@@ -82,6 +82,12 @@ const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title }) 
             yRange: yRange,
             animationDelay: 3,
             data: chartData.max,
+            tooltipConfig: {
+              getXLabel: (x) => getXLabel(x, dailyMinTemps),
+              getYLabel: (y) => getTemperatureLabel(y),
+              xAlias: 'Day',
+              yAlias: 'Temperature'
+            },
           },
           {
             id: 'avg-daily-temp',
@@ -93,6 +99,12 @@ const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title }) 
             yRange: yRange,
             animationDelay: 1.5,
             data: chartData.avg,
+            tooltipConfig: {
+              getXLabel: (x) => getXLabel(x, dailyMinTemps),
+              getYLabel: (y) => getTemperatureLabel(y),
+              xAlias: 'Day',
+              yAlias: 'Temperature'
+            },
           },
           {
             id: 'min-daily-temp',
@@ -104,6 +116,12 @@ const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title }) 
             yRange: yRange,
             animationDelay: 0,
             data: chartData.min,
+            tooltipConfig: {
+              getXLabel: (x) => getXLabel(x, dailyMinTemps),
+              getYLabel: (y) => getTemperatureLabel(y),
+              xAlias: 'Day',
+              yAlias: 'Temperature'
+            },
           },
         ]}
         xAxis={{
@@ -116,6 +134,11 @@ const WeeklyTempSpreadGraph: React.FC<WeeklyTempSpreadGraphProps> = ({ title }) 
         }}/>
       </div>
   )
+}
+
+const getXLabel = (xCoor: number, dailyMinTemps: (LabeledXPoint & Point)[] ) => {
+  const point = dailyMinTemps.find(({ x }) => x === xCoor)!;
+  return `${point.xLabel} (${point.xSubLabel})`;
 }
 
 export default WeeklyTempSpreadGraph

@@ -80,16 +80,11 @@ const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ hourlyWeather }
             yRange: [0, 100],
             animationDelay: 0,
             data: chartData.humidity,
-          },
-          {
-            id: 'temperature-line',
-            graphStyle: 'line',
-            label: 'TEMPERATURE',
-            labelColor: theme.palette.purple.main,
-            gradientColorStops: [theme.palette.teal.main, theme.palette.purple.main],
-            gradientDirection: 'v',
-            animationDelay: 0.5,
-            data: chartData.temps,
+            tooltipConfig: {
+              getCustomLabel: (x, y) => {
+                return `${getHumidityLabel(y)} humidity at ${getXLabel(x, hourlyTemps)}`
+              },
+            },
           },
           {
             id: 'temperature-area',
@@ -102,6 +97,21 @@ const TempVHumidityGraph: React.FC<TempVHumidityGraphProps> = ({ hourlyWeather }
             animationDelay: 0.5,
             data: chartData.temps,
           },
+          {
+            id: 'temperature-line',
+            graphStyle: 'line',
+            label: 'TEMPERATURE',
+            labelColor: theme.palette.purple.main,
+            gradientColorStops: [theme.palette.teal.main, theme.palette.purple.main],
+            gradientDirection: 'v',
+            animationDelay: 0.5,
+            data: chartData.temps,
+            tooltipConfig: {
+              getCustomLabel: (x, y) => {
+                return `${getTemperatureLabel(y)} at ${getXLabel(x, hourlyTemps)}`
+              },
+            },
+          }
         ]}
         xAxis={{
           labeledPoints: hourlyTemps,
@@ -139,5 +149,7 @@ const getCombinedYRange = (temperatures: number[]): LabeledYPoint[] => {
     yLabel: getTempAndHumidityLabel(tempY.yLabel, humidityLabels[i].yLabel),
   }));
 }
+
+export const getXLabel = (x: number, hourlyTemps: (LabeledXPoint & Point)[]) => hourlyTemps.find(temp => temp.x === x)?.xLabel as string;
 
 export default TempVHumidityGraph;
